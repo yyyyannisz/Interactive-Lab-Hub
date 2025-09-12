@@ -72,13 +72,13 @@ The interactive device can be anything *except* a computer, a tablet computer or
 
 \*\***Describe your setting, players, activity and goals here.**\*\*
 
-Smart Charger: This device is designed to be used whenever the user needs to charge their phone or other gadget. The main player is the device owner who plugs their device into the charger. Other people nearby can also see the charger’s light. The charger lights up red when the device is charging and turns green once the device is fully charged. If no light is shown, the charger is not in use. The goal is to help the user easily check whether their device is charging and know when it has reached full charge, without needing to look at the phone screen.
-
-
+- **Smart Charger:** This device is designed to be used whenever the user needs to charge their phone or other gadget. The main player is the device owner who plugs their device into the charger. Other people nearby can also see the charger’s light. The charger lights up red when the device is charging and turns green once the device is fully charged. If no light is shown, the charger is not in use. The goal is to help the user easily check whether their device is charging and know when it has reached full charge, without needing to look at the phone screen.
 
 Storyboards are a tool for visually exploring a users interaction with a device. They are a fast and cheap method to understand user flow, and iterate on a design before attempting to build on it. Take some time to read through this explanation of [storyboarding in UX design](https://www.smashingmagazine.com/2017/10/storyboarding-ux-design/). Sketch seven storyboards of the interactions you are planning. **It does not need to be perfect**, but must get across the behavior of the interactive device and the other characters in the scene. 
 
 \*\***Include pictures of your storyboards here**\*\*
+
+
 
 Present your ideas to the other people in your breakout room (or in small groups). You can just get feedback from one another or you can work together on the other parts of the lab.
 
