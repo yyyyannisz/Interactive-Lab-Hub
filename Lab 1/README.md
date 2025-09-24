@@ -216,6 +216,7 @@ Due to the consideration above, the design idea changed from an envisioned row o
 
 \*\***Include sketches of what your devices might look like here.**\*\*
 
+![Sketch](sketch 2.jpeg)
 
 \*\***What concerns or opportunitities are influencing the way you've designed the device to look?**\*\*
 
