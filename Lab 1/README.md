@@ -139,8 +139,11 @@ Think about the setting of the device: is the environment a place where the devi
 
 \*\***Include sketches of what your devices might look like here.**\*\*
 
+![Sketch](sketch.jpg)
+
 \*\***What concerns or opportunitities are influencing the way you've designed the device to look?**\*\*
 
+For the portable power brick design, the main concern is portability and convenience. The rounded, compact shape makes it easy to slip into a backpack or bag without taking much space. A prominent LED star shape ensures that the charging status is visible even on the go, so the user can quickly check whether the device is charging or fully charged. 
 
 ## Part F. Record
 
@@ -161,6 +164,7 @@ This describes the second week's work for this lab activity.
 You will be assigned three partners from other groups. Go to their github pages, view their videos, and provide them with reactions, suggestions & feedback: explain to them what you saw happening in their video. Guess the scene and the goals of the character. Ask them about anything that wasn’t clear. 
 
 \*\***Summarize feedback from your partners here.**\*\*
+Alice Zhang az536
 
 ## Make it your own
 
@@ -170,3 +174,14 @@ Do last week’s assignment again, but this time:
 3) We will be grading with an emphasis on creativity. 
 
 \*\***Document everything here. (Particularly, we would like to see the storyboard and video, although photos of the prototype are also great.)**\*\*
+
+## Part A. Plan 
+Since my lab parnters from Part 1 had dropped this class, I decided to work with Alice Zhang on her idea of ***Visual Glucose Monitor***.
+
+\*\***Describe your setting, players, activity and goals here.**\*\*
+
+***Visual Glucose Monitor***: This device is designed to be used throughout everyday activities. The main user is wearing the glucose monitor. Other players nearby might also notice alerts but will not impact light functionality. The main user wears the monitor. If the user’s glucose levels rise above the safe threshold, the device flashes to alert the user and those nearby. Once the user’s levels return to normal, the light turns off. The goal is to provide real-time alerts of harmful blood sugar levels.
+
+\*\***Include pictures of your storyboards here**\*\*
+
+
