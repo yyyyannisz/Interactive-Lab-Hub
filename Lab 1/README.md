@@ -123,10 +123,13 @@ Take a little time to set up the wizarding set-up that allows for someone to rem
 
 \*\***Include your first attempts at recording the set-up video here.**\*\*
 
+[Watch the demo video](https://drive.google.com/file/d/FILE_ID/view?usp=sharing)
+
 Now, change the goal within the same setting, and update the interaction with the paper prototype. 
 
 \*\***Show the follow-up work here.**\*\*
 
+[Watch the demo video](https://drive.google.com/file/d/1nfMfFijP1ivAtzLnNU7PNlpAIlMq7mIL/view?usp=drive_link)
 
 ## Part E. Costume the device
 
