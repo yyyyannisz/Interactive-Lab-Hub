@@ -72,27 +72,38 @@ The interactive device can be anything *except* a computer, a tablet computer or
 
 \*\***Describe your setting, players, activity and goals here.**\*\*
 
-- **Smart Charger:** This device is designed to be used whenever the user needs to charge their phone or other gadget. The main player is the device owner who plugs their device into the charger. Other people nearby can also see the charger’s light. The charger lights up red when the device is charging and turns green once the device is fully charged. If no light is shown, the charger is not in use. The goal is to help the user easily check whether their device is charging and know when it has reached full charge, without needing to look at the phone screen.
+- **Portable Smart Charger:** This device is designed to make checking your phone’s charging status simple and intuitive. It uses a clear light system: red indicates the device is charging, and green shows it’s fully charged. By glancing at the charger, the user can instantly know whether their device is ready without unlocking the screen or checking battery levels. Its portable design means it can fit naturally into different daily routines, offering convenience and reassurance wherever charging happens.
 
 Storyboards are a tool for visually exploring a users interaction with a device. They are a fast and cheap method to understand user flow, and iterate on a design before attempting to build on it. Take some time to read through this explanation of [storyboarding in UX design](https://www.smashingmagazine.com/2017/10/storyboarding-ux-design/). Sketch seven storyboards of the interactions you are planning. **It does not need to be perfect**, but must get across the behavior of the interactive device and the other characters in the scene. 
 
 \*\***Include pictures of your storyboards here**\*\*
 
 ![Storyboard](storyboard-3.jpg)
+![Storyboard](StoryBoard.jpg)
 
 Present your ideas to the other people in your breakout room (or in small groups). You can just get feedback from one another or you can work together on the other parts of the lab.
 
 \*\***Summarize feedback you got here.**\*\*
-
+Overall, feedback was that the concept solves a real pain point and the storyboard effectively showed a realistic, portable use case.
+- The red/green light system is clear and intuitive, so users don’t need to constantly check their phone screen. 
+- **Visibility** concern: if the charger is hidden (e.g., under a desk), the light might be hard to see. Brightness or an extra notification could help.  
+- **Accessibility**: red/green color-blind users might not distinguish the lights easily. Consider blinking, dual colors, or icons.  
+- **Energy efficiency**: if the light stays on after charging, it may waste power. An auto shutoff could be useful.  
+- Overall, feedback was that the concept solves real pain points (knowing charge status at a glance and also being portable is very useful) and the storyboard clearly showed a realistic use case.  
 
 ## Part B. Act out the Interaction
 
 Try physically acting out the interaction you planned. For now, you can just pretend the device is doing the things you’ve scripted for it. 
 
 \*\***Are there things that seemed better on paper than acted out?**\*\*
+- On paper, the light felt like a strong and clear signal, but when acting it out we realized that visibility depends heavily on where the charger is placed.
+- It also seemed less convenient to rely only on the red/green light.   
 
 \*\***Are there new ideas that occur to you or your collaborator that come up from the acting?**\*\*
-
+- Add **different brightness levels or a blinking pattern** to make the signal more noticeable at a glance.  
+- Consider a **sound or vibration cue** once the device is fully charged.  
+- Provide an alternative indicator for **color-blind users** (e.g., icon, shape, or brightness change).  
+- Have the light **shut off automatically** after a few minutes of being green to save energy and avoid nighttime distraction.  
 
 ## Part C. Prototype the device
 
@@ -105,7 +116,7 @@ We invented this tool for this lab!
 If you run into technical issues with this tool, you can also use a light switch, dimmer, etc. that you can can manually or remotely control.
 
 \*\***Give us feedback on Tinkerbelle.**\*\*
-
+Tinkerbelle was easy to set up, but having more detailed explanations would help with understanding.
 
 ## Part D. Wizard the device
 Take a little time to set up the wizarding set-up that allows for someone to remotely control the device while someone acts with it. Hint: You can use Zoom to record videos, and you can pin someone’s video feed if that is the scene which you want to record. 
