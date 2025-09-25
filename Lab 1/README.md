@@ -187,12 +187,15 @@ Since my lab parnters from Part 1 had dropped this class, I decided to work with
 ![Storyboard](storyboard-part2.PNG)
 
 \*\***Summarize feedback you got here.**\*\*
+
 Some critiques included concerns over for user privacy as well as suggestions for lighting features for additional information displayed.
 
 \*\***Are there things that seemed better on paper than acted out?**\*\*
+
 The wristband alert may not be as visible in certain hand positions.
 
 \*\***Are there new ideas that occur to you or your collaborator that come up from the acting?**\*\*
+
 Due to the consideration above, the design idea changed from an envisioned row of lights just on the top of the wristband to a ring of lights around the entire band.
 
 \*\***Include your first attempts at recording the set-up video here.**\*\*
@@ -207,6 +210,7 @@ Due to the consideration above, the design idea changed from an envisioned row o
 ![Storyboard](IMG_2721.PNG)
 
 \*\***What concerns or opportunitities are influencing the way you've designed the device to look?**\*\*
+
 Visibility concern: Replaced small LEDs with a continuous LED band for clearer, more noticeable alerts.
 
 Privacy concern: Added options to disable sound or light so the device can remain discreet.
@@ -214,6 +218,8 @@ Privacy concern: Added options to disable sound or light so the device can remai
 Opportunity for balance: Design now looks sleeker and more modern while offering both high visibility and subtle use when needed.
 
 \*\***Take a video of your prototyped interaction.**\*\*
+
 [Watch the demo video](https://drive.google.com/file/d/1wDniDGnrz-GNqm2MjuaUciHYuEE5E_Aj/view?usp=sharing)
+
 [Watch the demo video](https://drive.google.com/file/d/1zubf3U31TmKLepPN5DlNo5l3orDGw8KQ/view?usp=sharing)
 
