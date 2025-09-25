@@ -184,7 +184,6 @@ Since my lab parnters from Part 1 had dropped this class, I decided to work with
 
 \*\***Include pictures of your storyboards here**\*\*
 
-Original storyboard:
 ![Storyboard](storyboard-part2.PNG)
 
 \*\***Summarize feedback you got here.**\*\*
@@ -200,6 +199,8 @@ Due to the consideration above, the design idea changed from an envisioned row o
 
 ![Sketch](sketch-2.jpeg)
 
+[Watch the demo video](https://drive.google.com/file/d/1queFFC7oLWxL6OpfF78fbpsS0pcTwqkG/view?usp=sharing)
+
 \*\***Include sketches of what your devices might look like here.**\*\*
 
 ![Storyboard](IMG_2720.PNG)
@@ -213,4 +214,6 @@ Privacy concern: Added options to disable sound or light so the device can remai
 Opportunity for balance: Design now looks sleeker and more modern while offering both high visibility and subtle use when needed.
 
 \*\***Take a video of your prototyped interaction.**\*\*
+[Watch the demo video](https://drive.google.com/file/d/1wDniDGnrz-GNqm2MjuaUciHYuEE5E_Aj/view?usp=sharing)
+[Watch the demo video](https://drive.google.com/file/d/1zubf3U31TmKLepPN5DlNo5l3orDGw8KQ/view?usp=sharing)
 
