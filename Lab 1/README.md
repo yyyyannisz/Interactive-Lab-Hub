@@ -187,17 +187,6 @@ Since my lab parnters from Part 1 had dropped this class, I decided to work with
 Original storyboard:
 ![Storyboard](storyboard-part2.PNG)
 
-On the second iteration of this prototype, we focused on adapting the device for situations where the user may not immediately notice the visual flashing alert. The updated storyboard reflects this use case.
-
-We modified the functionality so that if glucose levels remain high after a set period, the device issues a secondary vibration and sound alert. This ensures the user is prompted to take action even if they overlook the visual signal.
-
-In response to prior feedback about privacy concerns, the device should have a configurable option to disable either sound or light alerts to preserve discretion if desired. The updated vibration is a key feature would provide a more immediate way of capturing the user’s attention.
-
-Other physical design changes include replacing individual LEDs with a continuous LED band across the bracelet, improving visibility of the visual alert. Prototype photos demonstrating this updates are shown below.
-
-Updated Storyboard:
-
-
 \*\***Summarize feedback you got here.**\*\*
 Some critiques included concerns over for user privacy as well as suggestions for lighting features for additional information displayed.
 
@@ -208,12 +197,13 @@ The wristband alert may not be as visible in certain hand positions.
 Due to the consideration above, the design idea changed from an envisioned row of lights just on the top of the wristband to a ring of lights around the entire band.
 
 \*\***Include your first attempts at recording the set-up video here.**\*\*
-![Storyboard](IMG_2720.PNG)
-![Storyboard](IMG_2721.PNG)
+
+![Sketch](sketch-2.jpeg)
 
 \*\***Include sketches of what your devices might look like here.**\*\*
 
-![Sketch](sketch-2.jpeg)
+![Storyboard](IMG_2720.PNG)
+![Storyboard](IMG_2721.PNG)
 
 \*\***What concerns or opportunitities are influencing the way you've designed the device to look?**\*\*
 Visibility concern: Replaced small LEDs with a continuous LED band for clearer, more noticeable alerts.
@@ -222,7 +212,5 @@ Privacy concern: Added options to disable sound or light so the device can remai
 
 Opportunity for balance: Design now looks sleeker and more modern while offering both high visibility and subtle use when needed.
 
-
 \*\***Take a video of your prototyped interaction.**\*\*
 
-A window was added to the prototype to allow an Apple Watch screen to simulate the flashing mechanism for video purposes.
