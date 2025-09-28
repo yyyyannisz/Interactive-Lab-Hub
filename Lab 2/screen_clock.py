@@ -96,8 +96,10 @@ while True:
         # Draw a circle and annotate phases
         center = (width // 2, height // 2)
         radius = 50
+
+        start_offset = -90  # rotate so 0° starts at top
         # draw arcs for each phase
-        start_angle = 0
+        start_angle = start_offset
         for phase, days, color in phases:
             end_angle = start_angle + (days / total_days) * 360
             draw.pieslice(
