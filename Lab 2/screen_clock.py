@@ -54,7 +54,9 @@ x = 0
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the
 # same directory as the python script!
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
+font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 11)
+font_medium = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 13)
+font_large = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 15)
 
 # Turn on the backlight
 backlight = digitalio.DigitalInOut(board.D22)
@@ -85,18 +87,55 @@ phases = [
 ]
 
 # ----------------------------------
-# Helpers (consistent angle system)
-# Pillow pieslice: 0° at 3 o'clock, CCW positive, +y is down.
+# Helpers (same angle system as Pillow pieslice)
+# 0° at 3 o'clock, CCW positive, +y is down.
 # ----------------------------------
 def pol2xy(cx, cy, r, deg):
     a = math.radians(deg)
     return (cx + r * math.cos(a), cy + r * math.sin(a))
 
 def draw_centered_text(draw_obj, text, center_xy, font, fill):
-    # center text on a point using textbbox
     l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
     w, h = (r - l, b - t)
     draw_obj.text((center_xy[0] - w / 2, center_xy[1] - h / 2), text, font=font, fill=fill)
+
+def phase_for_day(day):
+    """Return (name, color) for a 1-based day-of-cycle."""
+    d = day
+    for name, days, color in phases:
+        if d <= days:
+            return name, color
+        d -= days
+    # fallback
+    return phases[-1][0], phases[-1][2]
+
+# Layout constants
+TITLE_Y = 4
+LEGEND_H = 40                   # reserved space at bottom for legend
+CHART_AREA_H = height - LEGEND_H
+CENTER = (width // 2, CHART_AREA_H // 2 + 6)  # push slightly down
+RADIUS = 44                     # leave room for title
+POINTER_COLOR = "black"
+START_OFFSET = -90              # 12 o'clock
+
+def draw_legend(draw_obj, x0, y0, row_gap=4, col_gap=12):
+    """2-column legend with colored squares and labels."""
+    swatch = 9
+    col_w = (width - 2 * x0) // 2
+    # two rows × two columns
+    items = [
+        phases[0], phases[1],
+        phases[2], phases[3],
+    ]
+    for idx, (name, _, color) in enumerate(items):
+        row = idx // 2
+        col = idx % 2
+        cx = x0 + col * col_w
+        cy = y0 + row * (swatch + row_gap + 10)
+        # color square
+        draw_obj.rectangle([cx, cy, cx + swatch, cy + swatch], fill=color, outline="white")
+        # text
+        draw_obj.text((cx + swatch + 5, cy - 2), name, font=font_small, fill="white")
 
 while True:
     if not buttonA.value:  # pressed
@@ -107,60 +146,49 @@ while True:
     draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
 
     if screen_mode == 0:
-        # -------- Screen 1: Cycle Clock --------
-        center = (width // 2, height // 2)
-        radius = 45
-        label_r = radius + 16
-        start_offset = -90  # start at 12 o'clock
-        arrow_color = "black"
+        # -------- Screen 1: Cycle Clock (labels moved to legend) --------
+        day_of_cycle = 7  # TODO: replace with real value
+        # title
+        draw.text((6, TITLE_Y), f"{day_of_cycle}/{total_days} day of cycle", font=font_medium, fill="white")
 
-        start_angle = start_offset
-        for phase, days, color in phases:
+        # pie
+        start_angle = START_OFFSET
+        for name, days, color in phases:
             sweep = (days / total_days) * 360.0
             end_angle = start_angle + sweep
-
-            # slice
             draw.pieslice(
-                [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius],
-                start=start_angle,
-                end=end_angle,
-                fill=color,
-                outline="white",
+                [CENTER[0] - RADIUS, CENTER[1] - RADIUS, CENTER[0] + RADIUS, CENTER[1] + RADIUS],
+                start=start_angle, end=end_angle, fill=color, outline="white",
             )
-
-            # centered label at mid-angle
-            mid = (start_angle + end_angle) / 2.0
-            lx, ly = pol2xy(center[0], center[1], label_r, mid)
-            # Use white for readability on light slices
-            draw_centered_text(draw, phase, (lx, ly), font=font, fill="white")
-
             start_angle = end_angle
 
-        # arrow for current day (e.g., day 7)
-        day_of_cycle = 7  # TODO: replace with computed value
-        cumulative_days = 0
-        # convert current day into angle offset
-        angle = (day_of_cycle / total_days) * 360
-        arrow_x = center[0] + radius * 0.8 * math.cos(math.radians(angle))
-        arrow_y = center[1] - radius * 0.8 * math.sin(math.radians(angle))
-        draw.line([center, (arrow_x, arrow_y)], fill=arrow_color, width=3)
+        # pointer
+        angle = START_OFFSET + (day_of_cycle / total_days) * 360.0
+        ax, ay = pol2xy(CENTER[0], CENTER[1], RADIUS * 0.82, angle)
+        draw.line([CENTER, (ax, ay)], fill=POINTER_COLOR, width=3)
 
-        draw.text((5, 5), f"{day_of_cycle}/{total_days} day of cycle", font=font, fill="white")
+        # center label: current phase
+        cur_phase, _c = phase_for_day(day_of_cycle)
+        draw_centered_text(draw, cur_phase, CENTER, font=font_small, fill="black")
+
+        # legend at bottom
+        legend_y = height - LEGEND_H + 8
+        draw_legend(draw, x0=12, y0=legend_y)
 
     elif screen_mode == 1:
         # ----------- Screen 2: Summary Info View ------------
-        draw.text((10, 10), "Sat, Sep 27", font=font, fill="white")
-        draw.text((10, 40), "7th day of cycle", font=font, fill="white")
-        draw.text((10, 70), "⚡ Rising Energy", font=font, fill="white")
-        draw.text((10, 100), "❤️ Light Bleeding", font=font, fill="white")
-        draw.text((10, 130), "👍 Starting projects", font=font, fill="white")
+        draw.text((10, 10), "Sat, Sep 27", font=font_large, fill="white")
+        draw.text((10, 40), "7th day of cycle", font=font_small, fill="white")
+        draw.text((10, 70), "🔥 Rising Energy", font=font_medium, fill="white")
+        draw.text((10, 100), "❤️ Light Bleeding", font=font_medium, fill="white")
+        draw.text((10, 130), "👍 Starting projects", font=font_medium, fill="white")
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
-        draw.text((10, 10), "Last Period", font=font, fill="white")
-        draw.text((10, 50), "MM: 09", font=font, fill="white")
-        draw.text((10, 80), "DD: 21", font=font, fill="white")
-        draw.text((10, 120), "[Done]", font=font, fill="green")
+        draw.text((10, 10), "Last Period", font=font_small, fill="white")
+        draw.text((10, 50), "MM: 09", font=font_small, fill="white")
+        draw.text((10, 80), "DD: 21", font=font_small, fill="white")
+        draw.text((10, 120), "[Done]", font=font_small, fill="green")
 
     # Display image
     disp.image(image, rotation)
