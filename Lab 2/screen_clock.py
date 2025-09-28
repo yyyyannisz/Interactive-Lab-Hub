@@ -137,6 +137,21 @@ def draw_legend(draw_obj, x0, y0, row_gap=4, col_gap=12):
         # text
         draw_obj.text((cx + swatch + 5, cy - 2), name, font=font_small, fill="white")
 
+def rounded_rect(draw_obj, bbox, radius, fill, outline=None, width=1):
+    # Pillow has rounded_rectangle; keep this wrapper for clarity
+    draw_obj.rounded_rectangle(bbox, radius=radius, fill=fill, outline=outline, width=width)
+
+def draw_badge(draw_obj, text, x, y, pad_x=6, pad_y=2, bg="#2A2A2A", fg="white"):
+    w, h = text_size(draw_obj, text, font_small)
+    rounded_rect(draw_obj, (x, y, x + w + 2*pad_x, y + h + 2*pad_y), radius=6, fill=bg)
+    draw_obj.text((x + pad_x, y + pad_y), text, font=font_small, fill=fg)
+    return (x + w + 2*pad_x, y + h + 2*pad_y)
+
+def bullet_row(draw_obj, x, y, text, color, line_w=10, gap=8):
+    # colored line “bullet” + label
+    draw_obj.rounded_rectangle((x, y+6, x+line_w, y+8), radius=2, fill=color)
+    draw_obj.text((x + line_w + gap, y), text, font=font_medium, fill="white")
+    
 while True:
     if not buttonA.value:  # pressed
         screen_mode = (screen_mode + 1) % 3
@@ -172,12 +187,52 @@ while True:
         draw_legend(draw, x0=12, y0=legend_y)
 
     elif screen_mode == 1:
-        # ----------- Screen 2: Summary Info View ------------
-        draw.text((10, 10), "Sat, Sep 27", font=font_large, fill="white")
-        draw.text((10, 40), "7th day of cycle", font=font_small, fill="white")
-        draw.text((10, 70), "🔥 Rising Energy", font=font_medium, fill="white")
-        draw.text((10, 100), "❤️ Light Bleeding", font=font_medium, fill="white")
-        draw.text((10, 130), "👍 Starting projects", font=font_medium, fill="white")
+        # -------- Page 2: Summary (redesigned) --------
+        # Card background
+        card_margin = 6
+        card_bbox = (card_margin, card_margin, width - card_margin, height - card_margin)
+        rounded_rect(draw, card_bbox, radius=12, fill="#1B1E22")  # dark blue-gray
+        inner_pad = 10
+
+        # Header row: Date + phase badge
+        header_x = card_bbox[0] + inner_pad
+        header_y = card_bbox[1] + inner_pad
+
+        date_text = "Sat, Sep 27"
+        draw.text((header_x, header_y), date_text, font=font_large, fill="white")
+
+        # Phase badge on the right
+        day_of_cycle = 7  # TODO: your real value
+        phase_name, phase_color = phase_for_day(day_of_cycle)
+        badge_text = f"{day_of_cycle}ᵗʰ  •  {phase_name}"
+        bw, bh = text_size(draw, badge_text, font_small)
+        badge_right = card_bbox[2] - inner_pad
+        badge_x = badge_right - (bw + 12)
+        badge_y = header_y + 2
+        draw_badge(draw, badge_text, badge_x, badge_y, pad_x=6, pad_y=2, bg="#2C3137", fg="white")
+
+        # Divider
+        divider_y = header_y + 24
+        draw.line((card_bbox[0] + inner_pad, divider_y, card_bbox[2] - inner_pad, divider_y), fill="#3C424A", width=1)
+
+        # Subtitle
+        sub_y = divider_y + 6
+        draw.text((header_x, sub_y), "Today’s snapshot", font=font_medium, fill="#BFC7D1")
+
+        # Bullet rows
+        row_y = sub_y + 18
+        line_x = header_x
+        bullet_row(draw, line_x, row_y, "Rising Energy", color="#A8E3DC")   # teal
+        row_y += 20
+        bullet_row(draw, line_x, row_y, "Light Bleeding", color="#F28BA0")  # light red
+        row_y += 20
+        bullet_row(draw, line_x, row_y, "Good for starting tasks", color="#FFE88A")  # yellow hint
+
+        # Optional tiny footer hint
+        footer = "Press A to switch screens"
+        fw, fh = text_size(draw, footer, font_small)
+        draw.text((card_bbox[2] - inner_pad - fw, card_bbox[3] - inner_pad - fh),
+                  footer, font=font_small, fill="#8A93A0")
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
