@@ -2,6 +2,7 @@ import time
 import subprocess
 import digitalio
 import board
+import math
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
