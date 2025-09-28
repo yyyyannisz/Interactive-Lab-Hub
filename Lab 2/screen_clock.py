@@ -54,7 +54,7 @@ x = 0
 # Alternatively load a TTF font.  Make sure the .ttf font file is in the
 # same directory as the python script!
 # Some other nice fonts to try: http://www.dafont.com/bitmap.php
-font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 10)
+font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 12)
 
 # Turn on the backlight
 backlight = digitalio.DigitalInOut(board.D22)
@@ -66,6 +66,23 @@ buttonA = digitalio.DigitalInOut(board.D23)
 buttonA.switch_to_input(pull=digitalio.Pull.UP)
 
 screen_mode = 0  # 0: Cycle Clock, 1: Summary, 2: Input
+
+# ----------------------------
+# Phase Data
+# ----------------------------
+# Typical lengths – adjust later per user
+menstrual_days = 5
+follicular_days = 9
+ovulation_days = 2
+luteal_days = 12
+total_days = menstrual_days + follicular_days + ovulation_days + luteal_days
+
+phases = [
+    ("Menstrual", menstrual_days, "#D72638"),  # red
+    ("Follicular", follicular_days, "#3CAEA3"),# teal
+    ("Ovulatory", ovulation_days, "#FFD23F"), # yellow
+    ("Luteal", luteal_days, "#7550A0"),        # purple
+]
 
 while True:
     if not buttonA.value:  # If button pressed
@@ -79,21 +96,26 @@ while True:
         # Draw a circle and annotate phases
         center = (width // 2, height // 2)
         radius = 50
-        draw.ellipse([center[0]-radius, center[1]-radius, center[0]+radius, center[1]+radius], outline="white", width=2)
+        # draw arcs for each phase
+        start_angle = 0
+        for phase, days, color in phases:
+            end_angle = start_angle + (days / total_days) * 360
+            draw.pieslice(
+                [center[0]-radius, center[1]-radius,
+                 center[0]+radius, center[1]+radius],
+                start=start_angle, end=end_angle, fill=color, outline="white")
+            start_angle = end_angle
 
-        draw.text((center[0]-10, center[1]-radius-20), "Menstrual", font=font, fill="red")
-        draw.text((center[0]+radius+5, center[1]-10), "Follicular", font=font, fill="orange")
-        draw.text((center[0]-10, center[1]+radius+5), "Ovulatory", font=font, fill="blue")
-        draw.text((center[0]-radius-60, center[1]-10), "Luteal", font=font, fill="purple")
-
-        # Add arrow hand (e.g., day 7 = 63 degrees)
+        # arrow for current day (e.g., day 7)
         day_of_cycle = 7
-        angle = (day_of_cycle / 28) * 360  # Assuming 28-day cycle
+        cumulative_days = 0
+        # convert current day into angle offset
+        angle = (day_of_cycle / total_days) * 360
         arrow_x = center[0] + radius * 0.8 * math.cos(math.radians(angle))
         arrow_y = center[1] - radius * 0.8 * math.sin(math.radians(angle))
         draw.line([center, (arrow_x, arrow_y)], fill="white", width=3)
 
-        draw.text((10, 10), f"{day_of_cycle}/28 day of cycle", font=font, fill="white")
+        draw.text((5, 5), f"{day_of_cycle}/{total_days} day of cycle", font=font, fill="white")
 
     elif screen_mode == 1:
         # ----------- Screen 2: Summary Info View ------------
