@@ -96,9 +96,10 @@ while True:
         # Draw a circle and annotate phases
         center = (width // 2, height // 2)
         radius = 45
-
+        label_radius = radius + 10
         # rotate start so 0° is top
         start_offset = -90  
+        arrow_color = "black"
         
         # draw arcs for each phase
         start_angle =  start_offset
