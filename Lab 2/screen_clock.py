@@ -149,7 +149,7 @@ while True:
         # -------- Screen 1: Cycle Clock (labels moved to legend) --------
         day_of_cycle = 7  # TODO: replace with real value
         # title
-        draw.text((6, TITLE_Y), f"{day_of_cycle}/{total_days} day of cycle", font=font_medium, fill="white")
+        draw.text((6, TITLE_Y), f"{day_of_cycle}th day", font=font_medium, fill="white")
 
         # pie
         start_angle = START_OFFSET
@@ -166,11 +166,7 @@ while True:
         angle = START_OFFSET + (day_of_cycle / total_days) * 360.0
         ax, ay = pol2xy(CENTER[0], CENTER[1], RADIUS * 0.82, angle)
         draw.line([CENTER, (ax, ay)], fill=POINTER_COLOR, width=3)
-
-        # center label: current phase
-        cur_phase, _c = phase_for_day(day_of_cycle)
-        draw_centered_text(draw, cur_phase, CENTER, font=font_small, fill="black")
-
+    
         # legend at bottom
         legend_y = height - LEGEND_H + 8
         draw_legend(draw, x0=12, y0=legend_y)
