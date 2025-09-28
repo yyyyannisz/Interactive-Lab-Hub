@@ -141,6 +141,11 @@ def rounded_rect(draw_obj, bbox, radius, fill, outline=None, width=1):
     # Pillow has rounded_rectangle; keep this wrapper for clarity
     draw_obj.rounded_rectangle(bbox, radius=radius, fill=fill, outline=outline, width=width)
 
+def text_size(draw_obj, text, font):
+    """Return width and height of given text."""
+    l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
+    return (r - l, b - t)
+
 def draw_badge(draw_obj, text, x, y, pad_x=6, pad_y=2, bg="#2A2A2A", fg="white"):
     w, h = text_size(draw_obj, text, font_small)
     rounded_rect(draw_obj, (x, y, x + w + 2*pad_x, y + h + 2*pad_y), radius=6, fill=bg)
