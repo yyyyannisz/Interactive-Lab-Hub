@@ -126,7 +126,7 @@ while True:
         angle = (day_of_cycle / total_days) * 360
         arrow_x = center[0] + radius * 0.8 * math.cos(math.radians(angle))
         arrow_y = center[1] - radius * 0.8 * math.sin(math.radians(angle))
-        draw.line([center, (arrow_x, arrow_y)], fill="white", width=3)
+        draw.line([center, (arrow_x, arrow_y)], fill=arrow_color, width=3)
 
         draw.text((5, 5), f"{day_of_cycle}/{total_days} day of cycle", font=font, fill="white")
 
