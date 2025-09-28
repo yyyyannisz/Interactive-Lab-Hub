@@ -78,49 +78,66 @@ luteal_days = 12
 total_days = menstrual_days + follicular_days + ovulation_days + luteal_days
 
 phases = [
-    ("Menstrual", menstrual_days, "#D72638"),  # red
-    ("Follicular", follicular_days, "#3CAEA3"),# teal
-    ("Ovulatory", ovulation_days, "#FFD23F"), # yellow
-    ("Luteal", luteal_days, "#7550A0"),        # purple
+    ("Menstrual", menstrual_days, "#F28BA0"),  # red
+    ("Follicular", follicular_days, "#A8E3DC"),# teal
+    ("Ovulatory", ovulation_days, "#FFE88A"), # yellow
+    ("Luteal", luteal_days, "#C7ACDF"),        # purple
 ]
 
-while True:
-    if not buttonA.value:  # If button pressed
-        screen_mode = (screen_mode + 1) % 3
-        time.sleep(0.3)  # debounce delay
+# ----------------------------------
+# Helpers (consistent angle system)
+# Pillow pieslice: 0° at 3 o'clock, CCW positive, +y is down.
+# ----------------------------------
+def pol2xy(cx, cy, r, deg):
+    a = math.radians(deg)
+    return (cx + r * math.cos(a), cy + r * math.sin(a))
 
-    draw.rectangle((0, 0, width, height), outline=0, fill=0)
+def draw_centered_text(draw_obj, text, center_xy, font, fill):
+    # center text on a point using textbbox
+    l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
+    w, h = (r - l, b - t)
+    draw_obj.text((center_xy[0] - w / 2, center_xy[1] - h / 2), text, font=font, fill=fill)
+
+while True:
+    if not buttonA.value:  # pressed
+        screen_mode = (screen_mode + 1) % 3
+        time.sleep(0.3)  # debounce
+
+    # clear screen
+    draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
 
     if screen_mode == 0:
-        # ----------- Screen 1: Menstrual Cycle Clock View ------------
-        # Draw a circle and annotate phases
+        # -------- Screen 1: Cycle Clock --------
         center = (width // 2, height // 2)
         radius = 45
-        label_radius = radius + 10
-        # rotate start so 0° is top
-        start_offset = -90  
+        label_r = radius + 16
+        start_offset = -90  # start at 12 o'clock
         arrow_color = "black"
-        
-        # draw arcs for each phase
-        start_angle =  start_offset
+
+        start_angle = start_offset
         for phase, days, color in phases:
-            end_angle = start_angle + (days / total_days) * 360
+            sweep = (days / total_days) * 360.0
+            end_angle = start_angle + sweep
+
+            # slice
             draw.pieslice(
-                [center[0]-radius, center[1]-radius,
-                 center[0]+radius, center[1]+radius],
-                start=start_angle, end=end_angle, fill=color, outline="white")
-            
-         # draw label at middle of arc
-            mid_angle = (start_angle + end_angle) / 2
-            label_x = center[0] + (radius + 20) * math.cos(math.radians(mid_angle))
-            label_y = center[1] + (radius + 20) * math.sin(math.radians(mid_angle))
-            draw.text((label_x, label_y), phase, font=font, fill=color)
+                [center[0] - radius, center[1] - radius, center[0] + radius, center[1] + radius],
+                start=start_angle,
+                end=end_angle,
+                fill=color,
+                outline="white",
+            )
+
+            # centered label at mid-angle
+            mid = (start_angle + end_angle) / 2.0
+            lx, ly = pol2xy(center[0], center[1], label_r, mid)
+            # Use white for readability on light slices
+            draw_centered_text(draw, phase, (lx, ly), font=font, fill="white")
 
             start_angle = end_angle
 
-
         # arrow for current day (e.g., day 7)
-        day_of_cycle = 7
+        day_of_cycle = 7  # TODO: replace with computed value
         cumulative_days = 0
         # convert current day into angle offset
         angle = (day_of_cycle / total_days) * 360
