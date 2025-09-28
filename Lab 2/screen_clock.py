@@ -95,18 +95,28 @@ while True:
         # ----------- Screen 1: Menstrual Cycle Clock View ------------
         # Draw a circle and annotate phases
         center = (width // 2, height // 2)
-        radius = 50
+        radius = 45
 
-        start_offset = -90  # rotate so 0° starts at top
+        # rotate start so 0° is top
+        start_offset = -90  
+        
         # draw arcs for each phase
-        start_angle = start_offset
+        start_angle =  start_offset
         for phase, days, color in phases:
             end_angle = start_angle + (days / total_days) * 360
             draw.pieslice(
                 [center[0]-radius, center[1]-radius,
                  center[0]+radius, center[1]+radius],
                 start=start_angle, end=end_angle, fill=color, outline="white")
+            
+         # draw label at middle of arc
+            mid_angle = (start_angle + end_angle) / 2
+            label_x = center[0] + (radius + 20) * math.cos(math.radians(mid_angle))
+            label_y = center[1] + (radius + 20) * math.sin(math.radians(mid_angle))
+            draw.text((label_x, label_y), phase, font=font, fill=color)
+
             start_angle = end_angle
+
 
         # arrow for current day (e.g., day 7)
         day_of_cycle = 7
