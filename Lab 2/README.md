@@ -70,7 +70,7 @@ In a typical menstrual cycle, the four phases—Menstrual, Follicular, Ovulatory
 
 To create the uneven colored pie slices for our clock background, I calculated the angle of each menstrual phase (Menstrual, Follicular, Ovulatory, Luteal) based on its actual length in days relative to the full cycle. Using these proportions, I used draw.pieslice() to render each section with a distinct color. This visual design is important because it reflects the true duration of each phase rather than dividing the cycle evenly, giving users a more accurate and intuitive understanding of where they are in their cycle. 
 
-However, as I  drew the phase labels directly on the pie chart, they overlapped and clipped against each other. The text for the cycle day also touched the edge of the circle, making the chart hard to read. To fix it, I decided to remove all labels from the pie itself. Instead, I created a clean 2-column legend at the bottom of the screen. I reserved extra vertical space for the legend (LEGEND_H) and reduced the chart radius. This way, the chart sits above the legend, the day text has its own margin, and nothing collides anymore.
+However, as I  drew the phase labels directly on the pie chart, they overlapped and clipped against each other. The text for the cycle day also touched the edge of the circle, making the chart hard to read. To fix it, I decided to remove all labels from the pie itself. Instead, I created a clean 2-column legend at the bottom of the screen. I also shorten the day text aviod overlap.
 
 ![phase name](phase-name.jpg) 
 
@@ -89,6 +89,9 @@ To solve this, I redesigned the summary screen to be more organized, readable, a
 
 I also added a divider line below the header to clearly separate it from the details, giving the layout a more structured look. For the main content, I introduced a “Today’s snapshot” section. Instead of long text blocks, I broke the information into three simple bullet rows: how you feel, a symptom to expect, and one thing to try. To make these even clearer, I gave each row a distinct colored line marker—teal, red, or yellow—so the items can be recognized at a glance and are easier to distinguish.
 
+![updadted screen2(updated-screen2.jpg) 
+
+***Initial desgin of the summary screen***
 
 \*\*\***A copy of your code should be in your Lab 2 Github repo.**\*\*\*
 
