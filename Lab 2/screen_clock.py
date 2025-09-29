@@ -298,16 +298,18 @@ while True:
                 try:
                     selected_date = date(today.year, sel_month, sel_day)
                     if selected_date > today:
-                        # Show validation error
+                        # Show validation error and stay on input screen
                         validation_error = time.monotonic()
+                        input_focus = 0  # Reset focus to Month field
                     else:
                         # Date is valid, save it
                         save_data(sel_month, sel_day)
                         just_saved_at = time.monotonic()
                         screen_mode = 0             # back to clock
                 except ValueError:
-                    # Invalid date (e.g., Feb 30), show error
+                    # Invalid date (e.g., Feb 30), show error and stay on input screen
                     validation_error = time.monotonic()
+                    input_focus = 0  # Reset focus to Month field
             time.sleep(0.25)                # debounce
         else:
             screen_mode = (screen_mode + 1) % 3
