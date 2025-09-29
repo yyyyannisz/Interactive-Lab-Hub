@@ -10,7 +10,7 @@ Yannis Zhu yz3477
 
 ![Set up the Display Clock Demo](provided-demo-click.jpg)
 
-![button using video](button-use-video.mov)
+[button using video](button-use.mov)
 
 
 ## Sketch and brainstorm further interactions and features you would like for your clock for Part 2.
@@ -60,9 +60,35 @@ Based on feedback from peers, they all felt the clock-based visualization of the
 
 Another recurring point was the potential information overload on a single screen. To address this, I plan to improve the layout by organizing content into different screens. The ***main screen*** will display the ****period clock with phase visualization***. A ***second screen*** will focus on daily details such as ****energy level, symptoms, and activity suggestions****, presented in a cleaner and less crowded way. I also plan to add a ***third screen*** where users can enter the ***date of their last period***. This will allow the clock to calculate their current cycle day more accurately and make the display more relevant.
 
-Upadted Interface Design: 
+***Upadted Interface Design:***
 
 ![updated-interface](updated-interface.jpg) 
+
+***Clock design:***
+![clock-design](clock-redesign.jpg) 
+In a typical menstrual cycle, the four phases—Menstrual, Follicular, Ovulatory, and Luteal—do not occupy equal lengths of time. Representing them as evenly sized segments would be misleading and reduce the accuracy of the visual display. Thus, I would like to think there are four uneven colored pie slices on the background of our clock indicating the four phases.
+
+To create the uneven colored pie slices for our clock background, I calculated the angle of each menstrual phase (Menstrual, Follicular, Ovulatory, Luteal) based on its actual length in days relative to the full cycle. Using these proportions, I used draw.pieslice() to render each section with a distinct color. This visual design is important because it reflects the true duration of each phase rather than dividing the cycle evenly, giving users a more accurate and intuitive understanding of where they are in their cycle. 
+
+However, as I  drew the phase labels directly on the pie chart, they overlapped and clipped against each other. The text for the cycle day also touched the edge of the circle, making the chart hard to read. To fix it, I decided to remove all labels from the pie itself. Instead, I created a clean 2-column legend at the bottom of the screen. I reserved extra vertical space for the legend (LEGEND_H) and reduced the chart radius. This way, the chart sits above the legend, the day text has its own margin, and nothing collides anymore.
+
+![phase name](phase-name.jpg) 
+
+At first, I added a phase label right at the center of the clock. I thought it would make it clearer which phase the user was in, but when I saw it on the screen, it felt distracting. It pulled attention away from the overall chart. So, I removed that center label to keep the design simpler and cleaner.
+
+I also changed the arrow color to black. The old color blended too much into the background and the pie slices. With black, the arrow is sharp and easy to see, making it stand out against all the phase colors. This small change improved readability a lot.
+
+***Final desgin of the period clock:****
+![final clock design](final-clock.jpg) 
+
+***Initial desgin of the summary screen***
+![summary screen initial](second-screen-1.jpg) 
+Originally, the second screen was very plain and unstructured. It only showed text stacked together without any clear grouping, which made it difficult to follow. The phase and day information blended into the rest of the content, so users couldn’t easily see the most important details at a glance. Without a background panel or divider, the screen felt crowded and flat. The snapshot items—how you feel, a symptom to expect, and one thing to try—were displayed as regular text lines with no hierarchy, which made their purpose unclear.
+
+To solve this, I redesigned the summary screen to be more organized, readable, and visually balanced. I added a card-style background with rounded corners so that all the content feels grouped together and easier to read. At the top of the card, I placed the date on the left and a phase badge on the right. This layout allows users to quickly see both the current calendar date and their cycle phase without confusion.
+
+I also added a divider line below the header to clearly separate it from the details, giving the layout a more structured look. For the main content, I introduced a “Today’s snapshot” section. Instead of long text blocks, I broke the information into three simple bullet rows: how you feel, a symptom to expect, and one thing to try. To make these even clearer, I gave each row a distinct colored line marker—teal, red, or yellow—so the items can be recognized at a glance and are easier to distinguish.
+
 
 \*\*\***A copy of your code should be in your Lab 2 Github repo.**\*\*\*
 
