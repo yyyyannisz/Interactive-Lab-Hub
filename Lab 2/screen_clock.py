@@ -199,10 +199,20 @@ just_saved_at = 0  # for showing a brief "Saved" badge
 
 while True:
     if not buttonA.value:  # pressed
-        screen_mode = (screen_mode + 1) % 3
-        time.sleep(0.3)  # debounce
+        if screen_mode == 2:
+            # screen 3: A moves focus, and on Save it commits & exits
+            if input_focus < 2:
+                input_focus += 1            # Month -> Day -> Save
+            else:
+                save_data(sel_month, sel_day)
+                just_saved_at = time.monotonic()
+                screen_mode = 0             # back to clock
+            time.sleep(0.25)                # debounce
+        else:
+            screen_mode = (screen_mode + 1) % 3
+            time.sleep(0.25)                # debounce
 
-    # --- Button B (short/long) behavior on Page 3 only ---
+    # --- Button B (short/long) behavior on screen 3 only ---
     if screen_mode == 2:
         if not buttonB.value:  # pressed
             if last_b_press_start is None:
@@ -227,14 +237,7 @@ while True:
                         sel_day = maxd if sel_day == 1 else sel_day - 1
                     else:
                         sel_day = 1 if sel_day == maxd else sel_day + 1
-
-                elif input_focus == 2:  # Save
-                    save_data(sel_month, sel_day)
-                    just_saved_at = time.monotonic()
-                    # Next short press after Save cycles focus back to Month
-                    if not long_press:
-                        input_focus = 0
-
+                # If focus is Save, B does nothing (A will save)
                 last_b_press_start = None
 
     # clear screen
@@ -351,9 +354,6 @@ while True:
         elif just_saved_at:
             just_saved_at = 0  # reset once timeout passes
 
-        # Hints
-        hint = "On this page: B+short + / B+long − ; Save with B"
-        draw.text((px, panel_bbox[3] - 18), hint, font=font_small, fill="#8A93A0")
 
     # Display image
     disp.image(image, rotation)
