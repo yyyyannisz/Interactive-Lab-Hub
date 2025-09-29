@@ -1,8 +1,11 @@
 import time
+import json
+import os
 import subprocess
 import digitalio
 import board
 import math
+from datetime import date,datetime
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
@@ -63,9 +66,12 @@ backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
 backlight.value = True
 
-# Setup button A (to switch screens)
+# Buttons
 buttonA = digitalio.DigitalInOut(board.D23)
 buttonA.switch_to_input(pull=digitalio.Pull.UP)
+buttonB = digitalio.DigitalInOut(board.D24)  # value +/- (short/long)
+buttonB.switch_to_input(pull=digitalio.Pull.UP)
+
 
 screen_mode = 0  # 0: Cycle Clock, 1: Summary, 2: Input
 
@@ -93,6 +99,11 @@ phases = [
 def pol2xy(cx, cy, r, deg):
     a = math.radians(deg)
     return (cx + r * math.cos(a), cy + r * math.sin(a))
+
+def text_size(draw_obj, text, font):
+    """Return width and height of given text."""
+    l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
+    return (r - l, b - t)
 
 def draw_centered_text(draw_obj, text, center_xy, font, fill):
     l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
@@ -141,11 +152,6 @@ def rounded_rect(draw_obj, bbox, radius, fill, outline=None, width=1):
     # Pillow has rounded_rectangle; keep this wrapper for clarity
     draw_obj.rounded_rectangle(bbox, radius=radius, fill=fill, outline=outline, width=width)
 
-def text_size(draw_obj, text, font):
-    """Return width and height of given text."""
-    l, t, r, b = draw_obj.textbbox((0, 0), text, font=font)
-    return (r - l, b - t)
-
 def draw_badge(draw_obj, text, x, y, pad_x=6, pad_y=2, bg="#2A2A2A", fg="white"):
     w, h = text_size(draw_obj, text, font_small)
     rounded_rect(draw_obj, (x, y, x + w + 2*pad_x, y + h + 2*pad_y), radius=6, fill=bg)
@@ -156,11 +162,80 @@ def bullet_row(draw_obj, x, y, text, color, line_w=10, gap=8):
     # colored line “bullet” + label
     draw_obj.rounded_rectangle((x, y+6, x+line_w, y+8), radius=2, fill=color)
     draw_obj.text((x + line_w + gap, y), text, font=font_medium, fill="white")
-    
+
+def days_in_month(mm, yyyy=None):
+    # simple month lengths (no leap year for Feb since we don't store year)
+    month_lengths = [31,28,31,30,31,30,31,31,30,31,30,31]
+    if 1 <= mm <= 12:
+        return month_lengths[mm-1]
+    return 30
+
+# ---------- screen 3 input state + helpers ----------
+DATA_PATH = "/home/pi/Interactive-Lab-Hub/Lab 2/period_data.json"
+
+def save_data(month, day):
+    try:
+        with open(DATA_PATH, "w") as f:
+            json.dump({"month": month, "day": day}, f)
+    except Exception:
+        pass
+
+def load_data():
+    if os.path.exists(DATA_PATH):
+        try:
+            with open(DATA_PATH, "r") as f:
+                d = json.load(f)
+                return int(d.get("month", 9)), int(d.get("day", 21))
+        except Exception:
+            pass
+    return 9, 21
+
+# values shown/edited on screen 3
+sel_month, sel_day = load_data()
+input_focus = 0   # 0 = Month, 1 = Day, 2 = Save
+last_b_press_start = None
+B_LONG_MS = 600
+just_saved_at = 0  # for showing a brief "Saved" badge
+
 while True:
     if not buttonA.value:  # pressed
         screen_mode = (screen_mode + 1) % 3
         time.sleep(0.3)  # debounce
+
+    # --- Button B (short/long) behavior on Page 3 only ---
+    if screen_mode == 2:
+        if not buttonB.value:  # pressed
+            if last_b_press_start is None:
+                last_b_press_start = time.monotonic()
+        else:
+            if last_b_press_start is not None:
+                press_ms = (time.monotonic() - last_b_press_start) * 1000
+                long_press = press_ms >= B_LONG_MS
+
+                # increment on short, decrement on long
+                if input_focus == 0:  # Month
+                    if long_press:
+                        sel_month = 12 if sel_month == 1 else sel_month - 1
+                    else:
+                        sel_month = 1 if sel_month == 12 else sel_month + 1
+                    # clamp day to new month length
+                    sel_day = min(sel_day, days_in_month(sel_month))
+
+                elif input_focus == 1:  # Day
+                    maxd = days_in_month(sel_month)
+                    if long_press:
+                        sel_day = maxd if sel_day == 1 else sel_day - 1
+                    else:
+                        sel_day = 1 if sel_day == maxd else sel_day + 1
+
+                elif input_focus == 2:  # Save
+                    save_data(sel_month, sel_day)
+                    just_saved_at = time.monotonic()
+                    # Next short press after Save cycles focus back to Month
+                    if not long_press:
+                        input_focus = 0
+
+                last_b_press_start = None
 
     # clear screen
     draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
@@ -236,10 +311,49 @@ while True:
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
-        draw.text((10, 10), "Last Period", font=font_small, fill="white")
-        draw.text((10, 50), "MM: 09", font=font_small, fill="white")
-        draw.text((10, 80), "DD: 21", font=font_small, fill="white")
-        draw.text((10, 120), "[Done]", font=font_small, fill="green")
+        panel_margin = 10
+        panel_bbox = (panel_margin, panel_margin, width - panel_margin, height - panel_margin)
+        rounded_rect(draw, panel_bbox, radius=10, fill="#202428")
+
+        px = panel_bbox[0] + 12
+        py = panel_bbox[1] + 10
+        draw.text((px, py), "Last Period", font=font_large, fill="white")
+        py += 28
+
+        # Fields with focus highlight
+        fields = [("Month", f"{sel_month:02d}", 0), ("Day", f"{sel_day:02d}", 1)]
+        for label, val, idx in fields:
+            is_focus = (input_focus == idx)
+            label_color = "white" if is_focus else "#BFC7D1"
+            draw.text((px, py), f"{label}:", font=font_medium, fill=label_color)
+            # value badge
+            vb_x = px + 76
+            vb_y = py - 2
+            vb_bg = "#3A3F46" if is_focus else "#2C3137"
+            draw_badge(draw, val, vb_x, vb_y, pad_x=8, pad_y=3, bg=vb_bg, fg="white")
+            py += 26
+
+        # Save "button" (focus index 2)
+        is_focus_save = (input_focus == 2)
+        btn_w, btn_h = 72, 26
+        btn_x = width - panel_margin - btn_w - 6
+        btn_y = panel_bbox[3] - btn_h - 8
+        btn_fill = "#2E7D32" if is_focus_save else "#234A27"
+        rounded_rect(draw, (btn_x, btn_y, btn_x + btn_w, btn_y + btn_h), radius=8, fill=btn_fill)
+        sw, sh = text_size(draw, "Save", font=font_medium)
+        draw.text((btn_x + (btn_w - sw)//2, btn_y + (btn_h - sh)//2), "Save", font=font_medium, fill="white")
+
+        # Brief "Saved" badge after saving
+        if just_saved_at and time.monotonic() - just_saved_at < 1.2:
+            bx = px
+            by = panel_bbox[1] + 6
+            draw_badge(draw, "Saved", bx, by, pad_x=8, pad_y=3, bg="#355E3B", fg="white")
+        elif just_saved_at:
+            just_saved_at = 0  # reset once timeout passes
+
+        # Hints
+        hint = "On this page: B+short + / B+long − ; Save with B"
+        draw.text((px, panel_bbox[3] - 18), hint, font=font_small, fill="#8A93A0")
 
     # Display image
     disp.image(image, rotation)
