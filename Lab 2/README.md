@@ -151,18 +151,23 @@ You can type the name of a color then press either of the buttons on the MiniPiT
 (venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ cat screen_test.py
 ```
 
+
 #### Displaying Info with Texts
 You can look in `screen_boot_script.py` for how to display text on the screen!
+
+![Image](IMG_2587.jpg)
 
 #### Displaying an image
 
 You can look in `image.py` for an example of how to display an image on the screen. Can you make it switch to another image when you push one of the buttons?
 
-
+![Image](IMG_2775.jpg)
 
 ## Part D. 
 ### Set up the Display Clock Demo
 Work on `screen_clock.py`, try to show the time by filling in the while loop (at the bottom of the script where we noted "TODO" for you). You can use the code in `cli_clock.py` and `stats.py` to figure this out.
+
+![Image](IMG_2774.jpg)
 
 ### How to Edit Scripts on Pi
 Option 1. One of the ways for you to edit scripts on Pi through terminal is using [`nano`](https://linuxize.com/post/how-to-use-nano-text-editor/) command. You can go into the `screen_clock.py` by typing the follow command line:
@@ -192,6 +197,55 @@ Pro Tip: Using tools like [code-server](https://coder.com/docs/code-server/lates
 ## Sketch and brainstorm further interactions and features you would like for your clock for Part 2.
 
 
+***first feedback***: Comparison to Clue App:
+Your project reminds them of the Clue period tracking app. While Clue also uses a "period clock" visual, your design stands out by clearly identifying the four distinct phases (menstrual, follicular, ovulatory, luteal), which they find more informative and helpful.
+
+Suggestions for Additional Features:
+
+Add educational content about menstrual health (e.g., phase explanations, hormone changes).
+
+Include symptom tracking, such as recording bleeding volume or other physical/emotional states.
+
+Wellness Integration Idea:
+Consider integrating with fitness and self-care routines, such as:
+
+🧘 Yoga
+
+🧠 Meditation
+
+🏃‍♀️ Exercise planning
+These could be tailored to the user’s current cycle phase to support holistic well-being. 
+
+***second feedback***:
+Strong Concept:
+They think your design concept is very useful. It turns an abstract idea (the menstrual cycle) into a familiar format (a clock), making it easier to understand and remember which stage one is in.
+
+Questions on Usage:
+They wonder how the app calculates “Day X” of the cycle. For people with irregular periods, can the app provide custom calculations or explanations?
+
+Interface Layout:
+Showing energy level, symptoms, and recommended activities all at once might feel overwhelming. They suggest thinking about layout and organization to make the interface cleaner and more engaging.
+
+Additional Features:
+They really like your design overall but suggest adding a mood/lifestyle recommendation module, e.g.:
+
+“Today is good for watching a relaxing movie”
+
+“Chat with friends”
+
+Or integrating with an external calendar to tailor exercise or activity suggestions to the user’s actual schedule.   
+
+***Third feedback***:
+Good Concept Overall:
+They think the idea is great overall.
+
+Concern for Irregular Cycles:
+For users with irregular menstrual cycles, the clock might not be as useful in its current form.
+
+Customization Suggestion:
+They suggest adding user customization so people can input their own cycle data and compare their personal cycle vs. the “normal” cycle for better relevance.
+
+
 # Prep for Part 2
 
 1. Pick up remaining parts for kit on Thursday lab class. Check the updated [parts list inventory](partslist.md) and let the TA know if there is any part missing.
@@ -211,6 +265,16 @@ Can you make time interactive? You can look in `screen_test.py` for examples for
 Please sketch/diagram your clock idea. (Try using a [Verplank digram](http://www.billverplank.com/IxDSketchBook.pdf)!
 
 **We strongly discourage and will reject the results of literal digital or analog clock display.**
+
+Based on feedback from peers, I found strong support for the clock-based visualization of the menstrual cycle — many felt it was intuitive and helpful in making abstract cycle concepts more concrete.
+
+A key takeaway was the need to support users with irregular cycles, which led me to explore options for cycle customization and personalized tracking. For example, allowing users to input their own period data and compare it with a standard 28-day cycle.
+
+Another recurring point was the potential information overload on a single screen. To address this, I plan to improve the layout by organizing content into collapsible sections or progressive disclosure, so users can focus on one aspect at a time (e.g., energy, symptoms, or activity tips).
+
+Lastly, I was inspired by suggestions to integrate mood and lifestyle recommendations, possibly through a separate module or syncing with calendar events. This would make the clock not just a tracker, but a holistic daily wellness guide.
+
+Upadted Interface Design: 
 
 
 \*\*\***A copy of your code should be in your Lab 2 Github repo.**\*\*\*
