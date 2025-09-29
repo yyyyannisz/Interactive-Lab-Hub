@@ -410,7 +410,7 @@ while True:
 
         px = panel_bbox[0] + 12
         py = panel_bbox[1] + 10
-        draw.text((px, py), "Last Period", font=font_large, fill="white")
+        draw.text((px, py), "First day of Last Period", font=font_large, fill="white")
         py += 28
 
         # Fields with focus highlight
