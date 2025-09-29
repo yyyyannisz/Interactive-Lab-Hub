@@ -134,6 +134,19 @@ def compute_day_of_cycle(month, day, cycle_len=total_days):
         delta = 0
     return (delta % cycle_len) + 1
 
+def clamp_to_today(month, day):
+    """Ensure selected month/day is not in the future."""
+    today = date.today()
+    try:
+        chosen = date(today.year, month, day)
+        if chosen > today:
+            # If they go too far, snap to today
+            return today.month, today.day
+    except ValueError:
+        # Invalid date → snap to today
+        return today.month, today.day
+    return month, day
+
 # Layout constants
 TITLE_Y = 4
 LEGEND_H = 40                   # reserved space at bottom for legend
@@ -292,9 +305,11 @@ while True:
             if input_focus < 2:
                 input_focus += 1            # Month -> Day -> Save
             else:
+                # Before saving, make sure user didn't pick a future date
+                sel_month, sel_day = clamp_to_today(sel_month, sel_day)
                 save_data(sel_month, sel_day)
                 just_saved_at = time.monotonic()
-                screen_mode = 0             # back to clock
+                screen_mode = 0  # back to clock
             time.sleep(0.25)                # debounce
         else:
             screen_mode = (screen_mode + 1) % 3
@@ -410,7 +425,7 @@ while True:
 
         px = panel_bbox[0] + 12
         py = panel_bbox[1] + 10
-        draw.text((px, py), "First day of Last Period", font=font_large, fill="white")
+        draw.text((px, py), "First Day of Last Period", font=font_large, fill="white")
         py += 28
 
         # Fields with focus highlight
