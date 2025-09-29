@@ -93,8 +93,7 @@ phases = [
 ]
 
 # ----------------------------------
-# Helpers (same angle system as Pillow pieslice)
-# 0° at 3 o'clock, CCW positive, +y is down.
+# Helpers 
 # ----------------------------------
 def pol2xy(cx, cy, r, deg):
     a = math.radians(deg)
@@ -119,6 +118,21 @@ def phase_for_day(day):
         d -= days
     # fallback
     return phases[-1][0], phases[-1][2]
+
+def compute_day_of_cycle(month, day, cycle_len=total_days):
+    """Return 1..cycle_len based on days since last period start."""
+    today = date.today()
+    try:
+        last = date(today.year, month, day)
+        if last > today:
+            # if the saved date is in the future this year, assume last year
+            last = date(today.year - 1, month, day)
+    except ValueError:
+        return 1  # fallback if invalid date
+    delta = (today - last).days
+    if delta < 0:
+        delta = 0
+    return (delta % cycle_len) + 1
 
 # Layout constants
 TITLE_Y = 4
@@ -198,6 +212,8 @@ B_LONG_MS = 600
 just_saved_at = 0  # for showing a brief "Saved" badge
 
 while True:
+    # derive day_of_cycle from saved input
+    day_of_cycle = compute_day_of_cycle(sel_month, sel_day, total_days)
     if not buttonA.value:  # pressed
         if screen_mode == 2:
             # screen 3: A moves focus, and on Save it commits & exits
@@ -245,7 +261,6 @@ while True:
 
     if screen_mode == 0:
         # -------- Screen 1: Cycle Clock (labels moved to legend) --------
-        day_of_cycle = 7  # TODO: replace with real value
         # title
         draw.text((6, TITLE_Y), f"{day_of_cycle}th day", font=font_medium, fill="white")
 
@@ -285,7 +300,6 @@ while True:
         draw.text((header_x, header_y), date_text, font=font_large, fill="white")
 
         # Phase badge on the right
-        day_of_cycle = 7  # TODO: your real value
         phase_name, phase_color = phase_for_day(day_of_cycle)
         badge_text = f"{day_of_cycle}ᵗʰ  •  {phase_name}"
         bw, bh = text_size(draw, badge_text, font_small)
