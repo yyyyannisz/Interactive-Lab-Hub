@@ -135,16 +135,18 @@ def compute_day_of_cycle(month, day, cycle_len=total_days):
     return (delta % cycle_len) + 1
 
 def clamp_to_today(month, day):
-    """Ensure selected month/day is not in the future."""
+    """Ensure selected month/day is not in the future (this year)."""
     today = date.today()
     try:
         chosen = date(today.year, month, day)
-        if chosen > today:
-            # If they go too far, snap to today
-            return today.month, today.day
     except ValueError:
         # Invalid date → snap to today
         return today.month, today.day
+
+    # If chosen date is after today, clamp back to today
+    if chosen > today:
+        return today.month, today.day
+
     return month, day
 
 # Layout constants
