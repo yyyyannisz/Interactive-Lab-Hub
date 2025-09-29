@@ -184,6 +184,97 @@ def days_in_month(mm, yyyy=None):
         return month_lengths[mm-1]
     return 30
 
+def phase_position_for_day(day, phases_list):
+    """
+    Given a 1-based day and the current phases list [(name, days, color), ...],
+    return (phase_name, phase_color, phase_index, day_in_phase, days_in_phase).
+    """
+    d = day
+    for idx, (name, days, color) in enumerate(phases_list):
+        if d <= days:
+            return name, color, idx, d, days
+        d -= days
+    # fallback to last phase
+    name, days, color = phases_list[-1]
+    return name, color, len(phases_list)-1, days, days
+
+def get_snapshot_items(day, phases_list):
+    """
+    Return a list of (text, color_hex) tailored to the current phase and sub-phase.
+    Keep items short for the 240x135 screen.
+    """
+    name, color, idx, d_in, d_len = phase_position_for_day(day, phases_list)
+
+    # convenience colors (reuse your slice colors for coherence)
+    C_RED   = "#F28BA0"
+    C_TEAL  = "#A8E3DC"
+    C_YEL   = "#FFE88A"
+    C_PURP  = "#C7ACDF"
+    C_HINT  = "#BFC7D1"
+
+    items = []
+
+    if name == "Menstrual":
+        if d_in <= 2:
+            items = [
+                ("Rest & warmth", C_TEAL),
+                ("Hydrate; gentle stretch", C_TEAL),
+                ("Heavier bleeding likely", C_RED),
+            ]
+        else:
+            items = [
+                ("Energy picking up", C_TEAL),
+                ("Light bleeding", C_RED),
+                ("Short walks > intensity", C_HINT),
+            ]
+
+    elif name == "Follicular":
+        early = d_in <= max(1, d_len//2)
+        if early:
+            items = [
+                ("Rising energy", C_TEAL),
+                ("Plan new tasks", C_TEAL),
+                ("Light/Moderate workout", C_HINT),
+            ]
+        else:
+            items = [
+                ("Peak focus", C_TEAL),
+                ("Collaborate/brainstorm", C_TEAL),
+                ("Strength or intervals", C_HINT),
+            ]
+
+    elif name == "Ovulatory":
+        items = [
+            ("High energy", C_YEL),
+            ("Fertility highest", C_YEL),
+            ("Great for social/PR", C_HINT),
+        ]
+
+    elif name == "Luteal":
+        # treat last 3–4 days as PMS window
+        pms_window = d_in > (d_len - 3)
+        if pms_window:
+            items = [
+                ("Lower energy (PMS)", C_PURP),
+                ("Reduce caffeine", C_HINT),
+                ("Sleep 7–9h, light stretch", C_HINT),
+            ]
+        else:
+            items = [
+                ("Steady, maintain routines", C_PURP),
+                ("Protein + complex carbs", C_HINT),
+                ("Medium intensity only", C_HINT),
+            ]
+
+    else:
+        items = [
+            ("Check-in with energy", C_HINT),
+            ("Hydrate & move gently", C_HINT),
+            ("Plan tomorrow briefly", C_HINT),
+        ]
+
+    return items
+
 # ---------- screen 3 input state + helpers ----------
 DATA_PATH = "/home/pi/Interactive-Lab-Hub/Lab 2/period_data.json"
 
@@ -316,15 +407,15 @@ while True:
         sub_y = divider_y + 6
         draw.text((header_x, sub_y), "Today’s snapshot", font=font_medium, fill="#BFC7D1")
 
+        phase_name, phase_color, phase_idx, d_in, d_len = phase_position_for_day(day_of_cycle, phases)
+        items = get_snapshot_items(day_of_cycle, phases)
+
         # Bullet rows
         row_y = sub_y + 18
         line_x = header_x
-        bullet_row(draw, line_x, row_y, "Rising Energy", color="#A8E3DC")   # teal
-        row_y += 20
-        bullet_row(draw, line_x, row_y, "Light Bleeding", color="#F28BA0")  # light red
-        row_y += 20
-        bullet_row(draw, line_x, row_y, "Good for starting tasks", color="#FFE88A")  # yellow hint
-
+        for text, color in items[:3]:   # keep to 3 items for fit
+            bullet_row(draw, line_x, row_y, text, color=color)
+            row_y += 20
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
