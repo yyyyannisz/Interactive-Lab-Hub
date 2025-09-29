@@ -146,6 +146,10 @@ def clamp_to_today(month, day):
     # If chosen date is after today, clamp back to today
     if chosen > today:
         return today.month, today.day
+    
+    # If chosen is way in the future (e.g., next months this year), clamp too
+    if (month > today.month) or (month == today.month and day > today.day):
+        return today.month, today.day
 
     return month, day
 
