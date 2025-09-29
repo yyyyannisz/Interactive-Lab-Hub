@@ -111,6 +111,8 @@ I redesigned it into a proper input panel titled “First Day of Last Period” 
 Since the device only has two hardware buttons, I tried my best to design a simple but effective interaction model. Button A is used to cycle through options: on the input screen it moves the focus between Month, Day, and Save, and on other screens it switches between the clock, summary, and input screens. Button B is used to change values, with a short press increasing the number and a long press decreasing it. 
 
 ## Make a short video of your modified barebones PiClock
+***A copy of your code should be in your Lab 2 Github repo.***
+screen_clock.py
 
 \*\*\***Take a video of your PiClock.**\*\*\*
 
