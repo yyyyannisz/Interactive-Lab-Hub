@@ -18,7 +18,7 @@ Yannis Zhu yz3477
 ***Introduction***:
 I want to reimagine time as a cyclical, body-based rhythm rather than a strictly linear measure. For many women and people who menstruate, time is already experienced this way — not only in weeks or months, but in recurring physical and emotional patterns shaped by the menstrual cycle. With this in mind, my goal for this project is to build a ***“Period Clock”***, a physical interface that helps users understand and track the phases of their cycle in a gentle, intuitive, and empowering way. This design aims to support self-awareness, encourage planning around one’s natural fluctuations in energy and mood, and make visible the cyclical nature of menstruation as it is lived and felt.
 
-![Interface Desgin & Storyboard](IMG_Storyboard.jpg) 
+![Interface Desgin & Storyboard](storyboard.jpg) 
 
 ***Interface Design***:
 Our Period Clock uses a circular display to represent the menstrual cycle, divided into ***four phases: Menstrual, Follicular, Ovulatory, and Luteal***. A pointer shows the user’s current position in the cycle, making it easy to see where they are and what phase comes next. Alongside the diagram, the interface presents today’s date, the day of the cycle, a short phrase describing energy or mood, symptom reminders, and a suggested action such as “Start new projects” or “Rest more.” This design turns abstract cycle data into an intuitive, everyday reference.
@@ -30,9 +30,8 @@ The storyboard shows one example of how the Period Clock helps users connect dai
 
 ### Modify the barebones clock to make it your own
 
-**We strongly discourage and will reject the results of literal digital or analog clock display.**
-
 ***Peer Feedback***: 
+
 Because I missed some class time due to being sick, I was not able to get feedback from classmates in this course, but I reached out to other Cornell Tech students and peers for their input.
 
 1. Ruowen Lou HT'27 (II2226)
