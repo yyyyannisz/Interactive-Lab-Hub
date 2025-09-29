@@ -118,6 +118,8 @@ screen_clock.py
 
 [Watch the demo video](https://drive.google.com/file/d/1upCayziQyvRpw-Sf5W8fHvfIWTW5qL5K/view?usp=sharing)
 
+In the demo video, I showcased the general functionality of the clock using a default cycle day. The video begins with the ***main screen***, where the period clock and cycle day text are displayed together. I then switch to ***the second screen***, which presents the summary details for the specific cycle day, including energy, symptoms, and suggested activities. After that, I move to ***the third screen***, where users can input the first day of their last period. To demonstrate the validation feature, I first try entering a future date, which gets rejected and triggers a message explaining that a future date cannot be used. I then enter a valid past date, and the system successfully saves it. Finally, I return to the first two screens to show how the saved input updates the clock visualization and the summary details accordingly.
+
 ## Limitations and Future Improvements
 
 One limitation of my current design is that it assumes a standard 28-day cycle. In reality, people’s menstrual cycles vary a lot, and using a fixed length reduces the accuracy of the clock. A better design would include an input for users to enter their own average cycle length, or even better, allow the system to collect data over time and calculate a personalized average automatically. With that, the device could also start predicting the next period more reliably.
