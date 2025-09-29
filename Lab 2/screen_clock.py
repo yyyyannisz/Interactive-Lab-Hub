@@ -282,6 +282,7 @@ input_focus = 0   # 0 = Month, 1 = Day, 2 = Save
 last_b_press_start = None
 B_LONG_MS = 600
 just_saved_at = 0  # for showing a brief "Saved" badge
+validation_error = 0  # for showing validation error message
 
 while True:
     # derive day_of_cycle from saved input
@@ -293,9 +294,20 @@ while True:
                 input_focus += 1            # Month -> Day -> Save
             else:
                 # Before saving, make sure user didn't pick a future date
-                save_data(sel_month, sel_day)
-                just_saved_at = time.monotonic()
-                screen_mode = 0             # back to clock
+                today = date.today()
+                try:
+                    selected_date = date(today.year, sel_month, sel_day)
+                    if selected_date > today:
+                        # Show validation error
+                        validation_error = time.monotonic()
+                    else:
+                        # Date is valid, save it
+                        save_data(sel_month, sel_day)
+                        just_saved_at = time.monotonic()
+                        screen_mode = 0             # back to clock
+                except ValueError:
+                    # Invalid date (e.g., Feb 30), show error
+                    validation_error = time.monotonic()
             time.sleep(0.25)                # debounce
         else:
             screen_mode = (screen_mode + 1) % 3
@@ -444,6 +456,14 @@ while True:
             draw_badge(draw, "Saved", bx, by, pad_x=8, pad_y=3, bg="#355E3B", fg="white")
         elif just_saved_at:
             just_saved_at = 0  # reset once timeout passes
+
+        # Validation error message
+        if validation_error and time.monotonic() - validation_error < 2.0:
+            bx = px
+            by = panel_bbox[1] + 6
+            draw_badge(draw, "Cannot be future date", bx, by, pad_x=8, pad_y=3, bg="#D32F2F", fg="white")
+        elif validation_error:
+            validation_error = 0  # reset once timeout passes
 
 
     # Display image
