@@ -233,11 +233,6 @@ while True:
         row_y += 20
         bullet_row(draw, line_x, row_y, "Good for starting tasks", color="#FFE88A")  # yellow hint
 
-        # Optional tiny footer hint
-        footer = "Press A to switch screens"
-        fw, fh = text_size(draw, footer, font_small)
-        draw.text((card_bbox[2] - inner_pad - fw, card_bbox[3] - inner_pad - fh),
-                  footer, font=font_small, fill="#8A93A0")
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
