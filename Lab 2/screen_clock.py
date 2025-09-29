@@ -198,82 +198,48 @@ def phase_position_for_day(day, phases_list):
     name, days, color = phases_list[-1]
     return name, color, len(phases_list)-1, days, days
 
-def get_snapshot_items(day, phases_list):
+def get_snapshot_structured(day, phases_list):
     """
-    Return a list of (text, color_hex) tailored to the current phase and sub-phase.
-    Keep items short for the 240x135 screen.
+    Return {'feel': (text, color), 'symptom': (text, color), 'try': (text, color)}
+    tailored to the current phase and where you are inside it.
     """
     name, color, idx, d_in, d_len = phase_position_for_day(day, phases_list)
 
-    # convenience colors (reuse your slice colors for coherence)
-    C_RED   = "#F28BA0"
-    C_TEAL  = "#A8E3DC"
-    C_YEL   = "#FFE88A"
-    C_PURP  = "#C7ACDF"
-    C_HINT  = "#BFC7D1"
-
-    items = []
+    # reuse your palette for coherence
+    C_RED   = "#F28BA0"  # menstrual
+    C_TEAL  = "#A8E3DC"  # energy/feel-good
+    C_YEL   = "#FFE88A"  # ovulatory/fertility
+    C_PURP  = "#C7ACDF"  # luteal
+    C_HINT  = "#BFC7D1"  # neutral hint
 
     if name == "Menstrual":
-        if d_in <= 2:
-            items = [
-                ("Rest & warmth", C_TEAL),
-                ("Hydrate; gentle stretch", C_TEAL),
-                ("Heavier bleeding likely", C_RED),
-            ]
-        else:
-            items = [
-                ("Energy picking up", C_TEAL),
-                ("Light bleeding", C_RED),
-                ("Short walks > intensity", C_HINT),
-            ]
+        early = d_in <= 2
+        feel    = ("Low to rising energy" if not early else "Low energy"), (C_TEAL if not early else C_HINT)
+        symptom = ("Light bleeding" if not early else "Heavier bleeding"), C_RED
+        to_try  = ("Gentle walk & warmth" if not early else "Rest, hydrate, heat pad"), C_HINT
 
     elif name == "Follicular":
         early = d_in <= max(1, d_len//2)
-        if early:
-            items = [
-                ("Rising energy", C_TEAL),
-                ("Plan new tasks", C_TEAL),
-                ("Light/Moderate workout", C_HINT),
-            ]
-        else:
-            items = [
-                ("Peak focus", C_TEAL),
-                ("Collaborate/brainstorm", C_TEAL),
-                ("Strength or intervals", C_HINT),
-            ]
+        feel    = ("Rising energy" if early else "High, focused energy"), C_TEAL
+        symptom = ("Minimal symptoms" if early else "Clear mind, stable mood"), C_HINT
+        to_try  = ("Plan/brainstorm" if early else "Start a new project"), C_TEAL
 
     elif name == "Ovulatory":
-        items = [
-            ("High energy", C_YEL),
-            ("Fertility highest", C_YEL),
-            ("Great for social/PR", C_HINT),
-        ]
+        feel    = ("Peak energy & sociability", C_YEL)
+        symptom = ("Fertile window signs", C_YEL)  # (e.g., slippery CM, soft cervix)
+        to_try  = ("Present/collaborate or PR", C_HINT)
 
     elif name == "Luteal":
-        # treat last 3–4 days as PMS window
-        pms_window = d_in > (d_len - 3)
-        if pms_window:
-            items = [
-                ("Lower energy (PMS)", C_PURP),
-                ("Reduce caffeine", C_HINT),
-                ("Sleep 7–9h, light stretch", C_HINT),
-            ]
-        else:
-            items = [
-                ("Steady, maintain routines", C_PURP),
-                ("Protein + complex carbs", C_HINT),
-                ("Medium intensity only", C_HINT),
-            ]
+        pms_window = d_in > (d_len - 3)  # last ~3 days
+        feel    = ( "Steady, inward focus" if not pms_window else "Lower, irritable energy"
+                  , C_PURP if not pms_window else C_PURP)
+        symptom = ("Mild cravings/bloating" if not pms_window else "PMS: bloating, breast tenderness"), C_HINT
+        to_try  = ("Maintain routines" if not pms_window else "Light stretch, earlier bedtime"), C_HINT
 
     else:
-        items = [
-            ("Check-in with energy", C_HINT),
-            ("Hydrate & move gently", C_HINT),
-            ("Plan tomorrow briefly", C_HINT),
-        ]
+        feel, symptom, to_try = ("Check in with energy", C_HINT), ("—", C_HINT), ("Hydrate & light movement", C_HINT)
 
-    return items
+    return {"feel": feel, "symptom": symptom, "try": to_try}
 
 # ---------- screen 3 input state + helpers ----------
 DATA_PATH = "/home/pi/Interactive-Lab-Hub/Lab 2/period_data.json"
@@ -408,14 +374,18 @@ while True:
         draw.text((header_x, sub_y), "Today’s snapshot", font=font_medium, fill="#BFC7D1")
 
         phase_name, phase_color, phase_idx, d_in, d_len = phase_position_for_day(day_of_cycle, phases)
-        items = get_snapshot_items(day_of_cycle, phases)
+        snap = get_snapshot_structured(day_of_cycle, phases)
 
         # Bullet rows
         row_y = sub_y + 18
         line_x = header_x
-        for text, color in items[:3]:   # keep to 3 items for fit
-            bullet_row(draw, line_x, row_y, text, color=color)
-            row_y += 20
+
+        bullet_row(draw, line_x, row_y, f"Feel: {snap['feel'][0]}",     color=snap['feel'][1])
+        row_y += 20
+        bullet_row(draw, line_x, row_y, f"Symptom: {snap['symptom'][0]}", color=snap['symptom'][1])
+        row_y += 20
+        bullet_row(draw, line_x, row_y, f"Try: {snap['try'][0]}",        color=snap['try'][1])
+
 
     elif screen_mode == 2:
         # ----------- Screen 3: Last Period Input View ------------
