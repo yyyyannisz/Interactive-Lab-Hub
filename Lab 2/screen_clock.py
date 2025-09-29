@@ -368,7 +368,7 @@ while True:
         header_x = card_bbox[0] + inner_pad
         header_y = card_bbox[1] + inner_pad
 
-        date_text = "Sat, Sep 27"
+        date_text = datetime.now().strftime("%a, %b %d")
         draw.text((header_x, header_y), date_text, font=font_large, fill="white")
 
         # Phase badge on the right
