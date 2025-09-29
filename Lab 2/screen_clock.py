@@ -200,44 +200,59 @@ def phase_position_for_day(day, phases_list):
 
 def get_snapshot_structured(day, phases_list):
     """
-    Return {'feel': (text, color), 'symptom': (text, color), 'try': (text, color)}
-    tailored to the current phase and where you are inside it.
+    Always return 3 rows: Feel, Symptom, 
+    Colors are fixed (teal, red, yellow).
     """
     name, color, idx, d_in, d_len = phase_position_for_day(day, phases_list)
 
-    # reuse your palette for coherence
-    C_RED   = "#F28BA0"  # menstrual
-    C_TEAL  = "#A8E3DC"  # energy/feel-good
-    C_YEL   = "#FFE88A"  # ovulatory/fertility
-    C_PURP  = "#C7ACDF"  # luteal
-    C_HINT  = "#BFC7D1"  # neutral hint
+    # fixed colors
+    C_FEEL = "#3CAEA3"   # teal
+    C_SYMP = "#D72638"   # red
+    C_TRY  = "#FFD23F"   # yellow
 
     if name == "Menstrual":
-        early = d_in <= 2
-        feel    = ("Low to rising energy" if not early else "Low energy"), (C_TEAL if not early else C_HINT)
-        symptom = ("Light bleeding" if not early else "Heavier bleeding"), C_RED
-        to_try  = ("Gentle walk & warmth" if not early else "Rest, hydrate, heat pad"), C_HINT
+        if d_in <= 2:
+            feel    = ("Low energy", C_FEEL)
+            symptom = ("Heavier bleeding", C_SYMP)
+            to_try  = ("Rest & keep warm", C_TRY)
+        else:
+            feel    = ("Energy slowly rising", C_FEEL)
+            symptom = ("Light bleeding", C_SYMP)
+            to_try  = ("Gentle walks", C_TRY)
 
     elif name == "Follicular":
         early = d_in <= max(1, d_len//2)
-        feel    = ("Rising energy" if early else "High, focused energy"), C_TEAL
-        symptom = ("Minimal symptoms" if early else "Clear mind, stable mood"), C_HINT
-        to_try  = ("Plan/brainstorm" if early else "Start a new project"), C_TEAL
+        if early:
+            feel    = ("Rising energy", C_FEEL)
+            symptom = ("Few symptoms", C_SYMP)
+            to_try  = ("Plan & brainstorm", C_TRY)
+        else:
+            feel    = ("Focused & clear", C_FEEL)
+            symptom = ("Stable mood", C_SYMP)
+            to_try  = ("Start a project", C_TRY)
 
     elif name == "Ovulatory":
-        feel    = ("Peak energy & sociability", C_YEL)
-        symptom = ("Fertile window signs", C_YEL)  # (e.g., slippery CM, soft cervix)
-        to_try  = ("Present/collaborate or PR", C_HINT)
+        feel    = ("Peak energy", C_FEEL)
+        symptom = ("Fertile signs", C_SYMP)
+        to_try  = ("Social / Present work", C_TRY)
 
     elif name == "Luteal":
-        pms_window = d_in > (d_len - 3)  # last ~3 days
-        feel    = ( "Steady, inward focus" if not pms_window else "Lower, irritable energy"
-                  , C_PURP if not pms_window else C_PURP)
-        symptom = ("Mild cravings/bloating" if not pms_window else "PMS: bloating, breast tenderness"), C_HINT
-        to_try  = ("Maintain routines" if not pms_window else "Light stretch, earlier bedtime"), C_HINT
+        pms_window = d_in > (d_len - 3)
+        if pms_window:
+            feel    = ("Lower, irritable energy", C_FEEL)
+            symptom = ("PMS symptoms", C_SYMP)
+            to_try  = ("Stretch & early sleep", C_TRY)
+        else:
+            feel    = ("Steady energy", C_FEEL)
+            symptom = ("Mild bloating/cravings", C_SYMP)
+            to_try  = ("Maintain routines", C_TRY)
 
     else:
-        feel, symptom, to_try = ("Check in with energy", C_HINT), ("—", C_HINT), ("Hydrate & light movement", C_HINT)
+        feel, symptom, to_try = (
+            ("Check in with energy", C_FEEL),
+            ("—", C_SYMP),
+            ("Hydrate & light activity", C_TRY)
+        )
 
     return {"feel": feel, "symptom": symptom, "try": to_try}
 
@@ -380,11 +395,11 @@ while True:
         row_y = sub_y + 18
         line_x = header_x
 
-        bullet_row(draw, line_x, row_y, f"Feel: {snap['feel'][0]}",     color=snap['feel'][1])
+        bullet_row(draw, line_x, row_y, f"{snap['feel'][0]}",     color=snap['feel'][1])
         row_y += 20
-        bullet_row(draw, line_x, row_y, f"Symptom: {snap['symptom'][0]}", color=snap['symptom'][1])
+        bullet_row(draw, line_x, row_y, f"{snap['symptom'][0]}", color=snap['symptom'][1])
         row_y += 20
-        bullet_row(draw, line_x, row_y, f"Try: {snap['try'][0]}",        color=snap['try'][1])
+        bullet_row(draw, line_x, row_y, f"{snap['try'][0]}",        color=snap['try'][1])
 
 
     elif screen_mode == 2:
