@@ -10,7 +10,7 @@ Yannis Zhu yz3477
 
 ![Set up the Display Clock Demo](provided-demo-click.jpg)
 
-[button using video](button-use.mov)
+[Testing buttons](https://drive.google.com/file/d/1jSqCLsxJ_tglY7RoPkeRqU4lAqIU-INb/view?usp=sharing)
 
 
 ## Sketch and brainstorm further interactions and features you would like for your clock for Part 2.
@@ -60,11 +60,12 @@ Based on feedback from peers, they all felt the clock-based visualization of the
 
 Another recurring point was the potential information overload on a single screen. To address this, I plan to improve the layout by organizing content into different screens. The ***main screen*** will display the ****period clock with phase visualization***. A ***second screen*** will focus on daily details such as ****energy level, symptoms, and activity suggestions****, presented in a cleaner and less crowded way. I also plan to add a ***third screen*** where users can enter the ***date of their last period***. This will allow the clock to calculate their current cycle day more accurately and make the display more relevant.
 
-***Upadted Interface Design:***
+***Upadted Interface Design***:
 
 ![updated-interface](updated-interface.jpg) 
 
-***Clock design:***
+## Clock Design
+***Initial desgin of period clock***:
 ![clock-design](clock-redesign.jpg) 
 In a typical menstrual cycle, the four phases—Menstrual, Follicular, Ovulatory, and Luteal—do not occupy equal lengths of time. Representing them as evenly sized segments would be misleading and reduce the accuracy of the visual display. Thus, I would like to think there are four uneven colored pie slices on the background of our clock indicating the four phases.
 
@@ -78,46 +79,52 @@ At first, I added a phase label right at the center of the clock. I thought it w
 
 I also changed the arrow color to black. The old color blended too much into the background and the pie slices. With black, the arrow is sharp and easy to see, making it stand out against all the phase colors. This small change improved readability a lot.
 
-***Final desgin of the period clock:****
+***Final desgin of the period clock***:
 ![final clock design](final-clock.jpg) 
 
-***Initial desgin of the summary screen***
+## Summary Screen Design
+***Initial desgin of the summary screen***:
 ![summary screen initial](second-screen-1.jpg) 
 Originally, the second screen was very plain and unstructured. It only showed text stacked together without any clear grouping, which made it difficult to follow. The phase and day information blended into the rest of the content, so users couldn’t easily see the most important details at a glance. Without a background panel or divider, the screen felt crowded and flat. The snapshot items—how you feel, a symptom to expect, and one thing to try—were displayed as regular text lines with no hierarchy, which made their purpose unclear.
 
-To solve this, I redesigned the summary screen to be more organized, readable, and visually balanced. I added a card-style background with rounded corners so that all the content feels grouped together and easier to read. At the top of the card, I placed the date on the left and a phase badge on the right. This layout allows users to quickly see both the current calendar date and their cycle phase without confusion.
+To solve this, I redesigned the summary screen to be more organized, readable, and visually balanced. I added a card-style background with rounded corners so that all the content feels grouped together and easier to read. At the top of the card, I placed the current date (from the system’s local time) on the left and a phase badge on the right. This layout allows users to quickly see both the actual calendar date and where they are in their cycle without confusion.
 
-I also added a divider line below the header to clearly separate it from the details, giving the layout a more structured look. For the main content, I introduced a “Today’s snapshot” section. Instead of long text blocks, I broke the information into three simple bullet rows: how you feel, a symptom to expect, and one thing to try. To make these even clearer, I gave each row a distinct colored line marker—teal, red, or yellow—so the items can be recognized at a glance and are easier to distinguish.
+I also added a divider line below the header to clearly separate it from the details, giving the layout a more structured look. For the main content, I introduced a “Today’s snapshot” section. Instead of long text blocks, I broke the information into three simple bullet rows: how you feel, a symptom to expect, and one thing to try. To make these even clearer, I gave each row a distinct colored line marker—teal, red, or yellow—so the items can be recognized at a glance and are easier to distinguish. These snapshot items also change automatically based on the user’s current cycle day, so the guidance feels timely and relevant.
 
-![updadted screen2(updated-screen2.jpg) 
+***Final desgin of the summary screen***:
+![updadted screen2](updated-screen2.jpg) 
 
-***Initial desgin of the summary screen***
+## Input Screen Design
+***Initial desgin of the user input screen***:
+![initial screen3](Initial-screen3.jpg) 
 
-\*\*\***A copy of your code should be in your Lab 2 Github repo.**\*\*\*
+At first, this screen was labeled “Last Period”, but it wasn’t really an input screen. It just showed static text with “MM” and “DD” values, which looked like placeholders but couldn’t actually be edited. The bottom had a “[Done]” line, but it wasn’t a proper button — just more text. On top of that, the wording “Last Period” was unclear. It didn’t tell users whether they should enter the first day, last day, or something else, so it was both misleading and unusable.
+
+I redesigned it into a proper input panel titled “First Day of Last Period” to make the meaning clear that the cycle is always counted starting from day one of bleeding, not from the end of the period. Now the screen has real editable fields for Month and Day. The active field highlights, so users know exactly where they are. Button A switches between fields and the Save button, while Button B changes the numbers (short press to increase, long press to decrease). At the bottom, I replaced the plain “[Done]” text with a real green Save button. After saving, a temporary “Saved” badge appears, giving feedback. I also added validation so users can’t save a future date. Most importantly, the saved date is now stored and used by the other screens to calculate the cycle day and phase correctly.
+
+***Final desgin of the user input screen***:
+![updadted screen3](updated-screen3.jpg) 
 
 
+## Button Logic & Interaction Design
+
+Since the device only has two hardware buttons, I tried my best to design a simple but effective interaction model. Button A is used to cycle through options: on the input screen it moves the focus between Month, Day, and Save, and on other screens it switches between the clock, summary, and input screens. Button B is used to change values, with a short press increasing the number and a long press decreasing it. 
 
 ## Make a short video of your modified barebones PiClock
 
 \*\*\***Take a video of your PiClock.**\*\*\*
 
-After you edit and work on the scripts for Lab 2, the files should be upload back to your own GitHub repo! You can push to your personal github repo by adding the files here, commiting and pushing.
+[Watch the demo video](https://drive.google.com/file/d/1upCayziQyvRpw-Sf5W8fHvfIWTW5qL5K/view?usp=sharing)
 
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git add .
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git commit -m 'your commit message here'
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git push
-```
+## Limitations and Future Improvements
 
-After that, Git will ask you to login to your GitHub account to push the updates online, you will be asked to provide your GitHub user name and password. Remember to use the "Personal Access Tokens" you set up in Part A as the password instead of your account one! Go on your GitHub repo with your laptop, you should be able to see the updated files from your Pi!
+One limitation of my current design is that it assumes a standard 28-day cycle. In reality, people’s menstrual cycles vary a lot, and using a fixed length reduces the accuracy of the clock. A better design would include an input for users to enter their own average cycle length, or even better, allow the system to collect data over time and calculate a personalized average automatically. With that, the device could also start predicting the next period more reliably.
 
+Another limitation is that I haven’t considered how to handle late or irregular periods. If I had more time, I would like to explore ways to incorporate flexibility in the design, such as warning users when the expected date has passed and adjusting the cycle calculation accordingly.
 
-[Update your Lab Hub](pull_updates/README.md) to get the latest content and requirements for Part 2.
+I also haven’t implemented ways to track more detailed symptoms or mood logs. Right now, the “snapshot” screen only shows generic suggestions. A more advanced version could let users input daily experiences (like cramps, bloating, or mood changes) and then visualize trends over time. This would make the system more personal and useful for long-term self-tracking.
 
-Modify the code from last week's lab to make a new visual interface for your new clock. You may [extend the Pi](Extending%20the%20Pi.md) by adding sensors or buttons, but this is not required.
+## Note on AI Assistance
 
-As always, make sure you document contributions and ideas from others explicitly in your writeup.
-
-You are permitted (but not required) to work in groups and share a turn in; you are expected to make equal contribution on any group work you do, and N people's group project should look like N times the work of a single person's lab. What each person did should be explicitly documented. Make sure the page for the group turn in is linked to your Interactive Lab Hub page. 
-
+For this lab, I used ChatGPT to help me summarize my design decisions and rewrite some sections into clearer paragraphs. All reflection points and design choices are my own. Also, some of my script was coded using the assistance of ChatGPT.
 
