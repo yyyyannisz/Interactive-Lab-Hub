@@ -4,11 +4,13 @@
 
 Yannis Zhu yz3477 
 
-![Set up](IMG_2587.jpg)
+![Set up](device-set-up.jpg)
 
-![Displaying an image](IMG_2775.jpg)
+![Displaying an image](display-image.jpg)
 
-![Set up the Display Clock Demo](IMG_2774.jpg)
+![Set up the Display Clock Demo](provided-demo-click.jpg)
+
+![button using video](button-use-video.mov)
 
 
 ## Sketch and brainstorm further interactions and features you would like for your clock for Part 2.
