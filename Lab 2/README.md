@@ -1,243 +1,134 @@
 # Interactive Prototyping: The Clock of Pi
-**NAMES OF COLLABORATORS HERE**
 
-Does it feel like time is moving strangely during this semester?
+# Lab 2 Part 1
 
-For our first Pi project, we will pay homage to the [timekeeping devices of old](https://en.wikipedia.org/wiki/History_of_timekeeping_devices) by making simple clocks.
+Yannis Zhu yz3477 
 
-It is worth spending a little time thinking about how you mark time, and what would be useful in a clock of your own design.
+![Set up](device-set-up.jpg)
 
-**Please indicate anyone you collaborated with on this Lab here.**
-Be generous in acknowledging their contributions! And also recognizing any other influences (e.g. from YouTube, Github, Twitter) that informed your design. 
+![Displaying an image](display-image.jpg)
 
-## Prep
+![Set up the Display Clock Demo](provided-demo-click.jpg)
 
-Lab Prep is extra long this week. Make sure to start this early for lab on Thursday.
+[Testing buttons](https://drive.google.com/file/d/1jSqCLsxJ_tglY7RoPkeRqU4lAqIU-INb/view?usp=sharing)
 
-1. ### Set up your Lab 2 Github
 
-Before the start of lab Thursday, ensure you have the latest lab content by updating your forked repository. 
-
-**📖 [Follow the step-by-step guide for safely updating your fork](pull_updates/README.md)**
-
-This guide covers how to pull updates without overwriting your completed work, handle merge conflicts, and recover if something goes wrong.
-
-
-2. ### Get Kit and Inventory Parts
-Prior to the lab session on Thursday, taken inventory of the kit parts that you have, and note anything that is missing:
-
-***Update your [parts list inventory](partslist.md)***
-
-3. ### Prepare your Pi for lab this week
-[Follow these instructions](prep.md) to download and burn the image for your Raspberry Pi before lab Thursday.
-
-
-
-
-## Overview
-For this assignment, you are going to 
-
-A) [Connect to your Pi](#part-a)  
-
-B) [Try out cli_clock.py](#part-b) 
-
-C) [Set up your RGB display](#part-c)
-
-D) [Try out clock_display_demo](#part-d) 
-
-E) [Modify the code to make the display your own](#part-e)
-
-F) [Make a short video of your modified barebones PiClock](#part-f)
-
-G) [Sketch and brainstorm further interactions and features you would like for your clock for Part 2.](#part-g)
-
-## The Report
-This readme.md page in your own repository should be edited to include the work you have done. You can delete everything but the headers and the sections between the \*\*\***stars**\*\*\*. Write the answers to the questions under the starred sentences. Include any material that explains what you did in this lab hub folder, and link it in the readme.
-
-Labs are due on Mondays. Make sure this page is linked to on your main class hub page.
-
-## Part A. 
-### Connect to your Pi
-Just like you did in the lab prep, ssh on to your pi. Once you get there, create a Python environment (named venv) by typing the following commands.
-
-```
-ssh pi@<your Pi's IP address>
-...
-pi@raspberrypi:~ $ python -m venv venv
-pi@raspberrypi:~ $ source venv/bin/activate
-(venv) pi@raspberrypi:~ $ 
-
-```
-### Setup Personal Access Tokens on GitHub
-Set your git name and email so that commits appear under your name.
-```
-git config --global user.name "Your Name"
-git config --global user.email "yourNetID@cornell.edu"
-```
-
-The support for password authentication of GitHub was removed on August 13, 2021. That is, in order to link and sync your own lab-hub repo with your Pi, you will have to set up a "Personal Access Tokens" to act as the password for your GitHub account on your Pi when using git command, such as `git clone` and `git push`.
-
-Following the steps listed [here](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) from GitHub to set up a token. Depends on your preference, you can set up and select the scopes, or permissions, you would like to grant the token. This token will act as your GitHub password later when you use the terminal on your Pi to sync files with your lab-hub repo.
-
-
-## Part B. 
-### Try out the Command Line Clock
-Clone your own lab-hub repo for this assignment to your Pi and change the directory to Lab 2 folder (remember to replace the following command line with your own GitHub ID):
-
-```
-(venv) pi@raspberrypi:~$ git clone https://github.com/<YOURGITID>/Interactive-Lab-Hub.git
-(venv) pi@raspberrypi:~$ cd Interactive-Lab-Hub/Lab\ 2/
-```
-Depends on the setting, you might be asked to provide your GitHub user name and password. Remember to use the "Personal Access Tokens" you just set up as the password instead of your account one!
-
-Check if the directory has clone sucessfully, you should see the Interactive-Lab-Hub under the home directory listed:
-```
-(venv) pi@raspberrypi:~ $ ls
-Bookshelf      Documents            Music     Public                 venv
-create_img.sh  Downloads            pi-apps   screen_boot_script.py  Videos
-Desktop        Interactive-Lab-Hub  Pictures  Templates
-(venv) pi@raspberrypi:~ $
-```
-
-
-Install the packages from the requirements.txt and run the example script `cli_clock.py`:
-
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ pip install -r requirements.txt
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ python cli_clock.py 
-02/24/2021 11:20:49
-```
-
-The terminal should show the time, you can press `ctrl-c` to exit the script.
-If you are unfamiliar with the Python code in `cli_clock.py`, have a look at [this Python refresher](https://hackernoon.com/intermediate-python-refresher-tutorial-project-ideas-and-tips-i28s320p). If you are still concerned, please reach out to the teaching staff!
-
-
-## Part C. 
-### Set up your RGB Display
-We have asked you to equip the [Adafruit MiniPiTFT](https://www.adafruit.com/product/4393) on your Pi in the Lab 2 prep already. Here, we will introduce you to the MiniPiTFT and Python scripts on the Pi with more details.
-
-<img src="https://cdn-learn.adafruit.com/assets/assets/000/082/842/large1024/adafruit_products_4393_iso_ORIG_2019_10.jpg" height="200" />
-
-The Raspberry Pi 4 has a variety of interfacing options. When you plug the pi in the red power LED turns on. Any time the SD card is accessed the green LED flashes. It has standard USB ports and HDMI ports. Less familiar it has a set of 20x2 pin headers that allow you to connect a various peripherals.
-
-<img src="https://maker.pro/storage/g9KLAxU/g9KLAxUiJb9e4Zp1xcxrMhbCDyc3QWPdSunYAoew.png" height="400" />
-
-To learn more about any individual pin and what it is for go to [pinout.xyz](https://pinout.xyz/pinout/3v3_power) and click on the pin. Some terms may be unfamiliar but we will go over the relevant ones as they come up.
-
-### Hardware (you have already done this in the prep)
-
-From your kit take out the display and the [Raspberry Pi 5](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.raspberrypi.com%2Fproducts%2Fraspberry-pi-5%2F&psig=AOvVaw330s4wIQWfHou2Vk3-0jUN&ust=1757611779758000&source=images&cd=vfe&opi=89978449&ved=0CBMQjRxqFwoTCPi1-5_czo8DFQAAAAAdAAAAABAE)
-
-Line up the screen and press it on the headers. The hole in the screen should match up with the hole on the raspberry pi.
-
-<p float="left">
-<img src="https://cdn-learn.adafruit.com/assets/assets/000/087/539/medium640/adafruit_products_4393_quarter_ORIG_2019_10.jpg?1579991932" height="200" />
-<img src="https://cdn-learn.adafruit.com/assets/assets/000/082/861/original/adafruit_products_image.png" height="200">
-</p>
-
-### Testing your Screen
-
-The display uses a communication protocol called [SPI](https://www.circuitbasics.com/basics-of-the-spi-communication-protocol/) to speak with the raspberry pi. We won't go in depth in this course over how SPI works. The port on the bottom of the display connects to the SDA and SCL pins used for the I2C communication protocol which we will cover later. GPIO (General Purpose Input/Output) pins 23 and 24 are connected to the two buttons on the left. GPIO 22 controls the display backlight.
-
-To show you the IP and Mac address of the Pi to allow connecting remotely we created a service that launches a python script that runs on boot. For the following steps stop the service by typing ``` sudo systemctl stop piscreen.service --now```. Othwerise two scripts will try to use the screen at once. You may start it again by typing ``` sudo systemctl start piscreen.service --now```
-
-We can test it by typing 
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ python screen_test.py
-```
-
-You can type the name of a color then press either of the buttons on the MiniPiTFT to see what happens on the display! You can press `ctrl-c` to exit the script. Take a look at the code with
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ cat screen_test.py
-```
-
-#### Displaying Info with Texts
-You can look in `screen_boot_script.py` for how to display text on the screen!
-
-#### Displaying an image
-
-You can look in `image.py` for an example of how to display an image on the screen. Can you make it switch to another image when you push one of the buttons?
-
-
-
-## Part D. 
-### Set up the Display Clock Demo
-Work on `screen_clock.py`, try to show the time by filling in the while loop (at the bottom of the script where we noted "TODO" for you). You can use the code in `cli_clock.py` and `stats.py` to figure this out.
-
-### How to Edit Scripts on Pi
-Option 1. One of the ways for you to edit scripts on Pi through terminal is using [`nano`](https://linuxize.com/post/how-to-use-nano-text-editor/) command. You can go into the `screen_clock.py` by typing the follow command line:
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ nano screen_clock.py
-```
-You can make changes to the script this way, remember to save the changes by pressing `ctrl-o` and press enter again. You can press `ctrl-x` to exit the nano mode. There are more options listed down in the terminal you can use in nano.
-
-Option 2. Another way for you to edit scripts is to use VNC on your laptop to remotely connect your Pi. Try to open the files directly like what you will do with your laptop and edit them. Since the default OS we have for you does not come up a python programmer, you will have to install one yourself otherwise you will have to edit the codes with text editor. [Thonny IDE](https://thonny.org/) is a good option for you to install, try run the following command lines in your Pi's ternimal:
-
-  ```
-  pi@raspberrypi:~ $ sudo apt install thonny
-  pi@raspberrypi:~ $ sudo apt update && sudo apt upgrade -y
-  ```
-
-Now you should be able to edit python scripts with Thonny on your Pi.
-
-Option 3. A nowadays often preferred method is to use Microsoft [VS code to remote connect to the Pi](https://www.raspberrypi.com/news/coding-on-raspberry-pi-remotely-with-visual-studio-code/). This gives you access to a fullly equipped and responsive code editor with terminal and file browser.  
-
-Pro Tip: Using tools like [code-server](https://coder.com/docs/code-server/latest) you can even setup a VS Code coding environment hosted on your raspberry pi and code through a web browser on your tablet or smartphone! 
-
-## Part E. Now moved to Lab2 Part 2.
-
-## Part F. Now moved to Lab2 Part 2.
-
-## Part G. 
 ## Sketch and brainstorm further interactions and features you would like for your clock for Part 2.
 
+***Introduction***:
+I want to reimagine time as a cyclical, body-based rhythm rather than a strictly linear measure. For many women and people who menstruate, time is already experienced this way — not only in weeks or months, but in recurring physical and emotional patterns shaped by the menstrual cycle. With this in mind, my goal for this project is to build a ***“Period Clock”***, a physical interface that helps users understand and track the phases of their cycle in a gentle, intuitive, and empowering way. This design aims to support self-awareness, encourage planning around one’s natural fluctuations in energy and mood, and make visible the cyclical nature of menstruation as it is lived and felt.
 
-# Prep for Part 2
+![Interface Desgin & Storyboard](storyboard.jpg) 
 
-1. Pick up remaining parts for kit on Thursday lab class. Check the updated [parts list inventory](partslist.md) and let the TA know if there is any part missing.
-  
+***Interface Design***:
+Our Period Clock uses a circular display to represent the menstrual cycle, divided into ***four phases: Menstrual, Follicular, Ovulatory, and Luteal***. A pointer shows the user’s current position in the cycle, making it easy to see where they are and what phase comes next. Alongside the diagram, the interface presents today’s date, the day of the cycle, a short phrase describing energy or mood, symptom reminders, and a suggested action such as “Start new projects” or “Rest more.” This design turns abstract cycle data into an intuitive, everyday reference.
 
-2. Look at and give feedback on the Part G. for at least 2 other people in the class (and get 2 people to comment on your Part G!)
+***Storyboard***:
+The storyboard shows one example of how the Period Clock helps users connect daily experiences to their cycle. At first, the user feels terrible during their period. Later, the clock explains they are in the Luteal phase, helping them understand low energy and cravings. The interface suggests rest, and the user realizes they should care for themselves more during this time. A month later, the user feels prepared and reflects, “better planning this month,” showing how the clock builds awareness and self-compassion.
 
 # Lab 2 Part 2
 
-## Assignment that was formerly Lab 2 Part E.
 ### Modify the barebones clock to make it your own
 
-Does time have to be linear?  How do you measure a year? [In daylights? In midnights? In cups of coffee?](https://www.youtube.com/watch?v=wsj15wPpjLY)
+***Peer Feedback***: 
 
-Can you make time interactive? You can look in `screen_test.py` for examples for how to use the buttons.
+Because I missed some class time due to being sick, I was not able to get feedback from classmates in this course, but I reached out to other Cornell Tech students and peers for their input.
 
-Please sketch/diagram your clock idea. (Try using a [Verplank diagram](https://ccrma.stanford.edu/courses/250a-fall-2004/IDSketchbok.pdf))!
+1. Ruowen Lou HT'27 (II2226)
+-  Your project reminds them of the Clue period tracking app. While Clue also uses a "period clock" visual, your design stands out by clearly identifying the four distinct phases (menstrual, follicular, ovulatory, luteal), which they find more informative and helpfu.
 
-**We strongly discourage and will reject the results of literal digital or analog clock display.**
+- I really like the educational content about menstrual health, but I think more details would be better (e.g., phase explanations, hormone changes). I like that it includes symptom tracking, such as recording bleeding volume or other physical/emotional states.
+
+- Suggestion: Consider integrating with fitness and self-care routines, such as: yoga, meditation, or exercise planning. These could be tailored to the user’s current cycle phase to support holistic well-being. 
+
+2. Xinyi Huang CM'27 (xh453)
+-  I think your design concept is very useful. It turns the menstrual cycle, which can feel abstract, into a familiar format like a clock. This makes it easier to understand and remember which stage someone is in.
+  
+- I wonder how the app can be used by different people. For example, how does it know my cycle? Is there a way for me to enter my own data? 
+
+- Showing energy, symptoms, and activities all at once could feel overwhelming. The layout could be reorganized to make the interface cleaner and easier to use.
+
+- I really like your design overall. I think adding a mood or lifestyle recommendation module would be a good idea. For example, it could say “Today is good for watching a relaxing movie” or “Chat with friends.” Another idea is to connect with an external calendar so exercise or activity suggestions fit the user’s actual schedule.
+
+3. Jiayi Wu Industry UX designer
+- I noticed that the four phases are not evenly divided on the cycle, since the menstrual cycle has different lengths for each phase. You could think about how to represent that more clearly in your design. One idea is to use color to show the relative share of each phase.
+
+- Also, consider how to place or style the titles of each phase on the clock so that they are easier to read and look more visually balanced.
 
 
-\*\*\***A copy of your code should be in your Lab 2 Github repo.**\*\*\*
+Based on feedback from peers, they all felt the clock-based visualization of the menstrual cycle was intuitive and helpful in making abstract cycle concepts more concrete. A key takeaway was the need to think carefully about how to divide the four phases, since they are not equal in length. I did a little bit of research on this: the ***Menstrual phase*** (about 3–7 days) is when bleeding occurs and hormone levels are at their lowest. The ***Follicular*** phase (about 7–10 days) is when the body prepares an egg and energy levels usually begin to rise. The ***Ovulatory*** phase (about 1–2 days) is when ovulation happens and fertility is at its peak. The ***Luteal*** phase (about 12–14 days) is when the body prepares for a possible pregnancy and many people experience PMS symptoms. I plan to refine the design so that each phase reflects its typical duration, using color to visually represent the proportion of time each phase takes within the cycle.
+
+Another recurring point was the potential information overload on a single screen. To address this, I plan to improve the layout by organizing content into different screens. The ***main screen*** will display the ****period clock with phase visualization***. A ***second screen*** will focus on daily details such as ***energy level, symptoms, and activity suggestions****, presented in a cleaner and less crowded way. I also plan to add a ***third screen*** where users can enter the ***date of their last period***. This will allow the clock to calculate their current cycle day more accurately and make the display more relevant.
+
+***Upadted Interface Design***:
+
+![updated-interface](updated-interface.jpg) 
+
+## Clock Design
+***Initial desgin of period clock***:
+![clock-design](clock-redesign.jpg) 
+In a typical menstrual cycle, the four phases—Menstrual, Follicular, Ovulatory, and Luteal—do not occupy equal lengths of time. Representing them as evenly sized segments would be misleading and reduce the accuracy of the visual display. Thus, I would like to think there are four uneven colored pie slices on the background of our clock indicating the four phases.
+
+To create the uneven colored pie slices for our clock background, I calculated the angle of each menstrual phase (Menstrual, Follicular, Ovulatory, Luteal) based on its actual length in days relative to the full cycle. Using these proportions, I used draw.pieslice() to render each section with a distinct color. This visual design is important because it reflects the true duration of each phase rather than dividing the cycle evenly, giving users a more accurate and intuitive understanding of where they are in their cycle. 
+
+However, as I  drew the phase labels directly on the pie chart, they overlapped and clipped against each other. The text for the cycle day also touched the edge of the circle, making the chart hard to read. To fix it, I decided to remove all labels from the pie itself. Instead, I created a clean 2-column legend at the bottom of the screen. I also shorten the day text aviod overlap.
+
+![phase name](phase-name.jpg) 
+
+At first, I added a phase label right at the center of the clock. I thought it would make it clearer which phase the user was in, but when I saw it on the screen, it felt distracting. It pulled attention away from the overall chart. So, I removed that center label to keep the design simpler and cleaner.
+
+I also changed the arrow color to black. The old color blended too much into the background and the pie slices. With black, the arrow is sharp and easy to see, making it stand out against all the phase colors. This small change improved readability a lot.
+
+***Final desgin of the period clock***:
+![final clock design](final-clock.jpg) 
+
+## Summary Screen Design
+***Initial desgin of the summary screen***:
+![summary screen initial](second-screen-1.jpg) 
+Originally, the second screen was very plain and unstructured. It only showed text stacked together without any clear grouping, which made it difficult to follow. The phase and day information blended into the rest of the content, so users couldn’t easily see the most important details at a glance. Without a background panel or divider, the screen felt crowded and flat. The snapshot items—how you feel, a symptom to expect, and one thing to try—were displayed as regular text lines with no hierarchy, which made their purpose unclear.
+
+To solve this, I redesigned the summary screen to be more organized, readable, and visually balanced. I added a card-style background with rounded corners so that all the content feels grouped together and easier to read. At the top of the card, I placed the current date (from the system’s local time) on the left and a phase badge on the right. This layout allows users to quickly see both the actual calendar date and where they are in their cycle without confusion.
+
+I also added a divider line below the header to clearly separate it from the details, giving the layout a more structured look. For the main content, I introduced a “Today’s snapshot” section. Instead of long text blocks, I broke the information into three simple bullet rows: how you feel, a symptom to expect, and one thing to try. To make these even clearer, I gave each row a distinct colored line marker—teal, red, or yellow—so the items can be recognized at a glance and are easier to distinguish. These snapshot items also change automatically based on the user’s current cycle day, so the guidance feels timely and relevant.
+
+***Final desgin of the summary screen***:
+![updadted screen2](updated-screen2.jpg) 
+
+## Input Screen Design
+***Initial desgin of the user input screen***:
+![initial screen3](Initial-screen3.jpg) 
+
+At first, this screen was labeled “Last Period”, but it wasn’t really an input screen. It just showed static text with “MM” and “DD” values, which looked like placeholders but couldn’t actually be edited. The bottom had a “[Done]” line, but it wasn’t a proper button. On top of that, the wording “Last Period” was unclear. It didn’t tell users whether they should enter the first day, last day, or something else, so it was both misleading and unusable.
+
+I redesigned it into a proper input panel titled “First Day of Last Period” to make the meaning clear that the cycle is always counted starting from day one of bleeding, not from the end of the period. Now the screen has real editable fields for Month and Day. The active field highlights, so users know exactly where they are. Button A switches between fields and the Save button, while Button B changes the numbers (short press to increase, long press to decrease). At the bottom, I replaced the plain “[Done]” text with a real green Save button. After saving, a temporary “Saved” badge appears, giving feedback. I also added validation so users can’t save a future date. Most importantly, the saved date is now stored and used by the other screens to calculate the cycle day and phase correctly.
+
+***Final desgin of the user input screen***:
+![updadted screen3](updated-screen3.jpg) 
 
 
-## Assignment that was formerly Part F. 
+## Button Logic & Interaction Design
+
+Since the device only has two hardware buttons, I tried my best to design a simple but effective interaction model. Button A is used to cycle through options: on the input screen it moves the focus between Month, Day, and Save, and on other screens it switches between the clock, summary, and input screens. Button B is used to change values, with a short press increasing the number and a long press decreasing it. 
+
 ## Make a short video of your modified barebones PiClock
+***A copy of your code should be in your Lab 2 Github repo.***
+screen_clock.py
 
 \*\*\***Take a video of your PiClock.**\*\*\*
 
-After you edit and work on the scripts for Lab 2, the files should be upload back to your own GitHub repo! You can push to your personal github repo by adding the files here, commiting and pushing.
+[Watch the demo video](https://drive.google.com/file/d/1upCayziQyvRpw-Sf5W8fHvfIWTW5qL5K/view?usp=sharing)
 
-```
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git add .
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git commit -m 'your commit message here'
-(venv) pi@raspberrypi:~/Interactive-Lab-Hub/Lab 2 $ git push
-```
+In the demo video, I showcased the general functionality of the clock using a default cycle day. The video begins with the ***main screen***, where the period clock and cycle day text are displayed together. I then switch to ***the second screen***, which presents the summary details for the specific cycle day, including energy, symptoms, and suggested activities. After that, I move to ***the third screen***, where users can input the first day of their last period. To demonstrate the validation feature, I first try entering a future date, which gets rejected and triggers a message explaining that a future date cannot be used. I then enter a valid past date, and the system successfully saves it. Finally, I return to the first two screens to show how the saved input updates the clock visualization and the summary details accordingly.
 
-After that, Git will ask you to login to your GitHub account to push the updates online, you will be asked to provide your GitHub user name and password. Remember to use the "Personal Access Tokens" you set up in Part A as the password instead of your account one! Go on your GitHub repo with your laptop, you should be able to see the updated files from your Pi!
+## Limitations and Future Improvements
 
+One limitation of my current design is that it assumes a standard 28-day cycle. In reality, people’s menstrual cycles vary a lot, and using a fixed length reduces the accuracy of the clock. A better design would include an input for users to enter their own average cycle length, or even better, allow the system to collect data over time and calculate a personalized average automatically. With that, the device could also start predicting the next period more reliably.
 
-[Update your Lab Hub](pull_updates/README.md) to get the latest content and requirements for Part 2.
+Another limitation is that I haven’t considered how to handle late or irregular periods. If I had more time, I would like to explore ways to incorporate flexibility in the design, such as warning users when the expected date has passed and adjusting the cycle calculation accordingly.
 
-Modify the code from last week's lab to make a new visual interface for your new clock. You may [extend the Pi](Extending%20the%20Pi.md) by adding sensors or buttons, but this is not required.
+I also haven’t implemented ways to track more detailed symptoms or mood logs. Right now, the “snapshot” screen only shows generic suggestions. A more advanced version could let users input daily experiences (like cramps, bloating, or mood changes) and then visualize trends over time. This would make the system more personal and useful for long-term self-tracking.
 
-As always, make sure you document contributions and ideas from others explicitly in your writeup.
+## Note on AI Assistance
 
-You are permitted (but not required) to work in groups and share a turn in; you are expected to make equal contribution on any group work you do, and N people's group project should look like N times the work of a single person's lab. What each person did should be explicitly documented. Make sure the page for the group turn in is linked to your Interactive Lab Hub page. 
-
+For this lab, I used ChatGPT to help me summarize my design decisions and rewrite some sections into clearer paragraphs. All reflection points and design choices are my own. Also, some of my script was coded using the assistance of ChatGPT.
 
