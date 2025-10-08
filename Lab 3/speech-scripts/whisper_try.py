@@ -6,7 +6,7 @@ start_time = time.perf_counter()
 import whisper
 
 model = whisper.load_model("tiny")
-result = model.transcribe("lookdave.wav")
+result = model.transcribe("recorded_response.wav")
 
 print(result["text"])
 
