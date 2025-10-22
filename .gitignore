@@ -5,3 +5,5 @@ venv*
 __*
 .venv*
 .venv/
+# ignore local models
+*.onnx
