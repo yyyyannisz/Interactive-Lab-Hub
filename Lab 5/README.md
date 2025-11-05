@@ -144,12 +144,11 @@ Next train your own model. Visit [TeachableMachines](https://teachablemachine.wi
 
 Include screenshots of your use of Teachable Machines, and write how you might use this to create your own classifier. Include what different affordances this method brings, compared to the OpenCV or MediaPipe options.
 
+I used Teachable Machines to create my own pose classifier that recognizes two actions: looking at a cellphone and drinking water. To train the model, I collected around 200 image samples for each class using my webcam and exported the trained model as a TensorFlow Lite file for use on the Raspberry Pi. This process was simple and intuitive because Teachable Machines provides a visual interface — I didn’t need to write any code or manually label data.
+Compared to OpenCV or MediaPipe, Teachable Machines offers a much easier way to customize what the model learns. While OpenCV and MediaPipe use predefined detection methods, Teachable Machines lets me define my own classes based on any kind of image data. This gives it greater flexibility for personalized recognition tasks, such as detecting specific objects, gestures, or activities. However, Teachable Machines models are more general and may be less efficient or less precise than optimized pipelines like MediaPipe for specific tasks such as pose or hand tracking.
+
 ![Training model 1](Training-model-0.png)
 ![Training model 2](Training-model.png)
-
-
-
-
 
 #### (Optional) Legacy audio and computer vision observation approaches
 In an earlier version of this class students experimented with observing through audio cues. Find the material here:
