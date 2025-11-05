@@ -144,7 +144,8 @@ Next train your own model. Visit [TeachableMachines](https://teachablemachine.wi
 
 Include screenshots of your use of Teachable Machines, and write how you might use this to create your own classifier. Include what different affordances this method brings, compared to the OpenCV or MediaPipe options.
 
-![Training model](Training model 0.png)
+![Training model 1](Training-model-0.png)
+![Training model 2](Training-model.png)
 
 
 
