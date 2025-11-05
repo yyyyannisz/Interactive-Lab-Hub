@@ -1,6 +1,6 @@
 # Distributed Interaction
 
-**NAMES OF COLLABORATORS HERE**
+**Amy Chen (ac3295) & Yannis Zhu (yz3477)**
 
 For submission, replace this section with your documentation!
 
