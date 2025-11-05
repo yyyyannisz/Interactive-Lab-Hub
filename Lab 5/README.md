@@ -149,6 +149,8 @@ Include screenshots of your use of Teachable Machines, and write how you might u
 
 
 
+
+
 #### (Optional) Legacy audio and computer vision observation approaches
 In an earlier version of this class students experimented with observing through audio cues. Find the material here:
 [Audio_optional/audio.md](Audio_optional/audio.md). 
