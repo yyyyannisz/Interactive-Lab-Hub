@@ -165,6 +165,23 @@ In an earlier version of this class students experimented with foundational comp
 * This can be as simple as the boat detector shown in lecture.
 * Try out different interaction outputs and inputs.
 
+For this part of the lab, I built a simple “Yannis Detector” — a personalized image classifier that recognizes when I am in front of the camera. This project builds on one of the models I tried earlier (Teachable Machines) and uses it to create an interactive system that reacts differently depending on who the camera sees. The setup runs on my Raspberry Pi, using the webcam to continuously capture frames and classify them in real time.
+
+***Model and Input***
+
+I trained a custom Teachable Machines image model with two classes:
+
+Yannis — images of myself under different lighting and angles
+
+Not Yannis — background scenes, objects, and a few other people
+
+Each class had around 200 samples. 
+
+During testing, however, I discovered that the model was overconfident in its predictions. It consistently showed 100% confidence for “Yannis” whenever I faced the camera — which is expected — but it also reported 100% Yannis when I placed a printed poster of a celebrity or another face in front of the webcam. This revealed that the model wasn’t truly identifying my individual facial features, but rather responding to general face-like patterns or lighting conditions it had learned from my training samples.
+
+This behavior highlights a common limitation of simple image classifiers trained with small datasets: they tend to overfit to the training distribution and lack awareness of what is not part of the target class. In this case, my “Not Yannis” category didn’t include enough diverse examples of other faces or varied backgrounds, causing the model to mistake any human-like face for me. In future iterations, I plan to retrain the model with more diverse negative examples and a separate background class to help it better generalize and recognize when the camera sees someone or something else.
+
+
 
 **\*\*\*Describe and detail the interaction, as well as your experimentation here.\*\*\***
 
