@@ -175,15 +175,29 @@ As someone who lives alone, I often struggle with staying focused and motivated,
 
 ***Model Design: Custom Human Classifier***
 
-To power the detection, I trained a custom image classification model using Google’s Teachable Machine platform. The model was built with two primary classes: "Human" and "Not Human." The "Human" class included a wide range of images of myself sitting at my desk. These images were taken under varied lighting conditions, angles, and outfits, and included some with occlusion, such as a hand raised or leaning to one side. This helped the model learn to generalize across common scenarios. The "Not Human" class included images of the same desk space but without me present. This category also included static objects like chairs, monitors, pillows, and even clothes draped over a chair — things that could easily confuse a classifier. Altogether, I used approximately 400 images for the "Human" class and 200 for the "Not Human" class.
+To power the detection, I trained a custom image classification model using Google’s Teachable Machine platform. The model was built with two primary classes: "Human" and "Not Human." For the "Human" class, I uploaded around 400 images of myself sitting at my desk, taken under varied lighting conditions, camera angles, and wearing different outfits. Some of the images included partial occlusion—such as my hand raised or my body leaning to one side—to help the model generalize across real-world variations.
 
-After an initial round of training, I noticed some false positives — for example, the model sometimes mistook my chair with a hoodie for a person. To address this, I iterated on the dataset by collecting additional edge-case images, especially those in poor lighting or with confusing backgrounds. With each update, I re-trained the model and validated it on test cases, eventually reaching consistent results with confidence scores above 95% on correct detections.
+The "Not Human" class consisted of approximately 200 images showing the same environment without me present. These included common desk objects such as pencil cases, iPads, and books, as well as furniture like chairs and monitors that might visually resemble a person when seen from certain angles. This diversity helped the model distinguish between actual human presence and background clutter.
+
+![Model Human](Model-Human.png)
+
+After an initial round of training, I observed occasional false positives — for example, the model sometimes misclassified my desk chair with a hoodie draped over it as a person. In response, I iterated on the dataset by gathering additional "Not Human" samples in trickier lighting and positioning conditions. With each retraining, I tested the model in live scenarios until it consistently achieved confidence scores above 95% on correct classifications.
+
+![Model NotHuman](Model-NotHuman.png)
+![Model NotHuman2](Model-NotHuman2.png)
+![Model NotHuman3](Model-NotHuman3.png)
+
+One interesting edge case emerged during testing: I placed a Chappell Roan album poster in front of the camera, and the model briefly identified it as a human. While technically a false positive, I considered this acceptable given the limitations of image classification at a glance, and it didn’t affect the practical goal of encouraging me to sit at my desk to study.
+![Model Human2](Model-Human2.png)
+
 
 ***Model Export and Deployment***
 
 Once I was satisfied with the model’s performance, I exported it from Teachable Machine as a TensorFlow Lite model, which is optimized for use on Raspberry Pi. The export generated two files: a .tflite model file containing the compressed classifier, and a labels.txt file mapping numeric class IDs to class names. These files were transferred to my Pi using the scp command-line tool.
 
 On the Raspberry Pi, I wrote a Python script that uses the teachable_machine_lite module and OpenCV to capture live camera frames. Each frame is passed through the classifier, and the prediction is checked for its top label and confidence. The system is programmed to treat any detection of "Human" with over 80% confidence as a true positive and respond accordingly.
+
+
 
 ***System Setup and Functionality***
 
