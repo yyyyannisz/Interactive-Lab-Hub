@@ -209,9 +209,7 @@ Once the model detects a human with a confidence score above 80%, the system dyn
 If no human is detected or if confidence is too low, the system maintains the default “Waiting...” message without redundantly repeating outputs. This state machine prevents flickering and creates a smoother user experience. The backlight remains on once the initial detection completes, allowing the screen to remain visibly responsive throughout the session.
 
 https://youtu.be/z0HW9PHHPuM
-[![Watch the demo](demo_thumbnail.png)](https://youtu.be/z0HW9PHHPuM)
-
-[![Watch the demo](thumbnail1.png)]([https://www.youtube.com/watch?v=YOUR_VIDEO_ID](https://youtu.be/7MZTJp3idu4)) 
+[![Watch the demo](thumbnail1.png)](https://youtu.be/z0HW9PHHPuM)
 
 ***Exploration of Inputs and Outputs***
 
@@ -221,7 +219,7 @@ For output variation, I initially started with just visual feedback using the TF
 
 Exploring these input and output combinations helped me understand how multi-sensory interaction can improve the effectiveness of a simple system. The auditory feedback is especially helpful during low-light settings or when I’m approaching the desk from the side. Meanwhile, the visual feedback reinforces the feeling of being “seen” or acknowledged, which contributes to the motivational aspect of the system.
 
-[![Watch the demo](demo_thumbnail2.png)](https://youtu.be/7MZTJp3idu4)
+[![Watch the demo](thumbnail2.png)](https://youtu.be/7MZTJp3idu4)
 
 ### Part C
 ### Test the interaction prototype
