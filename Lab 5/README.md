@@ -167,24 +167,39 @@ In an earlier version of this class students experimented with foundational comp
 
 **\*\*\*Describe and detail the interaction, as well as your experimentation here.\*\*\***
 
-For this part of the lab, I built a simple “Yannis Detector” — a personalized image classifier that recognizes when I am in front of the camera. This project builds on one of the models I tried earlier (Teachable Machines) and uses it to create an interactive system that reacts differently depending on who the camera sees. The setup runs on my Raspberry Pi, using the webcam to continuously capture frames and classify them in real time.
+**Human Detection Greeter System**
 
-***Model and Input***
+***Motivation: Encouragement for Solo Study***
 
-I trained a custom Teachable Machines image model with two classes:
+As someone who lives alone, I often struggle with staying focused and motivated, especially when it comes to sitting down at my desk to begin work. Without external accountability or subtle social cues, it can be easy to avoid starting tasks or get stuck in a state of inertia. I became curious whether a lightweight, ambient form of interaction — something as simple as a warm "Welcome!" — could serve as a positive nudge to shift me into a productive mindset. This curiosity led to the development of a small but meaningful system: a Raspberry Pi-powered greeter that detects when I approach my desk and welcomes me with visual and auditory feedback.
 
-Yannis — images of myself under different lighting and angles
+***Model Design: Custom Human Classifier***
 
-Not Yannis — background scenes, objects, and a few other people
+To power the detection, I trained a custom image classification model using Google’s Teachable Machine platform. The model was built with two primary classes: "Human" and "Not Human." The "Human" class included a wide range of images of myself sitting at my desk. These images were taken under varied lighting conditions, angles, and outfits, and included some with occlusion, such as a hand raised or leaning to one side. This helped the model learn to generalize across common scenarios. The "Not Human" class included images of the same desk space but without me present. This category also included static objects like chairs, monitors, pillows, and even clothes draped over a chair — things that could easily confuse a classifier. Altogether, I used approximately 400 images for the "Human" class and 200 for the "Not Human" class.
 
-Each class had around 200 samples. 
+After an initial round of training, I noticed some false positives — for example, the model sometimes mistook my chair with a hoodie for a person. To address this, I iterated on the dataset by collecting additional edge-case images, especially those in poor lighting or with confusing backgrounds. With each update, I re-trained the model and validated it on test cases, eventually reaching consistent results with confidence scores above 95% on correct detections.
 
-During testing, however, I discovered that the model was overconfident in its predictions. It consistently showed 100% confidence for “Yannis” whenever I faced the camera — which is expected — but it also reported 100% Yannis when I placed a printed poster of a celebrity or another face in front of the webcam. This revealed that the model wasn’t truly identifying my individual facial features, but rather responding to general face-like patterns or lighting conditions it had learned from my training samples.
+***Model Export and Deployment***
 
-![Yannis Detector 1](Yannis-detector.png)
-![Yannis Detector 2](Yannis-detector2.png)
+Once I was satisfied with the model’s performance, I exported it from Teachable Machine as a TensorFlow Lite model, which is optimized for use on Raspberry Pi. The export generated two files: a .tflite model file containing the compressed classifier, and a labels.txt file mapping numeric class IDs to class names. These files were transferred to my Pi using the scp command-line tool.
 
-This behavior highlights a common limitation of simple image classifiers trained with small datasets: they tend to overfit to the training distribution and lack awareness of what is not part of the target class. In this case, my “Not Yannis” category didn’t include enough diverse examples of other faces or varied backgrounds, causing the model to mistake any human-like face for me. In future iterations, I plan to retrain the model with more diverse negative examples and a separate background class to help it better generalize and recognize when the camera sees someone or something else.
+On the Raspberry Pi, I wrote a Python script that uses the teachable_machine_lite module and OpenCV to capture live camera frames. Each frame is passed through the classifier, and the prediction is checked for its top label and confidence. The system is programmed to treat any detection of "Human" with over 80% confidence as a true positive and respond accordingly.
+
+***System Setup and Functionality***
+
+The hardware configuration for this interaction includes a Raspberry Pi paired with a webcam for real-time image capture and a 1.14-inch Adafruit ST7789 TFT screen for visual output. At startup, the screen displays a neutral standby message: “Waiting… Scanning for human.” This early screen setup was intentionally designed to prevent a bug encountered in earlier iterations, where the display would default to an unintended “Welcome!” message even before any inference was complete. To address this, the system now only transitions to the greeting screen after receiving a valid detection result.
+
+Once the model detects a human with a confidence score above 80%, the system dynamically updates the display to show a green-background message: “Welcome! Human Detected.” This visual feedback provides a friendly and ambient interaction, reinforcing presence awareness in the space. After five seconds, the display automatically reverts to its scanning mode, preparing for the next interaction.
+
+If no human is detected or if confidence is too low, the system maintains the default “Waiting...” message without redundantly repeating outputs. This state machine prevents flickering and creates a smoother user experience. The backlight remains on once the initial detection completes, allowing the screen to remain visibly responsive throughout the session.
+
+***Exploration of Inputs and Outputs***
+
+To explore input variation, I tested the model under several real-world conditions. I tried approaching the desk from different angles and distances, observed the effect of varied lighting (daylight, overhead lamp, and dim light), and experimented with partial occlusion — for instance, wearing a hoodie, leaning sideways, or partially hiding behind the monitor. The model consistently handled these variations well, maintaining high accuracy in detecting a human presence.
+
+For output variation, I initially started with just visual feedback using the TFT screen. Later, I added audio output via the espeak library to create a spoken “Welcome!” message when a person is detected. This not only made the system feel more interactive and friendly but also allowed it to function as a useful ambient cue, especially when I’m not directly looking at the screen.
+
+Exploring these input and output combinations helped me understand how multi-sensory interaction can improve the effectiveness of a simple system. The auditory feedback is especially helpful during low-light settings or when I’m approaching the desk from the side. Meanwhile, the visual feedback reinforces the feeling of being “seen” or acknowledged, which contributes to the motivational aspect of the system.
 
 
 ### Part C
