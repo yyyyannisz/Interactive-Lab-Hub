@@ -197,7 +197,8 @@ Once I was satisfied with the model’s performance, I exported it from Teachabl
 
 On the Raspberry Pi, I wrote a Python script that uses the teachable_machine_lite module and OpenCV to capture live camera frames. Each frame is passed through the classifier, and the prediction is checked for its top label and confidence. The system is programmed to treat any detection of "Human" with over 80% confidence as a true positive and respond accordingly.
 
-
+![Pi Human](Pi-Human.jpg)
+![Pi NotHuman](Pi-NotHuman.jpg)
 
 ***System Setup and Functionality***
 
@@ -207,6 +208,11 @@ Once the model detects a human with a confidence score above 80%, the system dyn
 
 If no human is detected or if confidence is too low, the system maintains the default “Waiting...” message without redundantly repeating outputs. This state machine prevents flickering and creates a smoother user experience. The backlight remains on once the initial detection completes, allowing the screen to remain visibly responsive throughout the session.
 
+https://youtu.be/z0HW9PHHPuM
+[![Watch the demo](demo_thumbnail.png)](https://youtu.be/z0HW9PHHPuM)
+
+[![Watch the demo](thumbnail1.png)]([https://www.youtube.com/watch?v=YOUR_VIDEO_ID](https://youtu.be/7MZTJp3idu4)) 
+
 ***Exploration of Inputs and Outputs***
 
 To explore input variation, I tested the model under several real-world conditions. I tried approaching the desk from different angles and distances, observed the effect of varied lighting (daylight, overhead lamp, and dim light), and experimented with partial occlusion — for instance, wearing a hoodie, leaning sideways, or partially hiding behind the monitor. The model consistently handled these variations well, maintaining high accuracy in detecting a human presence.
@@ -215,6 +221,7 @@ For output variation, I initially started with just visual feedback using the TF
 
 Exploring these input and output combinations helped me understand how multi-sensory interaction can improve the effectiveness of a simple system. The auditory feedback is especially helpful during low-light settings or when I’m approaching the desk from the side. Meanwhile, the visual feedback reinforces the feeling of being “seen” or acknowledged, which contributes to the motivational aspect of the system.
 
+[![Watch the demo](demo_thumbnail2.png)](https://youtu.be/7MZTJp3idu4)
 
 ### Part C
 ### Test the interaction prototype
