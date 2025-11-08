@@ -128,6 +128,7 @@ The interaction feels ambient and gentle — not intrusive, but quietly encourag
 ### Part 2.
 
 ***Model Improvements***
+
 Based on the failure cases identified in Part 1, I retrained the model with a more intentionally designed dataset. The original version contained enough “Human” images but an insufficient variety of “Not Human” examples, which caused occasional false positives—especially when objects such as hoodies or posters resembled human shapes. To address this, I expanded the “Not Human” class to include more ambiguous or confusable objects, such as bulky clothing, printed faces, and desk items positioned close to the camera. I also collected additional samples in dim or uneven lighting, since most false negatives occurred at night when the camera struggled to capture clear visual features. After retraining, the updated model showed fewer false positives and significantly more stability in edge cases. These improvements demonstrate how targeted augmentation of the dataset can meaningfully increase robustness without changing the system’s overall architecture.
 
 ![Retrain Model](Retrain-Model.png)
