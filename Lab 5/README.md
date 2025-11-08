@@ -84,16 +84,18 @@ If someone else were to use this system, I imagine it would feel like a subtle, 
 
 Fortunately, the consequences of a misclassification in this context are fairly minor. A false negative (not detecting a human) might mean the welcome screen doesn’t appear right away, which is not disruptive. A false positive (detecting a human when there is none) might result in an occasional premature “Welcome!” message, which could feel odd but not harmful. In both cases, the stakes are low because the system serves more as an ambient motivator than a security or productivity enforcement tool.
 
-To improve the interaction, I could add subtle visual or audio indicators of detection confidence — for instance, dimming the display slightly when the model is less confident, or using a short animation delay before the welcome message to confirm sustained presence. These design choices would make users more attuned to the system’s behavior and help them understand when it’s uncertain.
+There are several interaction-level adjustments that could help users better understand the system’s behavior without adding complexity. For example, a brief delay or debounce before showing the welcome message could reduce flicker and implicitly communicate that the system is validating what it sees. Another option would be to incorporate subtle visual states—such as a softer color tone or dimmer message—when the model’s confidence is lower. These cues would not expose numerical confidence scores but would help the user intuitively understand why the system sometimes reacts differently. Because the system is meant to feel gentle and ambient, any uncertainty cues should be minimal and non-intrusive. These adjustments could help shape a clearer mental model of how the device works, making interactions feel smoother and more coherent.
 
-In terms of improving the sense-making algorithm, I could refine the dataset further by adding more diverse “Not Human” examples, especially those involving ambiguous objects like hoodies, posters, or mannequins. Additionally, collecting more nighttime or low-light examples could help improve performance in dim conditions. Another potential optimization could involve combining image classification with a secondary input — such as motion detection or infrared proximity sensing — to cross-validate the presence of a human more accurately.
+Testing highlighted several data-related opportunities for improving the model. Adding more “Not Human” examples—especially ambiguous objects like hoodies or printed faces—could reduce false positives. Collecting more samples in dim lighting could also help address nighttime performance issues, which currently cause most false negatives.
+
+Beyond dataset refinements, additional sensing modalities could be explored if higher reliability were needed. For instance, integrating a passive infrared (PIR) sensor or a simple proximity detector could provide cross-validation for presence detection. While such additions are not necessary for this motivational context, they illustrate how multi-sensor fusion could increase robustness if the system were ever used in a more dynamic or shared environment.
 
 ### Part D
 ### Characterize your own Observant system
 
 ***What can you use this system for?***
 
-This system is designed to create an ambient cue for study motivation. When a person approaches the desk, the system detects their presence and displays a welcoming message. It can be used as a soft nudge to help users begin a focused session, or even as a lightweight check-in mechanism to track time spent at the desk.
+This system is designed to create an ambient cue for study motivation. When a person approaches the desk, the system detects their presence and displays a welcoming message. It can be used as a soft nudge to help users begin a focused session, or even as a lightweight check-in mechanism of study time.
 
 ***What is a good environment for this system?***
 
