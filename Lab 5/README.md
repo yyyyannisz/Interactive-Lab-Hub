@@ -63,7 +63,7 @@ For output variation, I initially started with just visual feedback using the TF
 
 Exploring these input and output combinations helped me understand how multi-sensory interaction can improve the effectiveness of a simple system. The auditory feedback is especially helpful during low-light settings or when I’m approaching the desk from the side. Meanwhile, the visual feedback reinforces the feeling of being “seen” or acknowledged, which contributes to the motivational aspect of the system.
 
-[![Watch the demo with both screen and audio output](thumbnail.png)](https://youtu.be/7MZTJp3idu4)
+[![Watch the demo with both screen and audio output](thumbnail.png)](https://youtube.com/shorts/ARwTY-7F5YE?feature=share)
 
 ### Part C
 ### Test the interaction prototype
