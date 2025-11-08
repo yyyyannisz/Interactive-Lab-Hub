@@ -181,8 +181,6 @@ The "Not Human" class consisted of approximately 200 images showing the same env
 
 ![Model Human](Model-Human.png)
 
-After an initial round of training, I observed occasional false positives — for example, the model sometimes misclassified my desk chair with a hoodie draped over it as a person. In response, I iterated on the dataset by gathering additional "Not Human" samples in trickier lighting and positioning conditions. With each retraining, I tested the model in live scenarios until it consistently achieved confidence scores above 95% on correct classifications.
-
 ![Model NotHuman](Model-NotHuman.png)
 ![Model NotHuman2](Model-NotHuman2.png)
 ![Model NotHuman3](Model-NotHuman3.png)
@@ -208,8 +206,7 @@ Once the model detects a human with a confidence score above 80%, the system dyn
 
 If no human is detected or if confidence is too low, the system maintains the default “Waiting...” message without redundantly repeating outputs. This state machine prevents flickering and creates a smoother user experience. The backlight remains on once the initial detection completes, allowing the screen to remain visibly responsive throughout the session.
 
-https://youtu.be/z0HW9PHHPuM
-[![Watch the demo](thumbnail1.png)](https://youtu.be/z0HW9PHHPuM)
+[![Watch the demo with screen output](thumbnail.png)](https://youtu.be/z0HW9PHHPuM)
 
 ***Exploration of Inputs and Outputs***
 
@@ -219,7 +216,7 @@ For output variation, I initially started with just visual feedback using the TF
 
 Exploring these input and output combinations helped me understand how multi-sensory interaction can improve the effectiveness of a simple system. The auditory feedback is especially helpful during low-light settings or when I’m approaching the desk from the side. Meanwhile, the visual feedback reinforces the feeling of being “seen” or acknowledged, which contributes to the motivational aspect of the system.
 
-[![Watch the demo](thumbnail2.png)](https://youtu.be/7MZTJp3idu4)
+[![Watch the demo with both screen and audio output](thumbnail.png)](https://youtu.be/7MZTJp3idu4)
 
 ### Part C
 ### Test the interaction prototype
@@ -231,11 +228,25 @@ For example:
 1. When it fails, why does it fail?
 1. Based on the behavior you have seen, what other scenarios could cause problems?
 
+During testing, the system performed reliably in most scenarios. It correctly identified me as a human even when I was standing far away from the camera, and it maintained high accuracy across different poses, such as turning sideways or wearing a mask. I was also impressed that it did not misclassify non-human objects, even when I moved items like a pillows, iPad, or book directly in front of the camera. These results suggest the model is robust against everyday desk clutter and movement.
+
+However, there were a few notable failure cases. When I held up a hoodie—without myself being visible—the system sometimes misclassified it as a human. Similarly, a poster of Chappell Roan showing her full frontal face occasionally triggered a false positive. While this type of misclassification is understandable given the visual similarity, it is less concerning in this context since the system is designed to offer a friendly prompt rather than make high-stakes decisions. The model also struggled in extremely low-light conditions, failing to detect me reliably when the lighting was too dim for the camera to capture clear features.
+
+Based on these observations, other potential failure scenarios may include highly realistic human-shaped mannequins, face-like drawings near the camera, or someone walking past the camera wearing bulky clothes that distort shape. While these edge cases may lead to occasional false positives, they do not critically impact the goal of creating a motivational, human-responsive study environment.
+
 **\*\*\*Think about someone using the system. Describe how you think this will work.\*\*\***
 1. Are they aware of the uncertainties in the system?
 1. How bad would they be impacted by a miss classification?
 1. How could change your interactive system to address this?
 1. Are there optimizations you can try to do on your sense-making algorithm.
+
+If someone else were to use this system, I imagine it would feel like a subtle, ambient interaction — a low-effort way to mark the start of a work session. They would walk up to their desk and be greeted by a simple welcome message, offering a gentle psychological cue to begin focusing. However, they may not immediately be aware of the uncertainties built into the system. Because the interface is minimal and doesn’t display detection confidence or reasoning, users might assume it's more accurate than it actually is.
+
+Fortunately, the consequences of a misclassification in this context are fairly minor. A false negative (not detecting a human) might mean the welcome screen doesn’t appear right away, which is not disruptive. A false positive (detecting a human when there is none) might result in an occasional premature “Welcome!” message, which could feel odd but not harmful. In both cases, the stakes are low because the system serves more as an ambient motivator than a security or productivity enforcement tool.
+
+To improve the interaction, I could add subtle visual or audio indicators of detection confidence — for instance, dimming the display slightly when the model is less confident, or using a short animation delay before the welcome message to confirm sustained presence. These design choices would make users more attuned to the system’s behavior and help them understand when it’s uncertain.
+
+In terms of improving the sense-making algorithm, I could refine the dataset further by adding more diverse “Not Human” examples, especially those involving ambiguous objects like hoodies, posters, or mannequins. Additionally, collecting more nighttime or low-light examples could help improve performance in dim conditions. Another potential optimization could involve combining image classification with a secondary input — such as motion detection or infrared proximity sensing — to cross-validate the presence of a human more accurately.
 
 ### Part D
 ### Characterize your own Observant system
@@ -252,8 +263,37 @@ During the lecture, we mentioned questions to help characterize a material:
 
 **\*\*\*Include a short video demonstrating the answers to these questions.\*\*\***
 
+***What can you use this system for?***
+This system is designed to create an ambient cue for study motivation. When a person approaches the desk, the system detects their presence and displays a welcoming message. It can be used as a soft nudge to help users begin a focused session, or even as a lightweight check-in mechanism to track time spent at the desk.
+
+***What is a good environment for this system?***
+The system works best in a well-lit, indoor space where the lighting is consistent and the background is relatively static. It thrives when used by a single primary user, particularly in solo work setups where desk layout and background conditions are predictable.
+
+***What is a bad environment for this system?***
+The system struggles in low-light or heavily cluttered environments. It may also misclassify things in shared or dynamic spaces — such as public libraries or co-working spaces — where multiple people, posters, or objects move in and out of frame frequently.
+
+***When will it break?***
+It will likely break in very dim conditions where the camera cannot capture clear input, or when unfamiliar objects (e.g. posters of human faces, or clothes with human-like form) are presented. The model might also break if the user makes significant appearance changes not represented in training (e.g., wearing a full costume or hat).
+
+***When it breaks, how will it break?***
+It typically breaks by producing a false positive, such as misclassifying a static object as a human, or a false negative, where a real human is not detected due to low confidence. In both cases, the user might see a wrong message (“Welcome!” when no one is there, or no message when they are present).
+
+***Other properties or behaviors?***
+The system responds quickly and does not require active input, making it feel seamless. It does not require an internet connection once deployed and can be customized with other outputs, such as audio or smart light integration, making it extensible.
+
+***How does it feel?***
+The interaction feels ambient and gentle — not intrusive, but quietly encouraging. It blends into the background of your daily routine, almost like a digital pet that acknowledges your presence and helps anchor your focus.
+
+[![Good Environment & Pass Cases](thumbnail.png)](https://youtube.com/shorts/adgnVRHFiWs?feature=share)
+[![Failed Case](thumbnail.png)](https://youtube.com/shorts/m6jAsJ6bOdk?feature=share)
+[![Failed Case 2](thumbnail.png)](https://youtu.be/4O2F7VAke7Y)
+
 ### Part 2.
 
 Following exploration and reflection from Part 1, finish building your interactive system, and demonstrate it in use with a video.
 
 **\*\*\*Include a short video demonstrating the finished result.\*\*\***
+
+Based on observations from Part 1, I improved the model by retraining it with more “Not Human” examples that previously caused false positives, such as a hoodie held in front of the camera. I also balanced the dataset more evenly and added some samples in dim lighting conditions to improve performance. After retraining, the model showed fewer false positives and more robust detection in edge cases. These targeted improvements demonstrate how small changes in training data can significantly impact system reliability.
+
+
