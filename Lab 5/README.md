@@ -294,6 +294,18 @@ Following exploration and reflection from Part 1, finish building your interacti
 
 **\*\*\*Include a short video demonstrating the finished result.\*\*\***
 
+***Model Improvements***
 Based on observations from Part 1, I improved the model by retraining it with more “Not Human” examples that previously caused false positives, such as a hoodie held in front of the camera. I also balanced the dataset more evenly and added some samples in dim lighting conditions to improve performance. After retraining, the model showed fewer false positives and more robust detection in edge cases. These targeted improvements demonstrate how small changes in training data can significantly impact system reliability.
 
+![Retrain Model](Retrain-Model.png)
+![Retrain Model2](Retrain-Model2.png)
 
+***Interaction Improvements***
+
+To enhance user interaction and make the experience feel more personal, we updated the system to provide time-specific motivational messages. Instead of repeating the same greeting throughout the day, the device now delivers context-aware responses—such as a gentle "Good morning! You've got this." or an encouraging "Good evening. Let’s get a bit done."—based on the current hour.
+
+In addition, I enhanced the text-to-speech audio quality. The default voice previously sounded too robotic and detached. I replaced it with a more natural-sounding voice using a built-in speech synthesis tool that better conveys tone and warmth. This makes the motivational prompts feel more encouraging and pleasant to hear during interaction.
+
+[![Demo](thumbnail.png)](https://youtu.be/7mVEo3a3GHE) 
+[![Edge Case Testing - Dim light](thumbnail.png)](https://youtube.com/shorts/XjR7BTSQimY?feature=share) 
+[![Edge Case Testing - Dim light](thumbnail.png)](https://youtu.be/B8TMCJNlymg) 
