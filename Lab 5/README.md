@@ -141,7 +141,7 @@ To make the interaction feel warmer and more personal, I updated the system to d
 I also improved the quality of the spoken audio. The original version used Flite’s default voice, which sounded noticeably robotic and out of place for a device meant to offer gentle encouragement. By switching to a more natural-sounding built-in voice, the spoken prompts now convey a friendlier tone without adding complexity to the system. These updates together make the interaction feel more pleasant and intentional, while still keeping the overall design lightweight and focused.
 
 [![Demo](thumbnail.png)](https://youtu.be/7mVEo3a3GHE) 
-[![Edge Case Testing - Dim light](thumbnail.png)](https://youtube.com/shorts/XjR7BTSQimY?feature=share) 
+[![Edge Case Testing - Hoodies](thumbnail.png)](https://youtube.com/shorts/XjR7BTSQimY?feature=share) 
 [![Edge Case Testing - Dim light](thumbnail.png)](https://youtu.be/B8TMCJNlymg) 
 
 
