@@ -94,6 +94,10 @@ display_delay = 5  # seconds to show welcome screen
 current_state = "blank"
 display_ready = False  # track when we first show something
 
+# Debounce Variable
+debounce_start = None
+debounce_duration = 0.3 #300ms debounce window
+
 while True:
     ret, frame = cap.read()
     if not ret:
@@ -118,17 +122,24 @@ while True:
         display_ready = True
 
     if results["highest_class_id"] == 0 and confidence > 0.8:
-        print("Human detected!")
-        if current_state != "detected":
-            motivational_message = get_time_based_message()
-            show_screen("Welcome!", "Human detected", bg=(0, 80, 0))
-            subprocess.run(["flite", "-voice", "slt", "-t", motivational_message])
-            current_state = "detected"
-        last_detect_time = now
+	 # Start or continue debounce
+	if debounce_start is None:
+		debounce_start = now
+	elif (now - debounce_start) >= debounce_duration:
+		 print("Human detected!")
+        	if current_state != "detected":
+            		motivational_message = get_time_based_message()
+           		 show_screen("Welcome!", "Human detected", bg=(0, 80, 0))
+           		 subprocess.run(["flite", "-voice", "slt", "-t", motivational_message])
+           		 current_state = "detected"
+       		last_detect_time = now
 
     else:
-        print("No human detected.")
-        if current_state == "detected" and (now - last_detect_time) > display_delay:
+       # Reset debounce when no human is seen
+	debounce_start = None
+	print("No human detected.")
+        
+	if current_state == "detected" and (now - last_detect_time) > display_delay:
             print("Timeout: switching to scanning mode.")
             show_screen("Waiting...", "Scanning for human")
             current_state = "waiting"
