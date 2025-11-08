@@ -1,2 +1,2 @@
-0 Phone
-1 Zooming
+0 Human
+1 Not Human
