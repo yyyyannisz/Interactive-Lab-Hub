@@ -68,13 +68,6 @@ Exploring these input and output combinations helped me understand how multi-sen
 ### Part C
 ### Test the interaction prototype
 
-Now flight test your interactive prototype and **note down your observations**:
-For example:
-1. When does it what it is supposed to do?
-1. When does it fail?
-1. When it fails, why does it fail?
-1. Based on the behavior you have seen, what other scenarios could cause problems?
-
 During testing, the system performed reliably in most scenarios. It correctly identified me as a human even when I was standing far away from the camera, and it maintained high accuracy across different poses, such as turning sideways or wearing a mask. I was also impressed that it did not misclassify non-human objects, even when I moved items like a pillows, iPad, or book directly in front of the camera. These results suggest the model is robust against everyday desk clutter and movement.
 
 However, there were a few notable failure cases. When I held up a hoodie—without myself being visible—the system sometimes misclassified it as a human. Similarly, a poster of Chappell Roan showing her full frontal face occasionally triggered a false positive. While this type of misclassification is understandable given the visual similarity, it is less concerning in this context since the system is designed to offer a friendly prompt rather than make high-stakes decisions. The model also struggled in extremely low-light conditions, failing to detect me reliably when the lighting was too dim for the camera to capture clear features.
