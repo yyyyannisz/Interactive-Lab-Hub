@@ -80,15 +80,15 @@ Based on these observations, other potential failure scenarios may include highl
 1. How could change your interactive system to address this?
 1. Are there optimizations you can try to do on your sense-making algorithm.
 
-If someone else were to use this system, I imagine it would feel like a subtle, ambient interaction — a low-effort way to mark the start of a work session. They would walk up to their desk and be greeted by a simple welcome message, offering a gentle psychological cue to begin focusing. However, they may not immediately be aware of the uncertainties built into the system. Because the interface is minimal and doesn’t display detection confidence or reasoning, users might assume it's more accurate than it actually is.
+If someone else were to use this system, it would feel like a quiet, ambient interaction rather than a tool that demands attention. When they walk up to the desk, the system notices their presence and displays a friendly welcome message, offering a small psychological nudge to begin working. Because the interface is intentionally simple and does not show confidence levels or internal reasoning, most users would not be explicitly aware of the system’s uncertainties. They are likely to assume the device is confident in its decisions even though the underlying model is making best-guess classifications frame by frame.
 
-Fortunately, the consequences of a misclassification in this context are fairly minor. A false negative (not detecting a human) might mean the welcome screen doesn’t appear right away, which is not disruptive. A false positive (detecting a human when there is none) might result in an occasional premature “Welcome!” message, which could feel odd but not harmful. In both cases, the stakes are low because the system serves more as an ambient motivator than a security or productivity enforcement tool.
+The impact of a misclassification in this context is minimal. A false negative—failing to detect someone who is actually there—would simply delay the welcome message, which is not disruptive. A false positive—triggering a welcome message when no one is present—might feel slightly amusing or unexpected, but it poses no real problem since the system is not enforcing productivity or making high-stakes decisions. The overall experience remains low-pressure and forgiving.
 
-There are several interaction-level adjustments that could help users better understand the system’s behavior without adding complexity. For example, a brief delay or debounce before showing the welcome message could reduce flicker and implicitly communicate that the system is validating what it sees. Another option would be to incorporate subtle visual states—such as a softer color tone or dimmer message—when the model’s confidence is lower. These cues would not expose numerical confidence scores but would help the user intuitively understand why the system sometimes reacts differently. Because the system is meant to feel gentle and ambient, any uncertainty cues should be minimal and non-intrusive. These adjustments could help shape a clearer mental model of how the device works, making interactions feel smoother and more coherent.
+If needed, there are interaction-level refinements that could make the system feel more transparent or consistent. For example, introducing a brief moment of visual settling before switching screens, or using a softer intermediate “checking…” state, could help communicate that the system is processing the scene rather than reacting instantly to every frame. These adjustments are optional, but they could make the device’s behavior feel smoother and help users form a clearer mental model of what the system is doing.
 
-Testing highlighted several data-related opportunities for improving the model. Adding more “Not Human” examples—especially ambiguous objects like hoodies or printed faces—could reduce false positives. Collecting more samples in dim lighting could also help address nighttime performance issues, which currently cause most false negatives.
+Testing the prototype also revealed opportunities to improve the sense-making algorithm itself. Adding more diverse “Not Human” examples—especially objects that previously caused false positives, such as hoodies or posters—would help the model better distinguish human presence from background clutter. Capturing additional training images in dim or uneven lighting would also improve performance at night, when most of the model’s false negatives occurred.
 
-Beyond dataset refinements, additional sensing modalities could be explored if higher reliability were needed. For instance, integrating a passive infrared (PIR) sensor or a simple proximity detector could provide cross-validation for presence detection. While such additions are not necessary for this motivational context, they illustrate how multi-sensor fusion could increase robustness if the system were ever used in a more dynamic or shared environment.
+If future versions required more reliability, the system could also incorporate an additional sensor, such as a passive infrared (PIR) motion detector or simple proximity sensor, to provide a second source of evidence. While this is not necessary for a motivational desk companion, multi-sensor fusion could be helpful if the system were used in more dynamic environments or shared spaces.
 
 ### Part D
 ### Characterize your own Observant system
@@ -128,17 +128,26 @@ The interaction feels ambient and gentle — not intrusive, but quietly encourag
 ### Part 2.
 
 ***Model Improvements***
-Based on observations from Part 1, I improved the model by retraining it with more “Not Human” examples that previously caused false positives, such as a hoodie held in front of the camera. I also balanced the dataset more evenly and added some samples in dim lighting conditions to improve performance. After retraining, the model showed fewer false positives and more robust detection in edge cases. These targeted improvements demonstrate how small changes in training data can significantly impact system reliability.
+Based on the failure cases identified in Part 1, I retrained the model with a more intentionally designed dataset. The original version contained enough “Human” images but an insufficient variety of “Not Human” examples, which caused occasional false positives—especially when objects such as hoodies or posters resembled human shapes. To address this, I expanded the “Not Human” class to include more ambiguous or confusable objects, such as bulky clothing, printed faces, and desk items positioned close to the camera. I also collected additional samples in dim or uneven lighting, since most false negatives occurred at night when the camera struggled to capture clear visual features. After retraining, the updated model showed fewer false positives and significantly more stability in edge cases. These improvements demonstrate how targeted augmentation of the dataset can meaningfully increase robustness without changing the system’s overall architecture.
 
 ![Retrain Model](Retrain-Model.png)
 ![Retrain Model2](Retrain-Model2.png)
 
 ***Interaction Improvements***
 
-To enhance user interaction and make the experience feel more personal, we updated the system to provide time-specific motivational messages. Instead of repeating the same greeting throughout the day, the device now delivers context-aware responses—such as a gentle "Good morning! You've got this." or an encouraging "Good evening. Let’s get a bit done."—based on the current hour.
+To make the interaction feel warmer and more personal, I updated the system to deliver time-specific motivational messages. Instead of repeating the same greeting throughout the day, the device now chooses a context-appropriate message—for example, “Good morning! You’ve got this.” in the morning or “Good evening. Let’s get a bit done.” later at night. This adds subtle variability to the interaction and helps the system feel more responsive to the user’s daily rhythm.
 
-In addition, I enhanced the text-to-speech audio quality. The default voice previously sounded too robotic and detached. I replaced it with a more natural-sounding voice using a built-in speech synthesis tool that better conveys tone and warmth. This makes the motivational prompts feel more encouraging and pleasant to hear during interaction.
+I also improved the quality of the spoken audio. The original version used Flite’s default voice, which sounded noticeably robotic and out of place for a device meant to offer gentle encouragement. By switching to a more natural-sounding built-in voice, the spoken prompts now convey a friendlier tone without adding complexity to the system. These updates together make the interaction feel more pleasant and intentional, while still keeping the overall design lightweight and focused.
 
 [![Demo](thumbnail.png)](https://youtu.be/7mVEo3a3GHE) 
 [![Edge Case Testing - Dim light](thumbnail.png)](https://youtube.com/shorts/XjR7BTSQimY?feature=share) 
 [![Edge Case Testing - Dim light](thumbnail.png)](https://youtu.be/B8TMCJNlymg) 
+
+
+***Additional Areas for Future Improvement***
+
+Testing highlighted several opportunities for future refinement. The system could benefit from a brief transitional “Checking…” state to smooth the switch between scanning and greeting, helping users form a better mental model of the device’s behavior. Performance in extremely low-light scenarios could also be improved with further nighttime training data. If higher reliability were ever required, the system could incorporate a secondary sensor—such as a passive infrared (PIR) motion detector—to complement the image classifier. While not necessary for a motivational desk companion, these options point toward meaningful next steps should the system be deployed in more dynamic environments.
+
+### Notes on AI Assistant
+
+For this lab, I used ChatGPT to help me summarize my design decisions and rewrite some sections into clearer paragraphs. All reflection points and design choices are my own. Also, some of my script was coded using the assistance of ChatGPT.
