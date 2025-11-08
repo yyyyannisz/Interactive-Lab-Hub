@@ -91,37 +91,32 @@ In terms of improving the sense-making algorithm, I could refine the dataset fur
 ### Part D
 ### Characterize your own Observant system
 
-Now that you have experimented with one or more of these sense-making systems **characterize their behavior**.
-During the lecture, we mentioned questions to help characterize a material:
-* What can you use X for?
-* What is a good environment for X?
-* What is a bad environment for X?
-* When will X break?
-* When it breaks how will X break?
-* What are other properties/behaviors of X?
-* How does X feel?
-
-**\*\*\*Include a short video demonstrating the answers to these questions.\*\*\***
-
 ***What can you use this system for?***
+
 This system is designed to create an ambient cue for study motivation. When a person approaches the desk, the system detects their presence and displays a welcoming message. It can be used as a soft nudge to help users begin a focused session, or even as a lightweight check-in mechanism to track time spent at the desk.
 
 ***What is a good environment for this system?***
+
 The system works best in a well-lit, indoor space where the lighting is consistent and the background is relatively static. It thrives when used by a single primary user, particularly in solo work setups where desk layout and background conditions are predictable.
 
 ***What is a bad environment for this system?***
+
 The system struggles in low-light or heavily cluttered environments. It may also misclassify things in shared or dynamic spaces — such as public libraries or co-working spaces — where multiple people, posters, or objects move in and out of frame frequently.
 
 ***When will it break?***
+
 It will likely break in very dim conditions where the camera cannot capture clear input, or when unfamiliar objects (e.g. posters of human faces, or clothes with human-like form) are presented. The model might also break if the user makes significant appearance changes not represented in training (e.g., wearing a full costume or hat).
 
 ***When it breaks, how will it break?***
+
 It typically breaks by producing a false positive, such as misclassifying a static object as a human, or a false negative, where a real human is not detected due to low confidence. In both cases, the user might see a wrong message (“Welcome!” when no one is there, or no message when they are present).
 
 ***Other properties or behaviors?***
+
 The system responds quickly and does not require active input, making it feel seamless. It does not require an internet connection once deployed and can be customized with other outputs, such as audio or smart light integration, making it extensible.
 
 ***How does it feel?***
+
 The interaction feels ambient and gentle — not intrusive, but quietly encouraging. It blends into the background of your daily routine, almost like a digital pet that acknowledges your presence and helps anchor your focus.
 
 [![Good Environment & Pass Cases](thumbnail.png)](https://youtube.com/shorts/adgnVRHFiWs?feature=share)
@@ -129,10 +124,6 @@ The interaction feels ambient and gentle — not intrusive, but quietly encourag
 [![Failed Case 2](thumbnail.png)](https://youtu.be/4O2F7VAke7Y)
 
 ### Part 2.
-
-Following exploration and reflection from Part 1, finish building your interactive system, and demonstrate it in use with a video.
-
-**\*\*\*Include a short video demonstrating the finished result.\*\*\***
 
 ***Model Improvements***
 Based on observations from Part 1, I improved the model by retraining it with more “Not Human” examples that previously caused false positives, such as a hoodie held in front of the camera. I also balanced the dataset more evenly and added some samples in dim lighting conditions to improve performance. After retraining, the model showed fewer false positives and more robust detection in edge cases. These targeted improvements demonstrate how small changes in training data can significantly impact system reliability.
