@@ -50,18 +50,18 @@ def on_message(client, userdata, msg):
         if player not in active_players:
             active_players.add(player)
             print(f"{player} joined (waiting room).")
-            announce(f"👋 {player} joined the game! ({len(active_players)} players now)")
+            announce(f"{player} joined the game! ({len(active_players)} players now)")
 
             if not game_active:
                 game_active = True
                 waiting_for_players = True
-                announce("🎮 New Rock-Paper-Scissors game starting!")
+                announce("New Rock-Paper-Scissors game starting!")
                 announce("Waiting for players to join...")
                 time.sleep(1)
 
             if waiting_for_players and len(active_players) >= MIN_PLAYERS:
                 waiting_for_players = False
-                announce("✅ Enough players joined! Get ready to play...")
+                announce("Enough players joined! Get ready to play...")
                 time.sleep(2)
         return
 
@@ -69,12 +69,12 @@ def on_message(client, userdata, msg):
     if choice == "quit":
         if player in active_players:
             active_players.remove(player)
-            announce(f"👋 {player} left the game. ({len(active_players)} players remaining)")
+            announce(f"{player} left the game. ({len(active_players)} players remaining)")
             print(f"{player} quit.")
             # Auto-win if only one remains
             if len(active_players) == 1:
                 sole_player = list(active_players)[0]
-                announce(f"🎉 Game Over! Champion: {sole_player}")
+                announce(f"Game Over! Champion: {sole_player}")
                 reset_game_prompt()
             elif len(active_players) < MIN_PLAYERS:
                 waiting_for_players = True
@@ -89,7 +89,7 @@ def on_message(client, userdata, msg):
         # Shouldn't happen, but safety
         game_active = True
         waiting_for_players = True
-        announce("🎮 New game starting! Waiting for players...")
+        announce("New game starting! Waiting for players...")
         time.sleep(1)
 
     if not round_active:
@@ -119,8 +119,8 @@ def start_round():
     # --- Begin round ---
     choices = {}
     round_active = True
-    announce(f"\n🕹 New round starting! You have {ROUND_DURATION} seconds to play!")
-    announce("👉 Time to play! Send your choice: rock, paper, or scissors!")
+    announce(f"\nNew round starting! You have {ROUND_DURATION} seconds to play!")
+    announce("Time to play! Send your choice: rock, paper, or scissors!")
     countdown = ROUND_DURATION
     while countdown > 0:
         print(f" {countdown}s remaining...", end="\r")
@@ -130,32 +130,32 @@ def start_round():
     round_active = False
 
     if not choices:
-        announce("😴 No moves received this round. Waiting for players...")
+        announce("No moves received this round. Waiting for players...")
         return True
 
     winner_choice = determine_winner(choices)
     if winner_choice is None:
-        announce(f"🤝 It's a tie! Everyone stays in. ({choices})")
+        announce(f"It's a tie! Everyone stays in. ({choices})")
         return True
 
     survivors = [p for p, c in choices.items() if c == winner_choice]
     eliminated = [p for p in active_players if p not in survivors]
 
-    announce(f"🏆 Winning move: {winner_choice.upper()}")
-    announce(f"✅ Survivors: {', '.join(survivors)}")
+    announce(f"Winning move: {winner_choice.upper()}")
+    announce(f"Survivors: {', '.join(survivors)}")
     if eliminated:
-        announce(f"❌ Eliminated: {', '.join(eliminated)}")
+        announce(f"Eliminated: {', '.join(eliminated)}")
 
     active_players.clear()
     active_players.update(survivors)
 
     # --- Game end checks ---
     if len(active_players) == 1:
-        announce(f"🎉 Game Over! Champion: {list(active_players)[0]}")
+        announce(f"Game Over! Champion: {list(active_players)[0]}")
         reset_game_prompt()
         return False
     elif len(active_players) == 0:
-        announce("😵 Everyone eliminated! No winner.")
+        announce("Everyone eliminated! No winner.")
         reset_game_prompt()
         return False
     else:
@@ -166,7 +166,7 @@ def reset_game_prompt():
     """Ask the host whether to start another game."""
     global game_active, waiting_for_players
     announce("Game finished!")
-    print("\n🎮 Game over!")
+    print("\n Game over!")
     while True:
         again = input("Play again? (y/n): ").strip().lower()
         if again == "y":
@@ -177,7 +177,7 @@ def reset_game_prompt():
             time.sleep(2)
             break
         elif again == "n":
-            announce("👋 Host ending session.")
+            announce(" Host ending session.")
             game_active = False
             waiting_for_players = False
             active_players.clear()
