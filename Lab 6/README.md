@@ -142,7 +142,7 @@ Hold colored objects near sensor to change your pixel!
 
 
 ![Screenshot of grid](Screenshot-of-grid.jpg)
-![photo of Pi setup](photo-of-Pi-etup.jpg)
+![photo of Pi setup](photo-of-Pi-setup.jpg)
 ---
 
 
