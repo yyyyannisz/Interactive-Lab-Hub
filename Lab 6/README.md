@@ -59,6 +59,23 @@ mosquitto_pub -h farlab.infosci.cornell.edu -p 1883 -t 'IDD/test/yourname' -m 'H
 
 **💡 Brainstorm 5 ideas for messaging between devices**
 
+We successfully connected to the broker and exchanged messages between devices.  
+However, we noticed that the messages appeared and disappeared too quickly in the MQTT Explorer.
+
+[![Testing Video](thumbnail.png)](https://youtube.com/shorts/vS_I9qKc26g?feature=share)
+
+Ideas: 
+
+1. Trivia game to play against your friends 
+
+2. Play rock paper scissors against your friends
+
+3. Play counting game against your friends (21)
+
+4. Door open sensor, send message to group when the door opens 
+
+5. Publishes temperatures to the group every 20 minutes for each room 
+
 ---
 
 ## Part B: Collaborative Pixel Grid
