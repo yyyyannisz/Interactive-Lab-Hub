@@ -24,7 +24,7 @@ client.loop_start()
 
 # --- Announce join ---
 client.publish(topic_choice, "join")
-print(f"👋 You have joined the game as {player_name}!")
+print(f"You have joined the game as {player_name}!")
 print("Waiting for round announcements...")
 
 try:
@@ -32,14 +32,14 @@ try:
         msg = input("").strip().lower()
         if msg == "quit":
             client.publish(topic_choice, "quit")
-            print("👋 You left the game.")
+            print("You left the game.")
             break
         if msg not in ["rock", "paper", "scissors"]:
             print("Invalid choice.")
             continue
 
         client.publish(topic_choice, msg)
-        print("✅ Sent your choice.")
+        print("Sent your choice.")
         time.sleep(1)
 
 finally:
