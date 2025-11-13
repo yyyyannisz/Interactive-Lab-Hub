@@ -46,22 +46,35 @@ except:
     font_big = ImageFont.load_default()
     font_sm = ImageFont.load_default()
 
-def show_text(title, subtitle="", color=(255, 255, 0)):
-    """Clear and display a title + optional subtitle."""
-    draw.rectangle((0, 0, width, height), fill=(0, 0, 0))
-    bbox = draw.textbbox((0, 0), title, font=font_big)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    draw.text(((width - tw) // 2, 40), title, font=font_big, fill=color)
-    if subtitle:
-        bbox2 = draw.textbbox((0, 0), subtitle, font=font_sm)
-        sw, sh = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
-        draw.text(((width - sw) // 2, 40 + th + 10), subtitle, font=font_sm, fill=color)
+def show_text(text, color=(255, 255, 0)):
+    """Display text auto-fitted to screen on PiTFT (keeps good readability)."""
+    draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
+
+    font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    max_font_size = 24
+    min_font_size = 16  # never shrink below this for readability
+    font_size = max_font_size
+
+    # Shrink text only if needed to fit the screen
+    while True:
+        font = ImageFont.truetype(font_path, font_size)
+        bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
+        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+
+        if (tw <= width - 10 and th <= height - 10) or font_size <= min_font_size:
+            break
+        font_size -= 2
+
+    # Center the text neatly
+    x = (width - tw) // 2
+    y = (height - th) // 2
+    draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
     disp.image(image)
 
 # --- Startup welcome ---
-show_text("Welcome", "Rock-Paper-Scissors Host", color=(0, 180, 255))
+show_text("Welcome\nRock-Paper-Scissors Host", color=(0, 180, 255))
 time.sleep(5)
-show_text("Waiting for", "players to join...", color=(255, 255, 0))
+show_text("Waiting for\nplayers to join...", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
