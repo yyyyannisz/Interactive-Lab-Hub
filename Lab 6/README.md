@@ -176,14 +176,22 @@ Replace this README with your documentation:
 **1. Project Description**
 - What does it do? Why interesting? User experience?
 
+Our project is an online Rock–Paper–Scissors game that allows multiple players to play together in real time using MQTT messaging between Raspberry Pis. Each Pi represents a player and publishes their chosen move (rock, paper, or scissors) to the shared MQTT broker. The host Pi collects all moves, determines the winner, and broadcasts the results back to all players.
+
+This setup transforms a simple hand game into a distributed interactive system, enabling fast, low-latency gameplay that outperforms typical video-call-based interactions. By transmitting lightweight text messages instead of video streams, the game ensures smooth, synchronized rounds among players and demonstrates the power of MQTT for real-time, multi-device coordination.
+
 **2. Architecture Diagram**
 - Hardware, connections, data flow
 - Label input/computation/output
+
+
 
 **3. Build Documentation**
 - Photos of each Pi + sensors
 - MQTT topics used
 - Code snippets with explanations
+
+
 
 **4. User Testing**
 - **Test with 2+ people NOT on your team**
@@ -191,6 +199,8 @@ Replace this README with your documentation:
 - What did they think before trying?
 - What surprised them?
 - What would they change?
+
+
 
 **5. Reflection**
 - What worked well?
