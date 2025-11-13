@@ -72,7 +72,7 @@ def show_text(text, color=(255, 255, 0)):
     disp.image(image)
 
 # --- Startup welcome ---
-show_text("Welcome\nRock-Paper-Scissors Host", color=(0, 180, 255))
+show_text("Welcome\nRock-Paper-Scissors\nHost", color=(0, 180, 255))
 time.sleep(5)
 show_text("Waiting for\nplayers to join...", color=(255, 255, 0))
 
