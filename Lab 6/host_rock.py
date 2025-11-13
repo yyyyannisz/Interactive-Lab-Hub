@@ -139,7 +139,7 @@ def on_message(client, userdata, msg):
                 reset_game_prompt()
             elif len(active_players) < MIN_PLAYERS:
                 waiting_for_players = True
-                announce("⚠ Not enough players to continue. Waiting for new players...")
+                announce("Not enough players to continue. Waiting for new players...")
         return
 
     # --- Player move ---
@@ -171,7 +171,7 @@ def start_round():
 
     if len(active_players) < MIN_PLAYERS:
         waiting_for_players = True
-        announce("⚠ Not enough players to continue. Waiting for new players...")
+        announce("Not enough players to continue. Waiting for new players...")
         return True
 
     choices.clear()
@@ -227,7 +227,7 @@ def reset_game_prompt():
     while True:
         again = input("Play again? (y/n): ").strip().lower()
         if again == "y":
-            announce("🔄 New game starting soon! Waiting for players...")
+            announce("New game starting soon! Waiting for players...")
             waiting_for_players = True
             game_active = True
             active_players.clear()
