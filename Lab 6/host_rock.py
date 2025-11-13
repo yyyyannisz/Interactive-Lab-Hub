@@ -166,7 +166,7 @@ def start_round():
     global round_active, choices, waiting_for_players
 
     if waiting_for_players:
-        announce("⏸ Waiting for enough players to join...")
+        announce("Waiting for enough players to join...")
         return True
 
     if len(active_players) < MIN_PLAYERS:
