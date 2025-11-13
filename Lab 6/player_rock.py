@@ -60,9 +60,11 @@ def show_text(title, subtitle="", color=(255, 255, 0)):
         draw.text(((width - sw) // 2, 40 + th + 10), subtitle, font=font_sm, fill=color)
     disp.image(image)
 
-# --- Initial welcome screen ---
+# --- Step 1: Show welcome screen for 5 seconds ---
 show_text("Welcome to", "the Paper, Scissor, and Rock Game!", color=(0, 180, 255))
-time.sleep(1.5)
+time.sleep(5)
+
+# --- Step 2: Transition to name prompt ---
 show_text("Please enter", "your name using keyboard", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
@@ -129,6 +131,10 @@ try:
         time.sleep(1)
 
 finally:
+    client.loop_stop()
+    client.disconnect()
+    show_text("Disconnected.", "", color=(255, 255, 255))
+
     client.loop_stop()
     client.disconnect()
     show_text("Disconnected.", "", color=(255, 255, 255))
