@@ -264,4 +264,6 @@ except KeyboardInterrupt:
 finally:
     client.loop_stop()
     client.disconnect()
+    show_text("Host disconnected.", color=(255, 255, 255))
+
 
