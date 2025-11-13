@@ -41,26 +41,28 @@ image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
 
 def show_text(text, color=(255, 255, 0)):
-    """Display text auto-fitted to screen on PiTFT."""
+    """Display text auto-fitted to screen on PiTFT (keeps good readability)."""
     draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
 
-    font_size = 24
     font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    max_font_size = 24
+    min_font_size = 16  # don't go below this unless absolutely needed
+    font_size = max_font_size
 
-    # Reduce font size until text fits
+    # Try from large to smaller fonts until the text fits
     while True:
         font = ImageFont.truetype(font_path, font_size)
         bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-        if tw <= width - 10 and th <= height - 10:
+
+        # If it fits or font too small, stop
+        if (tw <= width - 10 and th <= height - 10) or font_size <= min_font_size:
             break
         font_size -= 2
-        if font_size < 10:
-            break
 
+    # Center the text nicely
     x = (width - tw) // 2
     y = (height - th) // 2
-
     draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
     disp.image(image)
 
