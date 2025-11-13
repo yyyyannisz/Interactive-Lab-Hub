@@ -59,7 +59,7 @@ def show_text(title, subtitle="", color=(255, 255, 0)):
     disp.image(image)
 
 # --- Startup welcome ---
-show_text("Welcome", "Rock–Paper–Scissors Host", color=(0, 180, 255))
+show_text("Welcome", "Rock-Paper-Scissors Host", color=(0, 180, 255))
 time.sleep(5)
 show_text("Waiting for", "players to join...", color=(255, 255, 0))
 
@@ -242,7 +242,7 @@ def reset_game_prompt():
 
 def game_loop():
     global game_active
-    announce("Rock–Paper–Scissors Host Ready!")
+    announce("Rock-Paper-Scissors Host Ready!")
     while True:
         if not game_active:
             time.sleep(1)
@@ -265,3 +265,4 @@ except KeyboardInterrupt:
 finally:
     client.loop_stop()
     client.disconnect()
+
