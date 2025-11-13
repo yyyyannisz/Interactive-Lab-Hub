@@ -40,36 +40,24 @@ else:
 image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
 
-try:
-    font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
-    font_sm = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
-except:
-    font_big = ImageFont.load_default()
-    font_sm = ImageFont.load_default()
-
 def show_text(text, color=(255, 255, 0)):
     """Display text auto-fitted to screen on PiTFT."""
     draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
 
-    # Try a reasonably large starting font
     font_size = 24
-    try:
-        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    except:
-        font_path = None
+    font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 
-    # Reduce font size until the text fits
+    # Reduce font size until text fits
     while True:
-        font = ImageFont.truetype(font_path, font_size) if font_path else ImageFont.load_default()
+        font = ImageFont.truetype(font_path, font_size)
         bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
         if tw <= width - 10 and th <= height - 10:
             break
         font_size -= 2
         if font_size < 10:
-            break  # stop shrinking if it gets too small
+            break
 
-    # Center text
     x = (width - tw) // 2
     y = (height - th) // 2
 
@@ -77,11 +65,11 @@ def show_text(text, color=(255, 255, 0)):
     disp.image(image)
 
 
-# --- Step 1: Show welcome screen for 5 seconds ---
-show_text("Let's play\nPaper, Scissor, and Rock!", color=(0, 180, 255))
+# --- Step 1: Welcome screen ---
+show_text("Let's play\nPaper, Scissor,\nand Rock!", color=(0, 180, 255))
 time.sleep(5)
 
-# --- Step 2: Transition to name prompt ---
+# --- Step 2: Name input screen ---
 show_text("Please enter\nyour name using keyboard", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
@@ -104,7 +92,6 @@ def on_message(client, userdata, msg):
     message = msg.payload.decode()
     print(f"\n{message}")
 
-    # Choose colors based on message context
     lower = message.lower()
     if "winner" in lower or "champion" in lower:
         color = (0, 255, 0)
@@ -116,6 +103,7 @@ def on_message(client, userdata, msg):
         color = (0, 180, 255)
     else:
         color = (255, 255, 0)
+
     show_text(message, color=color)
 
 client.on_message = on_message
@@ -126,7 +114,7 @@ client.loop_start()
 # --- Announce join ---
 client.publish(topic_choice, "join")
 print(f"You have joined the game as {player_name}!")
-show_text("Joined as", player_name, color=(0, 180, 255))
+show_text(f"Joined as\n{player_name}", color=(0, 180, 255))
 print("Waiting for round announcements...")
 
 try:
@@ -135,23 +123,20 @@ try:
         if msg == "quit":
             client.publish(topic_choice, "quit")
             print("You left the game.")
-            show_text("You left", "the game.", color=(255, 0, 0))
+            show_text("You left\nthe game.", color=(255, 0, 0))
             break
+
         if msg not in ["rock", "paper", "scissors"]:
             print("Invalid choice.")
-            show_text("Invalid choice!", "Try again.", color=(255, 255, 255))
+            show_text("Invalid choice!\nTry again.", color=(255, 255, 255))
             continue
 
         client.publish(topic_choice, msg)
         print(f"Sent your choice: {msg.upper()}")
-        show_text("You chose", msg.upper(), color=(255, 255, 0))
+        show_text(f"You chose\n{msg.upper()}", color=(255, 255, 0))
         time.sleep(1)
 
 finally:
     client.loop_stop()
     client.disconnect()
-    show_text("Disconnected.", "", color=(255, 255, 255))
-
-    client.loop_stop()
-    client.disconnect()
-    show_text("Disconnected.", "", color=(255, 255, 255))
+    show_text("Disconnected.", color=(255, 255, 255))
