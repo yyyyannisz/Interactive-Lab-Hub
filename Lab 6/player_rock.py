@@ -72,7 +72,7 @@ show_text("Let's play\nPaper, Scissor,\nand Rock!", color=(0, 180, 255))
 time.sleep(5)
 
 # --- Step 2: Name input screen ---
-show_text("Please enter\nyour name using keyboard", color=(255, 255, 0))
+show_text("Please enter\nyour name\nusing keyboard", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
