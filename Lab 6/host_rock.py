@@ -242,7 +242,6 @@ def reset_game_prompt():
 
 def game_loop():
     global game_active
-    announce("Rock-Paper-Scissors Host Ready!")
     while True:
         if not game_active:
             time.sleep(1)
