@@ -61,11 +61,11 @@ def show_text(title, subtitle="", color=(255, 255, 0)):
     disp.image(image)
 
 # --- Step 1: Show welcome screen for 5 seconds ---
-show_text("Welcome to", "the Paper, Scissor, and Rock Game!", color=(0, 180, 255))
+show_text("Let's play\nPaper, Scissor, and Rock!", color=(0, 180, 255))
 time.sleep(5)
 
 # --- Step 2: Transition to name prompt ---
-show_text("Please enter", "your name using keyboard", color=(255, 255, 0))
+show_text("Please enter\nyour name using keyboard", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
