@@ -5,49 +5,63 @@ import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
-# --- Display setup ---
-cs_pin = digitalio.DigitalInOut(board.CE1)
+# --- Display setup (matches Human Greeter wiring) ---
+cs_pin = digitalio.DigitalInOut(board.D5)
 dc_pin = digitalio.DigitalInOut(board.D25)
 reset_pin = digitalio.DigitalInOut(board.D24)
-BAUDRATE = 64000000
+backlight = digitalio.DigitalInOut(board.D22)
+backlight.switch_to_output()
+backlight.value = True  # Turn on backlight immediately
 
+BAUDRATE = 24000000
 spi = board.SPI()
+
 disp = st7789.ST7789(
     spi,
-    height=135,
-    y_offset=40,
-    rotation=90,
     cs=cs_pin,
     dc=dc_pin,
     rst=reset_pin,
     baudrate=BAUDRATE,
+    width=135,
+    height=240,
+    x_offset=53,
+    y_offset=40,
+    rotation=270,
 )
 
-width = disp.width
-height = disp.height
+# Handle rotation properly
+if disp.rotation % 180 == 90:
+    height = disp.width
+    width = disp.height
+else:
+    width = disp.width
+    height = disp.height
+
 image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
-font = ImageFont.load_default()
+try:
+    font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+    font_sm = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
+except:
+    font_big = ImageFont.load_default()
+    font_sm = ImageFont.load_default()
 
-def show_text(text, color=(255, 255, 0)):
-    """Helper to clear and display text on PiTFT screen."""
-    draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
-    # Handle long text by splitting into lines
-    lines = []
-    words = text.split()
-    line = ""
-    for word in words:
-        if len(line + " " + word) < 20:
-            line += " " + word
-        else:
-            lines.append(line.strip())
-            line = word
-    lines.append(line.strip())
-    y = 40
-    for l in lines:
-        draw.text((10, y), l, font=font, fill=color)
-        y += 15
+def show_text(title, subtitle="", color=(255, 255, 0)):
+    """Clear and display a title + optional subtitle."""
+    draw.rectangle((0, 0, width, height), fill=(0, 0, 0))
+    bbox = draw.textbbox((0, 0), title, font=font_big)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    draw.text(((width - tw) // 2, 40), title, font=font_big, fill=color)
+    if subtitle:
+        bbox2 = draw.textbbox((0, 0), subtitle, font=font_sm)
+        sw, sh = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
+        draw.text(((width - sw) // 2, 40 + th + 10), subtitle, font=font_sm, fill=color)
     disp.image(image)
+
+# --- Startup welcome ---
+show_text("Welcome,", "Rock–Paper–Scissors Host", color=(0, 180, 255))
+time.sleep(5)
+show_text("Waiting for", "players to join...", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
@@ -84,7 +98,7 @@ def determine_winner(players_choices):
 def announce(message, color=(255, 255, 0)):
     """Send message to all players and display it on the host screen."""
     print(message)
-    show_text(message, color)
+    show_text(message, color=color)
     client.publish("IDD/rps/status", message)
 
 def on_message(client, userdata, msg):
@@ -119,7 +133,6 @@ def on_message(client, userdata, msg):
             active_players.remove(player)
             announce(f"{player} left the game. ({len(active_players)} players left)")
             print(f"{player} quit.")
-            # Auto-win if only one remains
             if len(active_players) == 1:
                 sole_player = list(active_players)[0]
                 announce(f"Game Over! Champion: {sole_player}", color=(0, 255, 0))
@@ -129,12 +142,11 @@ def on_message(client, userdata, msg):
                 announce("⚠ Not enough players to continue. Waiting for new players...")
         return
 
-    # --- Regular move ---
+    # --- Player move ---
     if choice not in ["rock", "paper", "scissors"]:
         return
 
     if not game_active:
-        # Safety check
         game_active = True
         waiting_for_players = True
         announce("New game starting! Waiting for players...")
@@ -145,7 +157,6 @@ def on_message(client, userdata, msg):
         active_players.add(player)
         return
 
-    # During a round
     choices[player] = choice
     active_players.add(player)
     print(f"{player} chose {choice}")
@@ -163,8 +174,7 @@ def start_round():
         announce("⚠ Not enough players to continue. Waiting for new players...")
         return True
 
-    # --- Begin round ---
-    choices = {}
+    choices.clear()
     round_active = True
     announce(f"New round! {ROUND_DURATION}s to play!", color=(255, 255, 0))
     announce("Send your move: rock, paper, or scissors!")
@@ -187,8 +197,6 @@ def start_round():
 
     survivors = [p for p, c in choices.items() if c == winner_choice]
     eliminated = [p for p in active_players if p not in survivors]
-
-    # Color-code winning move
     color_map = {"rock": (255, 0, 0), "paper": (0, 255, 0), "scissors": (0, 0, 255)}
     win_color = color_map.get(winner_choice, (255, 255, 0))
 
@@ -200,7 +208,6 @@ def start_round():
     active_players.clear()
     active_players.update(survivors)
 
-    # --- Game end checks ---
     if len(active_players) == 1:
         announce(f"Game Over! Champion: {list(active_players)[0]}", color=(0, 255, 0))
         reset_game_prompt()
@@ -216,7 +223,7 @@ def reset_game_prompt():
     """Ask the host whether to start another game."""
     global game_active, waiting_for_players
     announce("Game finished!")
-    print("\n Game over!")
+    print("\nGame over!")
     while True:
         again = input("Play again? (y/n): ").strip().lower()
         if again == "y":
@@ -241,9 +248,8 @@ def game_loop():
             time.sleep(1)
             continue
         keep_playing = start_round()
+        time.sleep(3)
         if not keep_playing:
-            time.sleep(3)
-        else:
             time.sleep(3)
 
 # --- MQTT setup ---
