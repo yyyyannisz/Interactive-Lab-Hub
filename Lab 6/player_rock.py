@@ -41,29 +41,29 @@ image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
 
 try:
-    font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 18)
+    font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
+    font_sm = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
 except:
-    font = ImageFont.load_default()
+    font_big = ImageFont.load_default()
+    font_sm = ImageFont.load_default()
 
-def show_text(text, color=(255, 255, 0)):
-    """Helper to clear and display text on the PiTFT screen."""
+def show_text(title, subtitle="", color=(255, 255, 0)):
+    """Clear and display a title + optional subtitle."""
     draw.rectangle((0, 0, width, height), fill=(0, 0, 0))
-    # Simple line wrapping for longer messages
-    lines = []
-    words = text.split()
-    line = ""
-    for word in words:
-        if len(line + " " + word) < 20:
-            line += " " + word
-        else:
-            lines.append(line.strip())
-            line = word
-    lines.append(line.strip())
-    y = 40
-    for l in lines:
-        draw.text((10, y), l, font=font, fill=color)
-        y += 20
+    # Center title
+    bbox = draw.textbbox((0, 0), title, font=font_big)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    draw.text(((width - tw) // 2, 40), title, font=font_big, fill=color)
+    if subtitle:
+        bbox2 = draw.textbbox((0, 0), subtitle, font=font_sm)
+        sw, sh = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
+        draw.text(((width - sw) // 2, 40 + th + 10), subtitle, font=font_sm, fill=color)
     disp.image(image)
+
+# --- Initial welcome screen ---
+show_text("Welcome to", "the Paper, Scissor, and Rock Game!", color=(0, 180, 255))
+time.sleep(1.5)
+show_text("Please enter", "your name using keyboard", color=(255, 255, 0))
 
 # --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
@@ -71,7 +71,9 @@ port = 1883
 username = "idd"
 password = "device@theFarm"
 
+# --- Ask for player name ---
 player_name = input("Enter your player name: ").strip()
+
 topic_choice = f"IDD/rps/choices/{player_name}"
 topic_status = "IDD/rps/status"
 
@@ -86,15 +88,15 @@ def on_message(client, userdata, msg):
     # Choose colors based on message context
     lower = message.lower()
     if "winner" in lower or "champion" in lower:
-        color = (0, 255, 0)        # green
+        color = (0, 255, 0)
     elif "eliminated" in lower:
-        color = (255, 0, 0)        # red
+        color = (255, 0, 0)
     elif "waiting" in lower:
-        color = (255, 255, 255)    # white
+        color = (255, 255, 255)
     elif "round" in lower or "ready" in lower:
-        color = (0, 180, 255)      # blue
+        color = (0, 180, 255)
     else:
-        color = (255, 255, 0)      # yellow
+        color = (255, 255, 0)
     show_text(message, color=color)
 
 client.on_message = on_message
@@ -105,7 +107,7 @@ client.loop_start()
 # --- Announce join ---
 client.publish(topic_choice, "join")
 print(f"You have joined the game as {player_name}!")
-show_text(f"Joined as {player_name}", color=(0, 180, 255))
+show_text("Joined as", player_name, color=(0, 180, 255))
 print("Waiting for round announcements...")
 
 try:
@@ -114,19 +116,19 @@ try:
         if msg == "quit":
             client.publish(topic_choice, "quit")
             print("You left the game.")
-            show_text("You left the game.", color=(255, 0, 0))
+            show_text("You left", "the game.", color=(255, 0, 0))
             break
         if msg not in ["rock", "paper", "scissors"]:
             print("Invalid choice.")
-            show_text("Invalid choice!", color=(255, 255, 255))
+            show_text("Invalid choice!", "Try again.", color=(255, 255, 255))
             continue
 
         client.publish(topic_choice, msg)
         print(f"Sent your choice: {msg.upper()}")
-        show_text(f"You chose {msg.upper()}", color=(255, 255, 0))
+        show_text("You chose", msg.upper(), color=(255, 255, 0))
         time.sleep(1)
 
 finally:
     client.loop_stop()
     client.disconnect()
-    show_text("Disconnected.", color=(255, 255, 255))
+    show_text("Disconnected.", "", color=(255, 255, 255))
