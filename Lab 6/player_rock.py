@@ -47,18 +47,35 @@ except:
     font_big = ImageFont.load_default()
     font_sm = ImageFont.load_default()
 
-def show_text(title, subtitle="", color=(255, 255, 0)):
-    """Clear and display a title + optional subtitle."""
-    draw.rectangle((0, 0, width, height), fill=(0, 0, 0))
-    # Center title
-    bbox = draw.textbbox((0, 0), title, font=font_big)
-    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-    draw.text(((width - tw) // 2, 40), title, font=font_big, fill=color)
-    if subtitle:
-        bbox2 = draw.textbbox((0, 0), subtitle, font=font_sm)
-        sw, sh = bbox2[2] - bbox2[0], bbox2[3] - bbox2[1]
-        draw.text(((width - sw) // 2, 40 + th + 10), subtitle, font=font_sm, fill=color)
+def show_text(text, color=(255, 255, 0)):
+    """Display text auto-fitted to screen on PiTFT."""
+    draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
+
+    # Try a reasonably large starting font
+    font_size = 24
+    try:
+        font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+    except:
+        font_path = None
+
+    # Reduce font size until the text fits
+    while True:
+        font = ImageFont.truetype(font_path, font_size) if font_path else ImageFont.load_default()
+        bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
+        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        if tw <= width - 10 and th <= height - 10:
+            break
+        font_size -= 2
+        if font_size < 10:
+            break  # stop shrinking if it gets too small
+
+    # Center text
+    x = (width - tw) // 2
+    y = (height - th) // 2
+
+    draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
     disp.image(image)
+
 
 # --- Step 1: Show welcome screen for 5 seconds ---
 show_text("Let's play\nPaper, Scissor, and Rock!", color=(0, 180, 255))
