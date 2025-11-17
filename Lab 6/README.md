@@ -183,10 +183,6 @@ This function calculates the winning move based on player submissions. The Host 
 
 **4. User Testing**
 - **Test with 2+ people NOT on your team**
-- Photos/video of use
-- What did they think before trying?
-- What surprised them?
-- What would they change?
 
 This is our Demo Video:
 [![Demo Video](thumbnail.png)](https://youtu.be/H4k-_PTIcUE)  
@@ -197,72 +193,38 @@ We did the user testing with two classmates (randomly selected):
 ![User testing](User-testing-2.jpg)
 ![User testing](User-testing-3.jpg)
 
+
+- What did they think before trying?
+  
+  It was not obvious that our set up was rock, paper, scissors at first and only looking at the setup it was impossible to tell.
+  
+- What surprised them?
+  
+  The sensor input surprises them. They didn’t see the sensors as buttons, instead they tried hovering over the copper strips at first until we said it was a button.
+  
+- What would they change?
+
+  What would they change? They said they would’ve liked more instructions on the screen for which buttons corresponded to which choices, but also did not need the same prompt of rock, paper, and scissors every round. 
+
+
 **5. Reflection**
 - What worked well?
+
+The main gameplay loop of rounds or rock, paper, scissors worked well and the host was able to accurately send out messages of who won. The players were also accurately able to send their choices out and get feedback. 
+
 - Challenges with distributed interaction?
+
+We had tried at some point to make the host a player as well to better play on only 2 pis, but that had absolutely broken the game play loop. The loop would end when the host sent theirs or would not properly register the host’s plays. As a result, we decided to simplify and make the roles of the host and players separate. In order to run both the host and the player on the same pi, we had to make sure the host did not interact with the pi’s screen and only read and sent messages. Sending messages and having the pi display their own message had initially also created an issue as the pi would try to display the message from the host and the message we programmed it to show at the same time as well. We also weren’t sure if the text not showing up properly on the screen was due to the messages sent by the host script or the player script itself. We got rid of these collisions and found that it was the messages sent by the host script causing the screen issues.
+  
 - How did sensor events work?
+
+The players would get the prompt to make their choice and the player script would listen to the sensor to accurately determine their choice. Each choice was registered to a copper strip and touching a strip would send their choice to the player script which would then send their choice to the host. The host then decided who won the match and sent the winner back to the players. 
+
 - What would you improve?
 
----
-
-## Code Files
-
-**Server files:**
-- `app.py` - Pixel grid server (Flask + WebSocket + MQTT)
-- `mqtt_viewer.py` - MQTT message viewer for debugging
-- `mqtt_bridge.py` - MQTT → WebSocket bridge
-- `requirements-server.txt` - Server dependencies
-
-**Pi files:**
-- `pixel_grid_publisher.py` - Example (RGB sensor → MQTT)
-- `requirements-pi.txt` - Pi dependencies
-
-**Web interface:**
-- `templates/grid.html` - Pixel grid display
-- `templates/controller.html` - Color picker
-- `templates/mqtt_viewer.html` - Message viewer
-
----
-
-## Debugging Tools
-
-**MQTT Message Viewer:** `http://farlab.infosci.cornell.edu:5001`
-- See all MQTT messages in real-time
-- View topics and payloads
-- Helpful for debugging your own projects
-
-**Command line:**
-```bash
-# See all IDD messages
-mosquitto_sub -h farlab.infosci.cornell.edu -p 1883 -t "IDD/#" -u idd -P "device@theFarm"
-```
-
----
-
-## Troubleshooting
-
-**MQTT:** Broker `farlab.infosci.cornell.edu:1883`, user `idd`, pass `device@theFarm`
-
-**Sensor:** Check `i2cdetect -y 1`, APDS-9960 at `0x39`
-
-**Grid:** Verify server running, check MQTT in console, test with web controller
-
-**Pi venv:** Make sure to activate: `source .venv/bin/activate`
+We would add more detailed instructions in the beginning, and distinguish between the first rounds and subsequent rounds like our test users suggested. Additionally, We would make it easier for users to play multiple games in a row as our script sometimes required restarting to properly play again. 
 
 
----
-
-## Submission Checklist
-
-Before submitting:
-- [ ] Delete prep/instructions above
-- [ ] Add YOUR project documentation
-- [ ] Include photos/videos/diagrams  
-- [ ] Document user testing with non-team members
-- [ ] Add reflection on learnings
-- [ ] List team names at top
-
-**Your README = story of what YOU built!**
 
 ---
 
