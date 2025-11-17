@@ -97,7 +97,7 @@ def on_message(client, userdata, msg):
         show_text("LOSE! GAME OVER! ", color=(255, 0, 0))
         return
     # ---- Default: show host message ----
-    #show_text(message)
+    show_text(message)
 
 
 client.on_message = on_message
