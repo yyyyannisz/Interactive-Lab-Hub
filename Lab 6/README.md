@@ -262,7 +262,7 @@ client.subscribe("IDD/rps/choices/#")
 
 This lets the Host collect all moves for the current round (no matter how many players join), update the game state, and broadcast the next status message.
 
-**Code snippets with explanations**
+### Code snippets with explanations
 
 ***Player Code Snippet: Publishing a Move***
 ```bash
@@ -286,10 +286,9 @@ def on_message(client, userdata, msg):
     choice = msg.payload.decode().strip()
     choices[player] = choice
 ```
-The Host receives moves from all players using a wildcard subscription.
-Each message is stored in the choices dictionary.
+The Host receives moves from all players using a wildcard subscription. Each message is stored in the choices dictionary.
 
-***Host Code Snippet — Determining Winner***
+***Host Code Snippet: Determining Winner***
 ```bash
 def determine_winner(players_choices):
     unique = set(players_choices.values())
@@ -299,12 +298,7 @@ def determine_winner(players_choices):
     if unique == {"scissors", "paper"}: return "scissors"
     if unique == {"paper", "rock"}: return "paper"
 ```
-This function calculates the winning move based on player submissions.
-The Host then eliminates players whose moves don’t match the winning move.
-
-
-
-
+This function calculates the winning move based on player submissions. The Host then eliminates players whose moves don’t match the winning move.
 
 **4. User Testing**
 - **Test with 2+ people NOT on your team**
