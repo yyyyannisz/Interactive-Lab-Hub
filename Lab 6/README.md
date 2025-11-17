@@ -184,44 +184,32 @@ This setup transforms a simple hand game into a distributed interactive system, 
 - Hardware, connections, data flow
 - Label input/computation/output
 
-                          MQTT Broker  
-                farlab.infosci.cornell.edu:1883
-        ┌────────────────────────────────────────────┐
-        │      Routes MQTT messages between Pis      │
-        └────────────────────────────────────────────┘
-                      ▲               ▲             ▲
-                      │               │             │
-                      │               │             │
-               (Player 1)     (Player 2)     (Player 3)
-     ┌────────────────────┐ ┌────────────────────┐ ┌────────────────────┐
-     │ Raspberry Pi 1     │ │ Raspberry Pi 2     │ │ Raspberry Pi 3     │
-     │ - Input buttons    │ │ - Input buttons    │ │ - Input buttons    │
-     │ - Publishes move   │ │ - Publishes move   │ │ - Publishes move   │
-     │   to /rps/p1/move  │ │   to /rps/p2/move  │ │   to /rps/p3/move  │
-     │ - Subscribes       │ │ - Subscribes       │ │ - Subscribes       │
-     │   to /rps/result   │ │   to /rps/result   │ │   to /rps/result   │
-     └─────────▲──────────┘ └─────────▲──────────┘ └─────────▲──────────┘
-               │                        │                     │
-               └──────────────┬─────────┴──────────┬──────────┘
-                              ▼                    ▼
-                     Receives round result (win/lose/tie)
 
-                       ┌────────────────────────────┐
-                       │          Host Pi           │
-                       │   Game Coordinator         │
-                       │ - Subscribes to all moves  │
-                       │   /rps/+/move              │
-                       │ - Determines winner        │
-                       │ - Publishes result to      │
-                       │   /rps/result              │
-                       └────────────────────────────┘
+```mermaid
+flowchart LR
+    P1[Player Pi 1<br>Keyboard Input<br>TFT Display] 
+    P2[Player Pi 2<br>Keyboard Input<br>TFT Display]
+    H[Host Pi<br>Also a Player<br>Round Logic + TFT]
 
+    B((MQTT Broker<br>farlab.infosci.cornell.edu))
+
+    P1 -- publishes move --> B
+    P2 -- publishes move --> B
+    H -- publishes move --> B
+
+    B -- sends choices --> H
+    H -- publishes results --> B
+    B -- sends results --> P1
+    B -- sends results --> P2
+```
 
 
 **3. Build Documentation**
 - Photos of each Pi + sensors
 - MQTT topics used
 - Code snippets with explanations
+
+
 
 
 
