@@ -2,6 +2,8 @@ import paho.mqtt.client as mqtt
 import time
 import board
 import digitalio
+import busio
+import adafruit_mpr121
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
 
@@ -29,7 +31,7 @@ disp = st7789.ST7789(
     rotation=270,
 )
 
-# Handle rotation
+# Display size
 if disp.rotation % 180 == 90:
     height = disp.width
     width = disp.height
@@ -61,14 +63,20 @@ def show_text(text, color=(255, 255, 0)):
     draw.multiline_text((x, y), text, fill=color, font=font, align="center", spacing=4)
     disp.image(image)
 
+# ---------------- MPR121 TOUCH SENSOR ----------------
+i2c = busio.I2C(board.SCL, board.SDA)
+mpr121 = adafruit_mpr121.MPR121(i2c)
 
-# ---------------- BUTTON SETUP (digitalio) ----------------
-button = digitalio.DigitalInOut(board.D17)
-button.switch_to_input(pull=digitalio.Pull.UP)
+# Mapping host choices to touch pads
+TOUCH_MAP = {
+    0: "rock",
+    1: "paper",
+    2: "scissors"
+}
 
+# Selection state
 moves = ["rock", "paper", "scissors"]
-move_index = 0
-current_move = moves[move_index]
+current_move = "rock"   # default
 host_submitted = False
 host_choice_topic = "IDD/rps/choices/host"
 
@@ -77,39 +85,46 @@ def update_selection_screen():
 
 update_selection_screen()
 
-def scan_host_button():
-    """Short press cycles. Long press submits."""
-    global move_index, current_move, host_submitted
+# ---------------- HOST TOUCH HANDLER ----------------
+last_touch_time = 0
+TOUCH_DEBOUNCE = 0.5
 
-    if not button.value:  # pressed LOW
-        press_start = time.time()
+def scan_host_touch():
+    """
+    Host selects ROCK/PAPER/SCISSORS via MPR121 touch pads.
+    Short touch = choose move
+    Long touch (≥1.2s) = submit choice
+    """
+    global current_move, host_submitted, last_touch_time
 
-        # Wait for release
-        while not button.value:
-            time.sleep(0.01)
+    for pad, move in TOUCH_MAP.items():
+        if mpr121[pad].value:
+            now = time.time()
+            if now - last_touch_time < TOUCH_DEBOUNCE:
+                return  # debounce
+            last_touch_time = now
 
-        press_time = time.time() - press_start
+            # Detect long press
+            press_start = time.time()
+            while mpr121[pad].value:
+                if time.time() - press_start > 1.2:
+                    # Long press = SUBMIT
+                    host_submitted = True
+                    client.publish(host_choice_topic, current_move)
+                    show_text(f"Host submitted:\n{current_move.upper()}", color=(255, 255, 0))
+                    return
+                time.sleep(0.01)
 
-        # Long press = submit
-        if press_time > 1.0:
-            client.publish(host_choice_topic, current_move)
-            show_text(f"Host submitted:\n{current_move.upper()}", color=(255, 255, 0))
-            host_submitted = True
-            time.sleep(0.5)
-
-        else:
-            # Short press = cycle moves
-            move_index = (move_index + 1) % len(moves)
-            current_move = moves[move_index]
+            # Short press = CHOOSE MOVE
+            current_move = move
             update_selection_screen()
-            time.sleep(0.2)
+            return
 
 
 # ---------------- GAME INITIAL UI ----------------
 show_text("Welcome\nRock-Paper-Scissors\nHost", color=(0, 180, 255))
 time.sleep(5)
 show_text("Waiting for\nplayers to join...", color=(255, 255, 0))
-
 
 # ---------------- MQTT CONFIG ----------------
 broker = "farlab.infosci.cornell.edu"
@@ -151,6 +166,7 @@ def on_message(client, userdata, msg):
     player = msg.topic.split("/")[-1]
     choice = msg.payload.decode().strip().lower()
 
+    # --- Player joins ---
     if choice == "join":
         if player not in active_players:
             active_players.add(player)
@@ -169,6 +185,7 @@ def on_message(client, userdata, msg):
                 time.sleep(2)
         return
 
+    # --- Player quits ---
     if choice == "quit":
         if player in active_players:
             active_players.remove(player)
@@ -184,19 +201,22 @@ def on_message(client, userdata, msg):
                 announce("Not enough players. Waiting...")
         return
 
+    # --- Invalid ---
     if choice not in ["rock", "paper", "scissors"]:
         return
 
+    # --- Round inactive: queue for next round ---
     if not round_active:
         active_players.add(player)
         return
 
+    # --- Valid move ---
     choices[player] = choice
     active_players.add(player)
 
 
 def start_round():
-    global round_active, choices, waiting_for_players, host_submitted
+    global round_active, choices, waiting_for_players, host_submitted, current_move
 
     host_submitted = False
     active_players.add("host")  # Host always plays
@@ -218,17 +238,17 @@ def start_round():
 
     countdown = ROUND_DURATION
     while countdown > 0:
-        scan_host_button()
+        scan_host_touch()
         print(f"{countdown}s...", end="\r")
         time.sleep(1)
         countdown -= 1
 
     round_active = False
 
+    # Auto-submit host if needed
     if not host_submitted:
         client.publish(host_choice_topic, current_move)
         announce(f"Host auto-selected:\n{current_move.upper()}")
-        time.sleep(1)
 
     if not choices:
         announce("No moves this round. Waiting...")
@@ -244,9 +264,7 @@ def start_round():
     eliminated = [p for p in active_players if p not in survivors]
 
     color_map = {"rock": (255, 0, 0), "paper": (0, 255, 0), "scissors": (0, 0, 255)}
-    win_color = color_map.get(winner_choice, (255, 255, 0))
-
-    announce(f"Winning move: {winner_choice.upper()}", color=win_color)
+    announce(f"Winning move: {winner_choice.upper()}", color=color_map[winner_choice])
     announce(f"Survivors: {', '.join(survivors)}", color=(0, 255, 0))
 
     if eliminated:
@@ -284,6 +302,7 @@ def reset_game_prompt():
             active_players.clear()
             time.sleep(2)
             break
+
         elif again == "n":
             announce("Host ending session.")
             game_active = False
