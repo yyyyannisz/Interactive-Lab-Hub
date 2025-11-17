@@ -90,10 +90,7 @@ flowchart LR
 - MQTT topics used
 - Code snippets with explanations
 
-[![Host Setup Video](thumbnail.jpg)](https://youtu.be/oofDiX5fk00)
-
-[![Player Setup Video](thumbnail.jpg)](https://youtu.be/uIO_vh4X3Ts)
-
+![Pi setup](Pi-setup.jpg)
 For our Rock–Paper–Scissors game, each Pi communicates through a small set of MQTT topics:
 
 ***Player → Host: Publish Move***
