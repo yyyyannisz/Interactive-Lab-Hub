@@ -2,17 +2,17 @@ import paho.mqtt.client as mqtt
 import time
 import board
 import digitalio
+import RPi.GPIO as GPIO
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
-import RPi.GPIO as GPIO    # <<< NEW for button support
 
-# --- Display setup (matches Human Greeter wiring) ---
+# ---------------- DISPLAY SETUP ----------------
 cs_pin = digitalio.DigitalInOut(board.D5)
 dc_pin = digitalio.DigitalInOut(board.D25)
 reset_pin = digitalio.DigitalInOut(board.D24)
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
-backlight.value = True  # Turn on backlight immediately
+backlight.value = True
 
 BAUDRATE = 24000000
 spi = board.SPI()
@@ -30,7 +30,6 @@ disp = st7789.ST7789(
     rotation=270,
 )
 
-# Handle rotation properly
 if disp.rotation % 180 == 90:
     height = disp.width
     width = disp.height
@@ -41,15 +40,7 @@ else:
 image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
 
-try:
-    font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
-    font_sm = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
-except:
-    font_big = ImageFont.load_default()
-    font_sm = ImageFont.load_default()
-
 def show_text(text, color=(255, 255, 0)):
-    """Display text auto-fitted to screen on PiTFT (keeps good readability)."""
     draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
 
     font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
@@ -57,11 +48,11 @@ def show_text(text, color=(255, 255, 0)):
     min_font_size = 16
     font_size = max_font_size
 
-    # Shrink text only if needed to fit the screen
     while True:
         font = ImageFont.truetype(font_path, font_size)
         bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
-        tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+        tw = bbox[2] - bbox[0]
+        th = bbox[3] - bbox[1]
         if (tw <= width - 10 and th <= height - 10) or font_size <= min_font_size:
             break
         font_size -= 2
@@ -71,12 +62,56 @@ def show_text(text, color=(255, 255, 0)):
     draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
     disp.image(image)
 
-# --- Startup welcome ---
+
+# ---------------- BUTTON SETUP ----------------
+GPIO.setmode(GPIO.BCM)
+BUTTON_PIN = 17
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+moves = ["rock", "paper", "scissors"]
+move_index = 0
+current_move = moves[move_index]
+host_submitted = False
+host_choice_topic = "IDD/rps/choices/host"
+
+
+def update_selection_screen():
+    show_text(f"Host selecting:\n{current_move.upper()}", color=(0, 180, 255))
+
+
+update_selection_screen()
+
+
+def scan_host_button():
+    """Short press cycles, long press submits host move."""
+    global move_index, current_move, host_submitted
+
+    if GPIO.input(BUTTON_PIN) == GPIO.LOW:
+        press_start = time.time()
+        while GPIO.input(BUTTON_PIN) == GPIO.LOW:
+            time.sleep(0.01)
+        press_duration = time.time() - press_start
+
+        # Long press: submit host move
+        if press_duration > 1.0:
+            client.publish(host_choice_topic, current_move)
+            show_text(f"Host submitted:\n{current_move.upper()}", color=(255, 255, 0))
+            host_submitted = True
+            time.sleep(1)
+        else:
+            # Short press: cycle choices
+            move_index = (move_index + 1) % len(moves)
+            current_move = moves[move_index]
+            update_selection_screen()
+            time.sleep(0.2)
+
+
+# ---------------- GAME LOGIC (UNCHANGED) ----------------
+
 show_text("Welcome\nRock-Paper-Scissors\nHost", color=(0, 180, 255))
 time.sleep(5)
 show_text("Waiting for\nplayers to join...", color=(255, 255, 0))
 
-# --- MQTT Configuration ---
 broker = "farlab.infosci.cornell.edu"
 port = 1883
 username = "idd"
@@ -85,19 +120,17 @@ password = "device@theFarm"
 ROUND_DURATION = 10
 MIN_PLAYERS = 2
 
-# --- Game State ---
 choices = {}
 active_players = set()
 round_active = False
 game_active = False
 waiting_for_players = False
 
-# --- MQTT Setup ---
 client = mqtt.Client()
 client.username_pw_set(username, password)
 
+
 def determine_winner(players_choices):
-    """Determine which choice wins overall."""
     unique_choices = set(players_choices.values())
     if len(unique_choices) == 1 or len(unique_choices) == 3:
         return None
@@ -108,23 +141,21 @@ def determine_winner(players_choices):
     if unique_choices == {"paper", "rock"}:
         return "paper"
 
+
 def announce(message, color=(255, 255, 0)):
-    """Send message to all players and display it on the host screen."""
     print(message)
     show_text(message, color=color)
     client.publish("IDD/rps/status", message)
 
+
 def on_message(client, userdata, msg):
-    """Handle player messages for join, quit, or moves."""
     global round_active, choices, active_players, game_active, waiting_for_players
     player = msg.topic.split("/")[-1]
     choice = msg.payload.decode().strip().lower()
 
-    # --- Player joins ---
     if choice == "join":
         if player not in active_players:
             active_players.add(player)
-            print(f"{player} joined (waiting room).")
             announce(f"{player} joined the game! ({len(active_players)} players now)")
 
             if not game_active:
@@ -140,12 +171,10 @@ def on_message(client, userdata, msg):
                 time.sleep(2)
         return
 
-    # --- Player quits ---
     if choice == "quit":
         if player in active_players:
             active_players.remove(player)
             announce(f"{player} left the game. ({len(active_players)} players left)")
-            print(f"{player} quit.")
             if len(active_players) == 1:
                 sole_player = list(active_players)[0]
                 announce(f"Game Over! Champion: {sole_player}", color=(0, 255, 0))
@@ -155,29 +184,25 @@ def on_message(client, userdata, msg):
                 announce("Not enough players to continue. Waiting for new players...")
         return
 
-    # --- Player move ---
     if choice not in ["rock", "paper", "scissors"]:
         return
 
     if not round_active:
-        print(f"{player} played early; added to next round.")
         active_players.add(player)
         return
 
     choices[player] = choice
     active_players.add(player)
-    print(f"{player} chose {choice}")
 
-def submit_host_choice():
-    """Host submits its own move as 'host'."""
-    global host_choice_submitted, current_move
-    client.publish("IDD/rps/choices/host", current_move)
-    announce(f"Host chose: {current_move.upper()}")
-    host_choice_submitted = True
 
 def start_round():
-    """Run one full round of play."""
-    global round_active, choices, waiting_for_players
+    global round_active, choices, waiting_for_players, host_submitted
+
+    # Reset host submission for new round
+    host_submitted = False
+
+    # Host must be included as a player
+    active_players.add("host")
 
     if waiting_for_players:
         announce("Waiting for enough players to join...")
@@ -190,16 +215,23 @@ def start_round():
 
     choices.clear()
     round_active = True
-    announce(f"New round! {ROUND_DURATION}s to play!", color=(255, 255, 0))
+    announce(f"New round! {ROUND_DURATION}s to play!")
     announce("Send your move: rock, paper, or scissors!")
-    countdown = ROUND_DURATION
 
+    countdown = ROUND_DURATION
     while countdown > 0:
-        print(f" {countdown}s remaining...", end="\r")
+        scan_host_button()  # <-- Host selecting
+        print(f"{countdown}s remaining...", end="\r")
         time.sleep(1)
         countdown -= 1
 
     round_active = False
+
+    if not host_submitted:
+        # Auto-submit last selected move
+        client.publish(host_choice_topic, current_move)
+        announce(f"Host auto-selected:\n{current_move.upper()}", color=(255, 255, 0))
+        time.sleep(1)
 
     if not choices:
         announce("No moves this round. Waiting for players...")
@@ -207,7 +239,7 @@ def start_round():
 
     winner_choice = determine_winner(choices)
     if winner_choice is None:
-        announce(f"Tie! Everyone stays in. ({choices})", color=(255, 255, 255))
+        announce(f"Tie! Everyone stays in. ({choices})")
         return True
 
     survivors = [p for p, c in choices.items() if c == winner_choice]
@@ -228,14 +260,14 @@ def start_round():
         reset_game_prompt()
         return False
     elif len(active_players) == 0:
-        announce("Everyone eliminated! No winner.", color=(255, 255, 255))
+        announce("Everyone eliminated! No winner.")
         reset_game_prompt()
         return False
     else:
         return True
 
+
 def reset_game_prompt():
-    """Ask the host whether to start another game."""
     global game_active, waiting_for_players
     announce("Game finished!")
     print("\nGame over!")
@@ -255,60 +287,30 @@ def reset_game_prompt():
             active_players.clear()
             break
 
-# --- Host Button Setup ---
-GPIO.setmode(GPIO.BCM)
-BUTTON_PIN = 17
-GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
-moves = ["rock", "paper", "scissors"]
-current_index = 0
-current_move = moves[current_index]
+def game_loop():
+    global game_active
+    while True:
+        if not game_active:
+            time.sleep(1)
+            continue
+        keep_playing = start_round()
+        time.sleep(3)
+        if not keep_playing:
+            time.sleep(3)
 
-last_press_time = None
-LONG_PRESS_MS = 600
-host_choice_submitted = False
 
-# --- MQTT setup ---
 client.on_message = on_message
 client.connect(broker, port)
 client.subscribe("IDD/rps/choices/#")
 client.loop_start()
 
 try:
-    while True:
-        # -------- Button Handling --------
-        if not GPIO.input(BUTTON_PIN):  # pressed
-            if last_press_time is None:
-                last_press_time = time.monotonic()
-        else:
-            if last_press_time is not None:
-                press_time_ms = (time.monotonic() - last_press_time) * 1000
-                long_press = press_time_ms >= LONG_PRESS_MS
-
-                if long_press:
-                    submit_host_choice()
-                else:
-                    current_index = (current_index + 1) % 3
-                    current_move = moves[current_index]
-                    show_text(f"Host selecting:\n{current_move.upper()}", color=(0, 180, 255))
-
-                last_press_time = None
-
-        # --- Run original host loop (unchanged) ---
-        if game_active:
-            keep_playing = start_round()
-            time.sleep(3)
-            if not keep_playing:
-                time.sleep(3)
-        else:
-            time.sleep(0.1)
-
+    game_loop()
 except KeyboardInterrupt:
     print("\nStopping host...")
-
 finally:
-    GPIO.cleanup()
     client.loop_stop()
     client.disconnect()
+    GPIO.cleanup()
     show_text("Host disconnected.", color=(255, 255, 255))
-
