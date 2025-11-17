@@ -86,7 +86,7 @@ def on_message(client, userdata, msg):
 
     # ---- Round start ----
     if "new round" in lower or "send your move" in lower:
-        show_text("Time to play!\nSend your choice:\nROCK, PAPER, SCISSORS!", color=(0, 180, 255))
+        show_text("Send your choice:\nROCK, PAPER, SCISSORS!", color=(0, 180, 255))
         return
 
     # ---- GAME OVER ----
@@ -95,7 +95,7 @@ def on_message(client, userdata, msg):
         return
 
     # ---- Default: show host message ----
-    show_text(message)
+    #show_text(message)
 
 
 client.on_message = on_message
