@@ -209,9 +209,58 @@ flowchart LR
 - MQTT topics used
 - Code snippets with explanations
 
+[![Host Setup Video](thumbnail.jpg)](https://youtu.be/oofDiX5fk00)
 
+[![Player Setup Video](thumbnail.jpg)](https://youtu.be/uIO_vh4X3Ts)
 
+For our Rock–Paper–Scissors game, each Pi communicates through a small set of MQTT topics:
 
+***Player → Host: Publish Move***
+
+Each player publishes their move (rock, paper, or scissors) to a unique topic: 
+```bash
+IDD/rps/choices/<playerName>
+```
+Examples:
+```bash
+IDD/rps/choices/amy
+IDD/rps/choices/yannis
+IDD/rps/choices/host
+```
+This is how the Host collects everyone’s moves for each round.
+
+***Host → All Players: Publish Game Updates***
+
+The Host sends all game status messages on a shared topic:
+```bash
+IDD/rps/status
+```
+
+Messages on this topic include things like:
+
+-“New round! 10s to play!”
+
+-“Winning move: ROCK”
+
+-“Champion: yannis”
+
+-“Waiting for players to join...”
+
+Every Player Pi subscribes to this topic so the TFT screen updates in real time.
+
+***Host: Subscribe to All Player Moves***
+
+The Host listens to every player's move using a wildcard:
+```bash
+IDD/rps/choices/#
+```
+
+This matches our code:
+```bash
+client.subscribe("IDD/rps/choices/#")
+```
+
+This lets the Host collect all moves for the current round (no matter how many players join), update the game state, and broadcast the next status message.
 
 **4. User Testing**
 - **Test with 2+ people NOT on your team**
