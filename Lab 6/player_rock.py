@@ -53,7 +53,6 @@ def show_text(text, color=(255, 255, 0)):
     draw.multiline_text((x, y), text, font=font, fill=color, align="center")
     disp.image(image)
 
-
 # --- Startup ---
 show_text("Let's play\nPaper, Scissor,\nand Rock!", (0,180,255))
 time.sleep(3)
@@ -72,14 +71,31 @@ topic_status = "IDD/rps/status"
 
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
+    lower = message.lower()
     print(f"\n{message}")
+
+    # ---- Hide "waiting for enough players" ----
+    if "waiting for enough players" in lower or "not enough players" in lower:
+        return
+
+    # ---- Show proper "round start" message ----
+    if "new round" in lower or "send your move" in lower:
+        show_text("Time to play!\nSend your choice:\nROCK, PAPER, SCISSORS!")
+        return
+
+    # ---- Detect GAME OVER ----
+    if "champion" in lower or "game over" in lower:
+        show_text("GAME OVER!", color=(255,0,0))
+        return
+
+    # Default: show host message
     show_text(message)
 
 client.on_message = on_message
 client.subscribe(topic_status)
 client.loop_start()
 
-# --- MPR121 ---
+# --- MPR121 Touch Sensor ---
 i2c = busio.I2C(board.SCL, board.SDA)
 mpr121 = adafruit_mpr121.MPR121(i2c)
 
@@ -105,7 +121,6 @@ show_text("Waiting for host...", (255,255,0))
 while True:
     touched_pad = None
     
-    # Scan all pads quickly
     for pad in TOUCH_MAP.keys():
         if mpr121[pad].value:
             touched_pad = pad
@@ -122,13 +137,11 @@ while True:
             show_text(f"You chose\n{choice.upper()}")
             client.publish(topic_choice, choice)
 
-        # Don't run keyboard while still touching
         time.sleep(0.05)
         continue
 
-    # Reset last_pad when released
     if touched_pad is None:
         last_pad = None
 
-    # Non-blocking small sleep
     time.sleep(0.05)
+
