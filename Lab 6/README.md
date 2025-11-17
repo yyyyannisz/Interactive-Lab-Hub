@@ -150,7 +150,7 @@ This lets the Host collect all moves for the current round (no matter how many p
 topic_choice = f"IDD/rps/choices/{player_name}"
 client.publish(topic_choice, msg)
 ```
-The Player Pi takes keyboard input (rock, paper, scissors), and publishes it to the player’s unique MQTT topic. The Host listens to all these topics and stores each move.
+The Player Pi detects which touch pad was activated on the MPR121 sensor and publishes the corresponding move (rock, paper, scissors).
 
 ***Player Subscribes to Results***
 ```bash
