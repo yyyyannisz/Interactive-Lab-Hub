@@ -4,6 +4,7 @@ import board
 import digitalio
 from PIL import Image, ImageDraw, ImageFont
 import adafruit_rgb_display.st7789 as st7789
+import RPi.GPIO as GPIO    # <<< NEW for button support
 
 # --- Display setup (matches Human Greeter wiring) ---
 cs_pin = digitalio.DigitalInOut(board.D5)
@@ -39,6 +40,7 @@ else:
 
 image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
+
 try:
     font_big = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 20)
     font_sm = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 16)
@@ -52,7 +54,7 @@ def show_text(text, color=(255, 255, 0)):
 
     font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
     max_font_size = 24
-    min_font_size = 16  # never shrink below this for readability
+    min_font_size = 16
     font_size = max_font_size
 
     # Shrink text only if needed to fit the screen
@@ -60,12 +62,10 @@ def show_text(text, color=(255, 255, 0)):
         font = ImageFont.truetype(font_path, font_size)
         bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-
         if (tw <= width - 10 and th <= height - 10) or font_size <= min_font_size:
             break
         font_size -= 2
 
-    # Center the text neatly
     x = (width - tw) // 2
     y = (height - th) // 2
     draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
@@ -159,12 +159,6 @@ def on_message(client, userdata, msg):
     if choice not in ["rock", "paper", "scissors"]:
         return
 
-    if not game_active:
-        game_active = True
-        waiting_for_players = True
-        announce("New game starting! Waiting for players...")
-        time.sleep(1)
-
     if not round_active:
         print(f"{player} played early; added to next round.")
         active_players.add(player)
@@ -173,6 +167,13 @@ def on_message(client, userdata, msg):
     choices[player] = choice
     active_players.add(player)
     print(f"{player} chose {choice}")
+
+def submit_host_choice():
+    """Host submits its own move as 'host'."""
+    global host_choice_submitted, current_move
+    client.publish("IDD/rps/choices/host", current_move)
+    announce(f"Host chose: {current_move.upper()}")
+    host_choice_submitted = True
 
 def start_round():
     """Run one full round of play."""
@@ -192,6 +193,7 @@ def start_round():
     announce(f"New round! {ROUND_DURATION}s to play!", color=(255, 255, 0))
     announce("Send your move: rock, paper, or scissors!")
     countdown = ROUND_DURATION
+
     while countdown > 0:
         print(f" {countdown}s remaining...", end="\r")
         time.sleep(1)
@@ -253,16 +255,18 @@ def reset_game_prompt():
             active_players.clear()
             break
 
-def game_loop():
-    global game_active
-    while True:
-        if not game_active:
-            time.sleep(1)
-            continue
-        keep_playing = start_round()
-        time.sleep(3)
-        if not keep_playing:
-            time.sleep(3)
+# --- Host Button Setup ---
+GPIO.setmode(GPIO.BCM)
+BUTTON_PIN = 17
+GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+moves = ["rock", "paper", "scissors"]
+current_index = 0
+current_move = moves[current_index]
+
+last_press_time = None
+LONG_PRESS_MS = 600
+host_choice_submitted = False
 
 # --- MQTT setup ---
 client.on_message = on_message
@@ -271,12 +275,40 @@ client.subscribe("IDD/rps/choices/#")
 client.loop_start()
 
 try:
-    game_loop()
+    while True:
+        # -------- Button Handling --------
+        if not GPIO.input(BUTTON_PIN):  # pressed
+            if last_press_time is None:
+                last_press_time = time.monotonic()
+        else:
+            if last_press_time is not None:
+                press_time_ms = (time.monotonic() - last_press_time) * 1000
+                long_press = press_time_ms >= LONG_PRESS_MS
+
+                if long_press:
+                    submit_host_choice()
+                else:
+                    current_index = (current_index + 1) % 3
+                    current_move = moves[current_index]
+                    show_text(f"Host selecting:\n{current_move.upper()}", color=(0, 180, 255))
+
+                last_press_time = None
+
+        # --- Run original host loop (unchanged) ---
+        if game_active:
+            keep_playing = start_round()
+            time.sleep(3)
+            if not keep_playing:
+                time.sleep(3)
+        else:
+            time.sleep(0.1)
+
 except KeyboardInterrupt:
     print("\nStopping host...")
+
 finally:
+    GPIO.cleanup()
     client.loop_stop()
     client.disconnect()
     show_text("Host disconnected.", color=(255, 255, 255))
-
 
