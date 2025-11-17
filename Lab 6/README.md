@@ -262,7 +262,7 @@ client.subscribe("IDD/rps/choices/#")
 
 This lets the Host collect all moves for the current round (no matter how many players join), update the game state, and broadcast the next status message.
 
-***Code snippets with explanations***
+**Code snippets with explanations**
 
 ***Player Code Snippet: Publishing a Move***
 ```bash
