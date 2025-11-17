@@ -47,20 +47,25 @@ def show_text(text, color=(255, 255, 0)):
     font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
     size = 20
     font = ImageFont.truetype(font_path, size)
+
     bbox = draw.multiline_textbbox((0, 0), text, font=font)
-    tw, th = bbox[2]-bbox[0], bbox[3]-bbox[1]
-    x, y = (width - tw)//2, (height - th)//2
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    x = (width - tw) // 2
+    y = (height - th) // 2
+
     draw.multiline_text((x, y), text, font=font, fill=color, align="center")
     disp.image(image)
 
-# --- Startup ---
-show_text("Let's play\nPaper, Scissor,\nand Rock!", (0,180,255))
+
+# ---------------- STARTUP ----------------
+show_text("Let's play\nPaper, Scissor,\nand Rock!", (0, 180, 255))
 time.sleep(3)
 
-show_text("Please enter\nyour name\nusing keyboard", (255,255,0))
+show_text("Please enter\nyour name\nusing keyboard", (255, 255, 0))
 player_name = input("Enter your player name: ").strip()
 
-# --- MQTT ---
+
+# ---------------- MQTT ----------------
 broker = "farlab.infosci.cornell.edu"
 client = mqtt.Client()
 client.username_pw_set("idd", "device@theFarm")
@@ -69,33 +74,36 @@ client.connect(broker, 1883)
 topic_choice = f"IDD/rps/choices/{player_name}"
 topic_status = "IDD/rps/status"
 
+
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
     lower = message.lower()
     print(f"\n{message}")
 
-    # ---- Hide "waiting for enough players" ----
-    if "waiting for enough players" in lower or "not enough players" in lower:
+    # ---- Completely hide "waiting for players" ----
+    if "waiting" in lower:
         return
 
-    # ---- Show proper "round start" message ----
+    # ---- Round start ----
     if "new round" in lower or "send your move" in lower:
-        show_text("Time to play!\nSend your choice:\nROCK, PAPER, SCISSORS!")
+        show_text("Time to play!\nSend your choice:\nROCK, PAPER, SCISSORS!", color=(0, 180, 255))
         return
 
-    # ---- Detect GAME OVER ----
+    # ---- GAME OVER ----
     if "champion" in lower or "game over" in lower:
-        show_text("GAME OVER!", color=(255,0,0))
+        show_text("GAME OVER!", color=(255, 0, 0))
         return
 
-    # Default: show host message
+    # ---- Default: show host message ----
     show_text(message)
+
 
 client.on_message = on_message
 client.subscribe(topic_status)
 client.loop_start()
 
-# --- MPR121 Touch Sensor ---
+
+# ---------------- MPR121 TOUCH SENSOR ----------------
 i2c = busio.I2C(board.SCL, board.SDA)
 mpr121 = adafruit_mpr121.MPR121(i2c)
 
@@ -110,22 +118,27 @@ last_pad = None
 last_time = 0
 DEBOUNCE_TIME = 0.6
 
-# Announce join
+
+# ---------------- JOIN MESSAGE ----------------
 client.publish(topic_choice, "join")
-show_text(f"Joined as\n{player_name}", (0,180,255))
+show_text(f"Joined as\n{player_name}", (0, 180, 255))
 print(f"Joined as {player_name}")
 time.sleep(2)
-show_text("Waiting for host...", (255,255,0))
 
-# --- Main Loop (non-blocking) ---
+show_text("Waiting for host...", (255, 255, 0))
+
+
+# ---------------- MAIN LOOP ----------------
 while True:
     touched_pad = None
-    
-    for pad in TOUCH_MAP.keys():
+
+    # Scan pads
+    for pad in TOUCH_MAP:
         if mpr121[pad].value:
             touched_pad = pad
             break
 
+    # Handle touch
     if touched_pad is not None:
         now = time.time()
         if (touched_pad != last_pad) or (now - last_time > DEBOUNCE_TIME):
@@ -134,14 +147,15 @@ while True:
 
             choice = TOUCH_MAP[touched_pad]
             print(f"Touched: {choice}")
-            show_text(f"You chose\n{choice.upper()}")
+
+            show_text(f"You chose\n{choice.upper()}", color=(255, 255, 0))
             client.publish(topic_choice, choice)
 
         time.sleep(0.05)
         continue
 
-    if touched_pad is None:
-        last_pad = None
+    # Reset when released
+    last_pad = None
 
     time.sleep(0.05)
 
