@@ -193,9 +193,9 @@ This is our Demo Video:
 
 We did the user testing with two classmates (randomly selected):
 
-![User testing](User-testing-1.PNG)
-![User testing](User-testing-2.PNG)
-![User testing](User-testing-3.PNG)
+![User testing](User-testing-1.jpg)
+![User testing](User-testing-2.jpg)
+![User testing](User-testing-3.jpg)
 
 **5. Reflection**
 - What worked well?
