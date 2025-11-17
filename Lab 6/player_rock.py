@@ -121,6 +121,8 @@ client.publish(topic_choice, "join")
 show_text(f"Joined as\n{player_name}", color=(0, 180, 255))
 print(f"You have joined the game as {player_name}!")
 print("Waiting for round announcements...")
+time.sleep(5)
+
 
 # --- Move selection state ---
 moves = ["rock", "paper", "scissors"]
