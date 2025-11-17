@@ -75,7 +75,6 @@ TOUCH_MAP = {
 }
 
 # Selection state
-moves = ["rock", "paper", "scissors"]
 current_move = "rock"   # default
 host_submitted = False
 host_choice_topic = "IDD/rps/choices/host"
@@ -87,7 +86,7 @@ update_selection_screen()
 
 # ---------------- HOST TOUCH HANDLER ----------------
 last_touch_time = 0
-TOUCH_DEBOUNCE = 0.5
+TOUCH_DEBOUNCE = 0.4  # seconds
 
 def scan_host_touch():
     """
@@ -100,23 +99,27 @@ def scan_host_touch():
     for pad, move in TOUCH_MAP.items():
         if mpr121[pad].value:
             now = time.time()
+            # debounce
             if now - last_touch_time < TOUCH_DEBOUNCE:
-                return  # debounce
+                return
             last_touch_time = now
 
-            # Detect long press
+            # measure press length
             press_start = time.time()
             while mpr121[pad].value:
+                # long press → submit
                 if time.time() - press_start > 1.2:
-                    # Long press = SUBMIT
-                    host_submitted = True
-                    client.publish(host_choice_topic, current_move)
-                    show_text(f"Host submitted:\n{current_move.upper()}", color=(255, 255, 0))
+                    if not host_submitted:
+                        host_submitted = True
+                        print(f"[HOST] SUBMIT {current_move}")
+                        client.publish(host_choice_topic, current_move)
+                        show_text(f"Host submitted:\n{current_move.upper()}", color=(255, 255, 0))
                     return
                 time.sleep(0.01)
 
-            # Short press = CHOOSE MOVE
+            # short tap → select move
             current_move = move
+            print(f"[HOST] SELECT {current_move}")
             update_selection_screen()
             return
 
@@ -144,7 +147,6 @@ waiting_for_players = False
 client = mqtt.Client()
 client.username_pw_set(username, password)
 
-
 def determine_winner(players_choices):
     unique = set(players_choices.values())
     if len(unique) == 1 or len(unique) == 3:
@@ -153,12 +155,10 @@ def determine_winner(players_choices):
     if unique == {"scissors", "paper"}: return "scissors"
     if unique == {"paper", "rock"}: return "paper"
 
-
 def announce(msg, color=(255, 255, 0)):
     print(msg)
     show_text(msg, color=color)
     client.publish("IDD/rps/status", msg)
-
 
 def on_message(client, userdata, msg):
     global round_active, choices, active_players, game_active, waiting_for_players
@@ -201,7 +201,7 @@ def on_message(client, userdata, msg):
                 announce("Not enough players. Waiting...")
         return
 
-    # --- Invalid ---
+    # --- Invalid payload ---
     if choice not in ["rock", "paper", "scissors"]:
         return
 
@@ -210,16 +210,14 @@ def on_message(client, userdata, msg):
         active_players.add(player)
         return
 
-    # --- Valid move ---
+    # --- Valid move during active round ---
     choices[player] = choice
     active_players.add(player)
-
 
 def start_round():
     global round_active, choices, waiting_for_players, host_submitted, current_move
 
-    host_submitted = False
-    active_players.add("host")  # Host always plays
+    host_submitted = False  # reset each round
 
     if waiting_for_players:
         announce("Waiting for enough players...")
@@ -236,19 +234,24 @@ def start_round():
     announce(f"New round! {ROUND_DURATION}s to play!")
     announce("Send your move!")
 
-    countdown = ROUND_DURATION
-    while countdown > 0:
+    # ---- Countdown with fast touch scanning ----
+    end_time = time.time() + ROUND_DURATION
+    last_shown = None
+
+    while time.time() < end_time:
         scan_host_touch()
-        print(f"{countdown}s...", end="\r")
-        time.sleep(1)
-        countdown -= 1
+
+        remaining = int(end_time - time.time())
+        if remaining != last_shown and remaining >= 0:
+            print(f"{remaining}s...", end="\r")
+            last_shown = remaining
+
+        time.sleep(0.05)  # fast scan for sensor
 
     round_active = False
 
-    # Auto-submit host if needed
-    if not host_submitted:
-        client.publish(host_choice_topic, current_move)
-        announce(f"Host auto-selected:\n{current_move.upper()}")
+    # Note: NO auto-submit – if host_submitted is False,
+    # the host simply does not play this round.
 
     if not choices:
         announce("No moves this round. Waiting...")
@@ -286,7 +289,6 @@ def start_round():
 
     return True
 
-
 def reset_game_prompt():
     global game_active, waiting_for_players
 
@@ -310,7 +312,6 @@ def reset_game_prompt():
             active_players.clear()
             break
 
-
 def game_loop():
     global game_active
     while True:
@@ -321,7 +322,6 @@ def game_loop():
         time.sleep(3)
         if not keep_going:
             time.sleep(3)
-
 
 # ---------------- MQTT START ----------------
 client.on_message = on_message
