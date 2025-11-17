@@ -188,6 +188,11 @@ This function calculates the winning move based on player submissions. The Host 
 - What surprised them?
 - What would they change?
 
+This is our Demo Video:
+[![Demo Video](thumbnail.png)](https://youtu.be/H4k-_PTIcUE)  
+
+We did the user testing with two classmates (randomly selected):
+
 
 
 **5. Reflection**
