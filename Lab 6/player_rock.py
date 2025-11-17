@@ -11,7 +11,7 @@ dc_pin = digitalio.DigitalInOut(board.D25)
 reset_pin = digitalio.DigitalInOut(board.D24)
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
-backlight.value = True  # Turn on backlight immediately
+backlight.value = True  # Turn on backlight
 
 BAUDRATE = 24000000
 spi = board.SPI()
@@ -29,7 +29,7 @@ disp = st7789.ST7789(
     rotation=270,
 )
 
-# Handle rotation properly
+# Determine width/height after rotation
 if disp.rotation % 180 == 90:
     height = disp.width
     width = disp.height
@@ -37,51 +37,56 @@ else:
     width = disp.width
     height = disp.height
 
+# TFT drawing
 image = Image.new("RGB", (width, height))
 draw = ImageDraw.Draw(image)
 
 def show_text(text, color=(255, 255, 0)):
-    """Display text auto-fitted to screen on PiTFT (keeps good readability)."""
-    draw.rectangle((0, 0, width, height), outline=0, fill=(0, 0, 0))
+    """Display centered text on the PiTFT."""
+    draw.rectangle((0, 0, width, height), fill=(0, 0, 0))
 
     font_path = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
-    max_font_size = 24
-    min_font_size = 16  # don't go below this unless absolutely needed
-    font_size = max_font_size
+    max_size, min_size = 24, 16
+    size = max_size
 
-    # Try from large to smaller fonts until the text fits
     while True:
-        font = ImageFont.truetype(font_path, font_size)
+        font = ImageFont.truetype(font_path, size)
         bbox = draw.multiline_textbbox((0, 0), text, font=font, spacing=4)
         tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
-
-        # If it fits or font too small, stop
-        if (tw <= width - 10 and th <= height - 10) or font_size <= min_font_size:
+        if (tw <= width - 10 and th <= height - 10) or size <= min_size:
             break
-        font_size -= 2
+        size -= 2
 
-    # Center the text nicely
     x = (width - tw) // 2
     y = (height - th) // 2
     draw.multiline_text((x, y), text, font=font, fill=color, spacing=4, align="center")
     disp.image(image)
 
+# ----------------------------
+# Buttons (same config as your earlier Lab)
+# ----------------------------
+buttonA = digitalio.DigitalInOut(board.D23)  # short press = cycle moves
+buttonA.switch_to_input(pull=digitalio.Pull.UP)
+
+buttonB = digitalio.DigitalInOut(board.D24)  # long press = submit move
+buttonB.switch_to_input(pull=digitalio.Pull.UP)
+
+B_LONG_MS = 600
+b_press_start = None
 
 # --- Step 1: Welcome screen ---
-show_text("Let's play\nPaper, Scissor,\nand Rock!", color=(0, 180, 255))
-time.sleep(5)
+show_text("Let's play\nRock, Paper,\nScissors!", color=(0, 180, 255))
+time.sleep(4)
 
-# --- Step 2: Name input screen ---
-show_text("Please enter\nyour name\nusing keyboard", color=(255, 255, 0))
+# --- Step 2: Input name (keyboard still needed here) ---
+show_text("Enter player\nname via\nkeyboard", color=(255, 255, 0))
+player_name = input("Enter your player name: ").strip()
 
-# --- MQTT Configuration ---
+# --- MQTT setup ---
 broker = "farlab.infosci.cornell.edu"
 port = 1883
 username = "idd"
 password = "device@theFarm"
-
-# --- Ask for player name ---
-player_name = input("Enter your player name: ").strip()
 
 topic_choice = f"IDD/rps/choices/{player_name}"
 topic_status = "IDD/rps/status"
@@ -89,19 +94,17 @@ topic_status = "IDD/rps/status"
 client = mqtt.Client()
 client.username_pw_set(username, password)
 
+# --- Show status messages from Host ---
 def on_message(client, userdata, msg):
-    """Display messages from host on both terminal and TFT."""
     message = msg.payload.decode()
-    print(f"\n{message}")
+    print("\nHOST:", message)
 
     lower = message.lower()
-    if "winner" in lower or "champion" in lower:
+    if "champion" in lower:
         color = (0, 255, 0)
     elif "eliminated" in lower:
         color = (255, 0, 0)
-    elif "waiting" in lower:
-        color = (255, 255, 255)
-    elif "round" in lower or "ready" in lower:
+    elif "round" in lower:
         color = (0, 180, 255)
     else:
         color = (255, 255, 0)
@@ -113,32 +116,53 @@ client.connect(broker, port)
 client.subscribe(topic_status)
 client.loop_start()
 
-# --- Announce join ---
+# Announce join
 client.publish(topic_choice, "join")
-print(f"You have joined the game as {player_name}!")
 show_text(f"Joined as\n{player_name}", color=(0, 180, 255))
-print("Waiting for round announcements...")
+print("Joined MQTT game. Waiting for Host...")
 
+# --- Move selection state ---
+moves = ["rock", "paper", "scissors"]
+move_index = 0
+current_move = moves[move_index]
+show_text(f"Selected:\n{current_move.upper()}")
+
+# ------------------------------------------------------
+# Main loop: use button A (cycle) & button B (submit)
+# ------------------------------------------------------
 try:
     while True:
-        msg = input("").strip().lower()
-        if msg == "quit":
-            client.publish(topic_choice, "quit")
-            print("You left the game.")
-            show_text("You left\nthe game.", color=(255, 0, 0))
-            break
 
-        if msg not in ["rock", "paper", "scissors"]:
-            print("Invalid choice.")
-            show_text("Invalid choice!\nTry again.", color=(255, 255, 255))
-            continue
+        # ----- Button A: short press = cycle moves -----
+        if not buttonA.value:  # button is pressed
+            move_index = (move_index + 1) % len(moves)
+            current_move = moves[move_index]
+            print("Cycle:", current_move)
+            show_text(f"Selected:\n{current_move.upper()}")
+            time.sleep(0.25)  # debounce
 
-        client.publish(topic_choice, msg)
-        print(f"Sent your choice: {msg.upper()}")
-        show_text(f"You chose\n{msg.upper()}", color=(255, 255, 0))
-        time.sleep(1)
+        # ----- Button B: short/long press detection -----
+        if not buttonB.value:
+            if b_press_start is None:
+                b_press_start = time.monotonic()
+        else:
+            if b_press_start is not None:
+                press_ms = (time.monotonic() - b_press_start) * 1000
+                long_press = press_ms >= B_LONG_MS
+
+                if long_press:
+                    # SEND MOVE
+                    client.publish(topic_choice, current_move)
+                    print("Submitted:", current_move)
+                    show_text(f"Submitted:\n{current_move.upper()}", color=(255, 255, 0))
+                    time.sleep(1)
+
+                b_press_start = None
+
+        time.sleep(0.05)
 
 finally:
     client.loop_stop()
     client.disconnect()
     show_text("Disconnected.", color=(255, 255, 255))
+
