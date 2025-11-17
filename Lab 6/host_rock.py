@@ -40,64 +40,29 @@ def announce(message):
 
 
 def on_message(client, userdata, msg):
-    raw = msg.payload.decode()
-    lower = raw.lower()
-    print("\n" + raw)
+    """Handle player messages for join, quit, or moves."""
+    global round_active, choices, active_players, game_active, waiting_for_players
+    player = msg.topic.split("/")[-1]
+    choice = msg.payload.decode().strip().lower()
 
-    # -----------------------------------------
-    # Hide waiting messages completely
-    # -----------------------------------------
-    if "waiting" in lower:
-        return
+    # --- Player joins ---
+    if choice == "join":
+        if player not in active_players:
+            active_players.add(player)
+            print(f"{player} joined (waiting room).")
+            announce(f"{player} joined the game! ({len(active_players)} players now)")
 
-    # -----------------------------------------
-    # New round
-    # -----------------------------------------
-    if "new round" in lower or "time to play" in lower:
-        show_text("Time to play!\nSend your choice:\nROCK, PAPER, SCISSORS!", color=(0,180,255))
-        return
+            if not game_active:
+                game_active = True
+                waiting_for_players = True
+                announce("New Rock-Paper-Scissors game starting!")
+                announce("Waiting for players to join...")
+                time.sleep(1)
 
-    # -----------------------------------------
-    # Tie message
-    # -----------------------------------------
-    if "tie" in lower:
-        show_text("TIE!\nEveryone stays in!", color=(255,255,255))
-        return
-
-    # -----------------------------------------
-    # Winning move
-    # -----------------------------------------
-    if "winning move" in lower:
-        move = raw.split(":")[-1].strip()
-        show_text(f"{move} WINS\nthis round!", color=(0,255,0))
-        return
-
-    # -----------------------------------------
-    # Survivors
-    # -----------------------------------------
-    if "survivors" in lower:
-        names = raw.split(":")[-1].strip()
-        show_text(f"Still in:\n{names}", color=(0,255,0))
-        return
-
-    # -----------------------------------------
-    # Eliminated
-    # -----------------------------------------
-    if "eliminated" in lower:
-        names = raw.split(":")[-1].strip()
-        show_text(f"Eliminated:\n{names}", color=(255,0,0))
-        return
-
-    # -----------------------------------------
-    # GAME OVER
-    # -----------------------------------------
-    if "champion" in lower:
-        champ = raw.split(":")[-1].strip()
-        show_text(f"GAME OVER!\nWinner: {champ}", color=(255,0,0))
-        return
-
-    if "game over" in lower:
-        show_text("GAME OVER!", color=(255,0,0))
+            if waiting_for_players and len(active_players) >= MIN_PLAYERS:
+                waiting_for_players = False
+                announce("Enough players joined! Get ready to play...")
+                time.sleep(2)
         return
 
     # --- Player quits ---
