@@ -262,6 +262,50 @@ client.subscribe("IDD/rps/choices/#")
 
 This lets the Host collect all moves for the current round (no matter how many players join), update the game state, and broadcast the next status message.
 
+***Code snippets with explanations***
+
+***Player Code Snippet: Publishing a Move***
+```bash
+topic_choice = f"IDD/rps/choices/{player_name}"
+client.publish(topic_choice, msg)
+```
+The Player Pi takes keyboard input (rock, paper, scissors), and publishes it to the player’s unique MQTT topic. The Host listens to all these topics and stores each move.
+
+***Player Subscribes to Results***
+```bash
+client.subscribe("IDD/rps/status")
+```
+Players receive all game updates (start round, winner, elimination, champion) via a shared topic. Messages are also displayed on the TFT screen.
+
+***Host Code Snippet: Collecting Moves***
+```bash
+client.subscribe("IDD/rps/choices/#")
+
+def on_message(client, userdata, msg):
+    player = msg.topic.split("/")[-1]
+    choice = msg.payload.decode().strip()
+    choices[player] = choice
+```
+The Host receives moves from all players using a wildcard subscription.
+Each message is stored in the choices dictionary.
+
+***Host Code Snippet — Determining Winner***
+```bash
+def determine_winner(players_choices):
+    unique = set(players_choices.values())
+    if len(unique) == 1 or len(unique) == 3:
+        return None     # tie
+    if unique == {"rock", "scissors"}: return "rock"
+    if unique == {"scissors", "paper"}: return "scissors"
+    if unique == {"paper", "rock"}: return "paper"
+```
+This function calculates the winning move based on player submissions.
+The Host then eliminates players whose moves don’t match the winning move.
+
+
+
+
+
 **4. User Testing**
 - **Test with 2+ people NOT on your team**
 - Photos/video of use
