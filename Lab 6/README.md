@@ -68,8 +68,8 @@ This setup transforms a simple hand game into a distributed interactive system, 
 
 ```mermaid
 flowchart LR
-    P1[Player Pi 1<br>Keyboard Input<br>TFT Display] 
-    P2[Player Pi 2<br>Keyboard Input<br>TFT Display]
+    P1[Player Pi 1<br>Keyboard & Sensor Input<br>TFT Display] 
+    P2[Player Pi 2<br>Keyboard & Sensor Input<br>TFT Display]
     H[Host Pi<br>Also a Player<br>Round Logic + TFT]
 
     B((MQTT Broker<br>farlab.infosci.cornell.edu))
