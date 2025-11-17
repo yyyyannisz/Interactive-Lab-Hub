@@ -90,10 +90,12 @@ def on_message(client, userdata, msg):
         return
 
     # ---- GAME OVER ----
-    if "champion" in lower or "game over" in lower:
-        show_text("GAME OVER!", color=(255, 0, 0))
+    if "champion" in lower:
+        show_text("You Win! GAME OVER!", color=(255, 0, 0))
         return
-
+    if "game over" in lower:
+        show_text("LOSE! GAME OVER! ", color=(255, 0, 0))
+        return
     # ---- Default: show host message ----
     #show_text(message)
 
