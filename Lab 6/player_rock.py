@@ -11,7 +11,7 @@ dc_pin = digitalio.DigitalInOut(board.D25)
 reset_pin = digitalio.DigitalInOut(board.D24)
 backlight = digitalio.DigitalInOut(board.D22)
 backlight.switch_to_output()
-backlight.value = True  # Turn on backlight
+backlight.value = True  # Turn on backlight immediately
 
 BAUDRATE = 24000000
 spi = board.SPI()
@@ -63,7 +63,7 @@ def show_text(text, color=(255, 255, 0)):
     disp.image(image)
 
 # ----------------------------
-# Buttons (same config as your earlier Lab)
+# Buttons
 # ----------------------------
 buttonA = digitalio.DigitalInOut(board.D23)  # short press = cycle moves
 buttonA.switch_to_input(pull=digitalio.Pull.UP)
@@ -78,8 +78,8 @@ b_press_start = None
 show_text("Let's play\nRock, Paper,\nScissors!", color=(0, 180, 255))
 time.sleep(4)
 
-# --- Step 2: Input name (keyboard still needed here) ---
-show_text("Enter player\nname via\nkeyboard", color=(255, 255, 0))
+# --- Step 2: Ask for player name ---
+show_text("Please enter\nyour name\nusing keyboard", color=(255, 255, 0))
 player_name = input("Enter your player name: ").strip()
 
 # --- MQTT setup ---
@@ -94,7 +94,7 @@ topic_status = "IDD/rps/status"
 client = mqtt.Client()
 client.username_pw_set(username, password)
 
-# --- Show status messages from Host ---
+# --- Host message handler ---
 def on_message(client, userdata, msg):
     message = msg.payload.decode()
     print("\nHOST:", message)
@@ -119,13 +119,16 @@ client.loop_start()
 # Announce join
 client.publish(topic_choice, "join")
 show_text(f"Joined as\n{player_name}", color=(0, 180, 255))
-print("Joined MQTT game. Waiting for Host...")
+print(f"You have joined the game as {player_name}!")
+print("Waiting for round announcements...")
 
 # --- Move selection state ---
 moves = ["rock", "paper", "scissors"]
 move_index = 0
 current_move = moves[move_index]
-show_text(f"Selected:\n{current_move.upper()}")
+
+# IMPORTANT CHANGE:
+show_text(f"Choose your move:\n{current_move.upper()}")
 
 # ------------------------------------------------------
 # Main loop: use button A (cycle) & button B (submit)
@@ -134,14 +137,17 @@ try:
     while True:
 
         # ----- Button A: short press = cycle moves -----
-        if not buttonA.value:  # button is pressed
+        if not buttonA.value:  # pressed
             move_index = (move_index + 1) % len(moves)
             current_move = moves[move_index]
             print("Cycle:", current_move)
-            show_text(f"Selected:\n{current_move.upper()}")
+
+            # Updated text while selecting
+            show_text(f"Choose your move:\n{current_move.upper()}")
+
             time.sleep(0.25)  # debounce
 
-        # ----- Button B: short/long press detection -----
+        # ----- Button B: handle long press = submit -----
         if not buttonB.value:
             if b_press_start is None:
                 b_press_start = time.monotonic()
@@ -154,7 +160,10 @@ try:
                     # SEND MOVE
                     client.publish(topic_choice, current_move)
                     print("Submitted:", current_move)
+
+                    # Only here show Submitted:
                     show_text(f"Submitted:\n{current_move.upper()}", color=(255, 255, 0))
+
                     time.sleep(1)
 
                 b_press_start = None
@@ -165,7 +174,3 @@ finally:
     client.loop_stop()
     client.disconnect()
     show_text("Disconnected.", color=(255, 255, 255))
-
-
-
-
