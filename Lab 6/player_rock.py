@@ -134,18 +134,18 @@ try:
     while True:
 
         # ----- Button A: short press = cycle moves -----
-        if not buttonA.value:  # pressed
+        if not buttonA.value:  # button is pressed
             move_index = (move_index + 1) % len(moves)
             current_move = moves[move_index]
             print("Cycle:", current_move)
-            show_text(f"Choose your move:\n{current_move.upper()}")
+            show_text(f"Selected:\n{current_move.upper()}")
             time.sleep(0.25)  # debounce
 
         # ----- Button B: short/long press detection -----
-        if not buttonB.value:  # pressed
+        if not buttonB.value:
             if b_press_start is None:
                 b_press_start = time.monotonic()
-        else:  # released
+        else:
             if b_press_start is not None:
                 press_ms = (time.monotonic() - b_press_start) * 1000
                 long_press = press_ms >= B_LONG_MS
@@ -165,5 +165,7 @@ finally:
     client.loop_stop()
     client.disconnect()
     show_text("Disconnected.", color=(255, 255, 255))
+
+
 
 
