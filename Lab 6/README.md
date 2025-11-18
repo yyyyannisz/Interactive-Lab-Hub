@@ -58,9 +58,6 @@ flowchart LR
 
 
 **3. Build Documentation**
-- Photos of each Pi + sensors
-- MQTT topics used
-- Code snippets with explanations
 
 The project runs on a Raspberry Pi with a small ST7789 TFT screen showing game prompts, while an MPR121 capacitive touch board with three metal pads serves as the physical interface for selecting rock, paper, or scissors.
 ![Pi setup](Pi-Setup.jpg)
