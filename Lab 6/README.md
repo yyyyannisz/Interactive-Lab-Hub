@@ -37,9 +37,6 @@ Our project is an online Rock–Paper–Scissors game that allows multiple playe
 This setup transforms a simple hand game into a distributed interactive system, enabling fast, low-latency gameplay that outperforms typical video-call-based interactions. By transmitting lightweight text messages instead of video streams, the game ensures smooth, synchronized rounds among players and demonstrates the power of MQTT for real-time, multi-device coordination.
 
 **2. Architecture Diagram**
-- Hardware, connections, data flow
-- Label input/computation/output
-
 
 ```mermaid
 flowchart LR
