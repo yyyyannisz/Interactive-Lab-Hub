@@ -173,7 +173,7 @@ We did the user testing with two classmates (randomly selected):
   
 - What would they change?
 
-  What would they change? They said they would’ve liked more instructions on the screen for which buttons corresponded to which choices, but also did not need the same prompt of rock, paper, and scissors every round. 
+  They said they would’ve liked more instructions on the screen for which buttons corresponded to which choices, but also did not need the same prompt of rock, paper, and scissors every round. 
 
 
 **5. Reflection**
