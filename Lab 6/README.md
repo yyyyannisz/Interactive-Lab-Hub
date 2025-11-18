@@ -193,7 +193,9 @@ The players would get the prompt to make their choice and the player script woul
 
 We would add more detailed instructions in the beginning, and distinguish between the first rounds and subsequent rounds like our test users suggested. Additionally, We would make it easier for users to play multiple games in a row as our script sometimes required restarting to properly play again. 
 
+## Note on AI Assistance
 
+For this lab, I used ChatGPT to help me summarize my design decisions and rewrite some sections into clearer paragraphs. All reflection points and design choices are my own. Also, some of my script was coded using the assistance of ChatGPT.
 
 ---
 
