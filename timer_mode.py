@@ -1,6 +1,9 @@
 
 import time
 import os
+import pyaudio
+import json
+from vosk import Model, KaldiRecognizer
 
 # ---------------------------------------------------
 # Play .wav files directly (you will upload each file)
@@ -12,14 +15,48 @@ def play_audio(filename):
 # ---------------------------------------------------
 # MAIN FOCUS TIMER
 # ---------------------------------------------------
+def listen_for_task():
+    model = Model("vosk-model-small-en-us-0.15")
+    recognizer = KaldiRecognizer(model, 16000)
+
+    p = pyaudio.PyAudio()
+    stream = p.open(
+        format=pyaudio.paInt16,
+        channels=1,
+        rate=16000,
+        input=True,
+        frames_per_buffer=8000
+    )
+    stream.start_stream()
+
+    print("Listening for task... speak now.")
+
+    spoken_text = ""
+
+    while True:
+        data = stream.read(4000, exception_on_overflow=False)
+        if recognizer.AcceptWaveform(data):
+            result = json.loads(recognizer.Result())
+            spoken_text = result.get("text", "")
+            break
+
+    stream.stop_stream()
+    stream.close()
+    p.terminate()
+
+    if len(spoken_text.strip()) == 0:
+        return None
+    return spoken_text
+
+
 def run_focus_timer():
     # Step 1 — Play start + ask-task messages
     play_audio("start.wav")       # “Let's begin! Start this 30-minute focus with me…”
     play_audio("ask_task.wav")    # “First, tell me what you want to work on today.”
 
-    # Step 2 — Read user reply (later replace with STT)
+    # Step 2 — Read user reply 
     try:
-        task = input("User says: ").strip()
+        task = listen_for_task()
     except:
         task = ""
 
