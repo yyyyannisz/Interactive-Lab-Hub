@@ -53,19 +53,16 @@ def run_focus_timer():
     # Step 1 — Play start + ask-task messages
     play_audio("start.wav")       # “Let's begin! Start this 30-minute focus with me…”
 
-    # Step 3 — Confirm 
-    play_audio("confirm_generic.wav")
-
-    # Step 4 — Start 30-minute timer
-    total_seconds = 30 * 60
+    # Step 4 — Start 45-sec timer
+    total_seconds = 45
     five_min_warning_given = False
 
     while total_seconds > 0:
         time.sleep(1)
         total_seconds -= 1
 
-        # 5-minute remaining point = 300 seconds
-        if total_seconds == 5 * 60 and not five_min_warning_given:
+        # 5-minute remaining point = 20 seconds
+        if total_seconds == 20 and not five_min_warning_given:
             five_min_warning_given = True
 
             # Before sound → soft quack
