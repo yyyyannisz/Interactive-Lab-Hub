@@ -1,9 +1,9 @@
 
 import time
 import os
-import pyaudio
-import json
-from vosk import Model, KaldiRecognizer
+#import pyaudio
+#import json
+#from vosk import Model, KaldiRecognizer
 
 # ---------------------------------------------------
 # Play .wav files directly (you will upload each file)
