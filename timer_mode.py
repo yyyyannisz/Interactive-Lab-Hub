@@ -52,19 +52,9 @@ def listen_for_task():
 def run_focus_timer():
     # Step 1 — Play start + ask-task messages
     play_audio("start.wav")       # “Let's begin! Start this 30-minute focus with me…”
-    play_audio("ask_task.wav")    # “First, tell me what you want to work on today.”
 
-    # Step 2 — Read user reply 
-    try:
-        task = listen_for_task()
-    except:
-        task = ""
-
-    # Step 3 — Confirm (different audio depending on whether task exists)
-    if task:
-        play_audio("confirm_task.wav")
-    else:
-        play_audio("confirm_generic.wav")
+    # Step 3 — Confirm 
+    play_audio("confirm_generic.wav")
 
     # Step 4 — Start 30-minute timer
     total_seconds = 30 * 60
@@ -86,10 +76,7 @@ def run_focus_timer():
             play_audio("five_min_left.wav")    # “Only 5 minutes left. Stay with me…”
 
     # Step 5 — Session complete messages
-    if task:
-        play_audio("finish_task.wav")
-    else:
-        play_audio("finish_generic.wav")
+    play_audio("finish_generic.wav")
 
 # ---------------------------------------------------
 # RUN
