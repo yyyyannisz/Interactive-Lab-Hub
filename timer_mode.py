@@ -3,6 +3,11 @@ import json
 import pyaudio
 from vosk import Model, KaldiRecognizer
 
+import os
+os.environ["PYTHONWARNINGS"] = "ignore"
+os.environ["SDL_AUDIODRIVER"] = "dummy"
+import ctypes
+ctypes.CDLL('libasound.so').snd_lib_error_set_handler(None)
 
 # ---------------------------------------------------
 # Simple text output instead of audio
