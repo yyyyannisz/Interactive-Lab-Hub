@@ -8,7 +8,7 @@ from vosk import Model, KaldiRecognizer
 # Instead of playing audio → print placeholders
 # ---------------------------------------------------
 def duck_say(text):
-    print(f"🦆 CyberDuck: {text}")
+    print(f"CyberDuck: {text}")
 
 
 # ---------------------------------------------------
@@ -23,7 +23,7 @@ def listen_for_speech(prompt_text=None, timeout=6):
     if prompt_text:
         duck_say(prompt_text)
 
-    print("🎤 Listening... (Speak now)")
+    print("Listening... (Speak now)")
 
     model = Model("vosk-model-small-en-us-0.15")
     recognizer = KaldiRecognizer(model, 16000)
@@ -50,7 +50,7 @@ def listen_for_speech(prompt_text=None, timeout=6):
     stream.close()
     p.terminate()
 
-    print(f"🗣️ User said: {spoken_text}")
+    print(f"User said: {spoken_text}")
     return spoken_text.strip()
 
 
@@ -150,7 +150,7 @@ def run_focus_timer():
     stream.close()
     p.terminate()
 
-    duck_say("Focus session complete! Great job! 🥳")
+    duck_say("Focus session complete! Great job!")
 
 
 # ---------------------------------------------------
