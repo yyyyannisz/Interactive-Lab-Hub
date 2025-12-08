@@ -43,7 +43,7 @@ def listen_for_speech(prompt_text=None, timeout=6):
                     channels=1,
                     rate=16000,
                     input=True,
-                    frames_per_buffer=8000
+                    frames_per_buffer=8000,
                     input_device_index=2)
 
     stream.start_stream()
