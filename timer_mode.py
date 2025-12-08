@@ -1,25 +1,26 @@
-
-
 import time
 import json
 import pyaudio
+import os
 from vosk import Model, KaldiRecognizer
 
 
 # ---------------------------------------------------
-# Simple text output instead of audio
+# Play WAV audio instead of text output
 # ---------------------------------------------------
-def duck_say(text):
-    print("CyberDuck:", text)
+def play_audio(filename):
+    print(f"[Playing audio: {filename}]")
+    os.system(f"aplay {filename}")
 
 
 # ---------------------------------------------------
 # SPEECH RECOGNITION (single listening)
 # ---------------------------------------------------
-def listen_for_speech(prompt_text=None, timeout=6):
+def listen_for_speech(prompt_wav=None, timeout=6):
 
-    if prompt_text:
-        duck_say(prompt_text)
+    # prompt_wav should be a filename (e.g., "ask_task.wav")
+    if prompt_wav:
+        play_audio(prompt_wav)
 
     print("Listening... (Speak now)")
 
@@ -27,7 +28,7 @@ def listen_for_speech(prompt_text=None, timeout=6):
     recognizer = KaldiRecognizer(model, 16000)
 
     p = pyaudio.PyAudio()
-    # Force using your webcam mic (card 2)
+
     stream = p.open(format=pyaudio.paInt16,
                     channels=1,
                     rate=16000,
@@ -58,58 +59,78 @@ def listen_for_speech(prompt_text=None, timeout=6):
 # ---------------------------------------------------
 def run_focus_timer():
 
-    # Ask for task
-    task = listen_for_speech("What are you focusing on today?")
+    # ---------------------------------------------------
+    # 1. Ask for task
+    # ---------------------------------------------------
+    task = listen_for_speech("ask_task.wav")  
+    # ask_task.wav → "What are you focusing on today?"
 
     if not task or len(task.split()) < 2:
-        duck_say("Sorry, did not catch that, but let's focus anyway!")
+        play_audio("task_not_understood.wav")
+        # task_not_understood.wav → "Sorry, I didn't catch that, but let's focus anyway!"
     else:
-        duck_say("Got it! I'll help you stay focused.")
+        play_audio("task_confirm.wav")
+        # task_confirm.wav → "Got it! I'll help you stay focused."
 
     if len(task.split()) > 6:
-        duck_say("Wow, ambitious task! Let's crush it.")
+        play_audio("task_ambitious.wav")
+        # task_ambitious.wav → "Wow, that's an ambitious task. Let's crush it!"
     else:
-        duck_say("Nice and simple. I love it.")
+        play_audio("task_simple.wav")
+        # task_simple.wav → "Nice and simple. I like it."
 
-    # Ask for session length
-    length_text = listen_for_speech(
-        "Would you like a short, medium, or long session?"
-    )
+    # ---------------------------------------------------
+    # 2. Ask for session length
+    # ---------------------------------------------------
+    length_text = listen_for_speech("ask_length.wav")
+    # ask_length.wav → "Would you like a short, medium, or long focus session?"
 
     if "short" in length_text:
         total_seconds = 30
-        duck_say("Short session selected!")
+        play_audio("session_short.wav")
+        # session_short.wav → "Short session selected!"
     elif "medium" in length_text:
         total_seconds = 45
-        duck_say("Medium session selected!")
+        play_audio("session_medium.wav")
+        # session_medium.wav → "Medium session selected!"
     elif "long" in length_text:
         total_seconds = 60
-        duck_say("Long session selected! Power mode!")
+        play_audio("session_long.wav")
+        # session_long.wav → "Long session selected! Power mode!"
     else:
         total_seconds = 45
-        duck_say("Defaulting to medium session.")
+        play_audio("session_default_medium.wav")
+        # session_default_medium.wav → "I’ll set a medium session for you."
 
     # ---------------------------------------------------
-    # NEW: CALMING BREATHING RITUAL BEFORE STARTING
+    # 3. Calming breathing ritual
     # ---------------------------------------------------
-    duck_say("Before we begin, let's take one deep breath together")
+    play_audio("breath_intro.wav")
+    # breath_intro.wav → "Before we begin, let's take one deep breath together."
+
     time.sleep(1)
-    duck_say("Inhale...")
-    time.sleep(2)
-    duck_say("Exhale...")
-    time.sleep(2)
-    duck_say("Okay! Now let's get focused.")
+    play_audio("inhale.wav")
+    # inhale.wav → "Inhale..."
 
-    # Start focusing
-    duck_say("Let's begin your focus sprint!")
+    time.sleep(2)
+    play_audio("exhale.wav")
+    # exhale.wav → "Exhale..."
 
-    # Continuous monitoring recognizer
+    time.sleep(2)
+    play_audio("breath_complete.wav")
+    # breath_complete.wav → "Great. Now let's get focused."
+
+    # ---------------------------------------------------
+    # Start focus session
+    # ---------------------------------------------------
+    play_audio("focus_start.wav")
+    # focus_start.wav → "Let's begin your focus sprint!"
+
     model = Model("vosk-model-small-en-us-0.15")
     recognizer = KaldiRecognizer(model, 16000)
 
     p = pyaudio.PyAudio()
 
-    # IMPORTANT: also force correct mic device here
     stream = p.open(format=pyaudio.paInt16,
                     channels=1,
                     rate=16000,
@@ -121,8 +142,6 @@ def run_focus_timer():
 
     encouragement_given = False
     checkin_done = False
-
-    # NEW: Cooldown for "focus" warning
     last_warning_time = 0
     warning_interval = 10  # seconds
 
@@ -133,42 +152,50 @@ def run_focus_timer():
         time.sleep(1)
         total_seconds -= 1
 
-        # Read microphone audio
+        # Detect speech during focus session
         data = stream.read(4000, exception_on_overflow=False)
 
         if recognizer.AcceptWaveform(data):
             result = json.loads(recognizer.Result())
             heard_text = result.get("text", "").strip()
 
-            # Only warn if real words + cooldown passed
             if len(heard_text.split()) > 1:
                 if time.time() - last_warning_time > warning_interval:
-                    duck_say("Hey, try to stay focused with me!")
+                    play_audio("stay_focused.wav")
+                    # stay_focused.wav → "Try to stay focused with me!"
                     last_warning_time = time.time()
 
-        # Midpoint encouragement
+        # Mid-session encouragement
         if total_seconds == 30 and not encouragement_given:
             encouragement_given = True
-            duck_say("You are doing great! Keep going!")
+            play_audio("encouragement.wav")
+            # encouragement.wav → "You're doing great! Keep going!"
 
-        # Check-in around middle
+        # Mid-session check-in
         if total_seconds == 25 and not checkin_done:
             checkin_done = True
-            response = listen_for_speech("Are you still with me? Say yes!")
+            response = listen_for_speech("checkin_prompt.wav")
+            # checkin_prompt.wav → "Are you still with me? Say yes!"
+
             if "yes" in response:
-                duck_say("Yay! Let's keep going!")
+                play_audio("checkin_positive.wav")
+                # checkin_positive.wav → "Awesome! Let's keep going!"
             else:
-                duck_say("That's okay, let's refocus together.")
+                play_audio("checkin_refocus.wav")
+                # checkin_refocus.wav → "That's okay, let's refocus together."
 
         # Final countdown
         if total_seconds == 5:
-            duck_say("Five seconds left! Final push!")
+            play_audio("final_push.wav")
+            # final_push.wav → "Five seconds left! Final push!"
 
+    # End session
     stream.stop_stream()
     stream.close()
     p.terminate()
 
-    duck_say("Focus session complete! Great job!")
+    play_audio("session_complete.wav")
+    # session_complete.wav → "Focus session complete! Great job!"
 
 
 # ---------------------------------------------------
