@@ -5,20 +5,16 @@ from vosk import Model, KaldiRecognizer
 
 
 # ---------------------------------------------------
-# Instead of playing audio → print placeholders
+# Simple text output instead of audio
 # ---------------------------------------------------
 def duck_say(text):
-    print(f"CyberDuck: {text}")
+    print("CyberDuck:", text)
 
 
 # ---------------------------------------------------
 # SPEECH RECOGNITION
 # ---------------------------------------------------
 def listen_for_speech(prompt_text=None, timeout=6):
-    """
-    Prints a prompt, listens for up to `timeout` seconds,
-    returns recognized text (empty string if none).
-    """
 
     if prompt_text:
         duck_say(prompt_text)
@@ -50,12 +46,12 @@ def listen_for_speech(prompt_text=None, timeout=6):
     stream.close()
     p.terminate()
 
-    print(f"User said: {spoken_text}")
+    print("User said:", spoken_text)
     return spoken_text.strip()
 
 
 # ---------------------------------------------------
-# MAIN INTERACTIVE CYBERDUCK TIMER (No Audio Version)
+# MAIN INTERACTIVE CYBERDUCK TIMER
 # ---------------------------------------------------
 def run_focus_timer():
 
@@ -65,9 +61,9 @@ def run_focus_timer():
     task = listen_for_speech("What are you focusing on today?")
 
     if not task or len(task.split()) < 2:
-        duck_say("Sorry, didn't catch that, but let's focus anyway!")
+        duck_say("Sorry, did not catch that, but let's focus anyway!")
     else:
-        duck_say("Got it! I’ll help you stay focused.")
+        duck_say("Got it! I'll help you stay focused.")
 
     # Task complexity reaction
     if len(task.split()) > 6:
@@ -100,7 +96,7 @@ def run_focus_timer():
     # ---------------------------------------------------
     duck_say("Let's begin your focus sprint!")
 
-    # Reinitialize recognizer for detecting speech during timer
+    # Recognizer for detecting speech during timer
     model = Model("vosk-model-small-en-us-0.15")
     recognizer = KaldiRecognizer(model, 16000)
 
@@ -131,7 +127,7 @@ def run_focus_timer():
         # Mid session encouragement
         if total_seconds == 30 and not encouragement_given:
             encouragement_given = True
-            duck_say("You're doing great! Keep going!")
+            duck_say("You are doing great! Keep going!")
 
         # Mid session check-in
         if total_seconds == 25 and not checkin_done:
@@ -140,7 +136,7 @@ def run_focus_timer():
             if "yes" in response:
                 duck_say("Yay! Let's keep going!")
             else:
-                duck_say("That's okay — let's refocus together.")
+                duck_say("That's okay, let's refocus together.")
 
         # Final countdown
         if total_seconds == 5:
