@@ -1,13 +1,25 @@
+import os
+os.environ["SDL_AUDIODRIVER"] = "dummy"
+os.environ["ALSA_CARD"] = "null"
+os.environ["AUDIODEV"] = "null"
+os.environ["JACK_NO_START_SERVER"] = "1"
+os.environ["VOSK_LOG_LEVEL"] = "-1"
+
+import warnings
+warnings.filterwarnings("ignore")
+
+import ctypes
+try:
+    ctypes.CDLL('libasound.so').snd_lib_error_set_handler(None)
+except:
+    pass
+
+
 import time
 import json
 import pyaudio
 from vosk import Model, KaldiRecognizer
 
-import os
-os.environ["PYTHONWARNINGS"] = "ignore"
-os.environ["SDL_AUDIODRIVER"] = "dummy"
-import ctypes
-ctypes.CDLL('libasound.so').snd_lib_error_set_handler(None)
 
 # ---------------------------------------------------
 # Simple text output instead of audio
