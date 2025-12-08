@@ -62,6 +62,7 @@ def run_focus_timer():
     # ---------------------------------------------------
     # 1. Ask for task
     # ---------------------------------------------------
+    play_audio("soft_quack.wav") 
     task = listen_for_speech("ask_task.wav")  
     # ask_task.wav → "What are you focusing on today?"
 
@@ -186,6 +187,7 @@ def run_focus_timer():
 
         # Final countdown
         if total_seconds == 5:
+            play_audio("notice.wav")
             play_audio("final_push.wav")
             # final_push.wav → "Five seconds left! Final push!"
 
@@ -195,6 +197,7 @@ def run_focus_timer():
     p.terminate()
 
     play_audio("session_complete.wav")
+    play_audio("soft_quack.wav")
     # session_complete.wav → "Focus session complete! Great job!"
 
 
