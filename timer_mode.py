@@ -73,13 +73,6 @@ def run_focus_timer():
         play_audio("task_confirm.wav")
         # task_confirm.wav → "Got it! I'll help you stay focused."
 
-    if len(task.split()) > 6:
-        play_audio("task_ambitious.wav")
-        # task_ambitious.wav → "Wow, that's an ambitious task. Let's crush it!"
-    else:
-        play_audio("task_simple.wav")
-        # task_simple.wav → "Nice and simple. I like it."
-
     # ---------------------------------------------------
     # 2. Ask for session length
     # ---------------------------------------------------
