@@ -65,7 +65,7 @@ def run_focus_timer():
     task = listen_for_speech("What are you focusing on today?")
 
     if not task or len(task.split()) < 2:
-        duck_say("Hmm… didn't catch that, but let's focus anyway!")
+        duck_say("Sorry, didn't catch that, but let's focus anyway!")
     else:
         duck_say("Got it! I’ll help you stay focused.")
 
