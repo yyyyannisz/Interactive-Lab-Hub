@@ -89,6 +89,17 @@ def run_focus_timer():
         total_seconds = 45
         duck_say("Defaulting to medium session.")
 
+    # ---------------------------------------------------
+    # NEW: CALMING BREATHING RITUAL BEFORE STARTING
+    # ---------------------------------------------------
+    duck_say("Before we begin, let's take one deep breath together")
+    time.sleep(1)
+    duck_say("Inhale...")
+    time.sleep(2)
+    duck_say("Exhale...")
+    time.sleep(2)
+    duck_say("Okay! Now let's get focused.")
+
     # Start focusing
     duck_say("Let's begin your focus sprint!")
 
