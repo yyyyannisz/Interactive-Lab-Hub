@@ -1,12 +1,9 @@
 import os
+os.environ["PULSE_SERVER"] = "127.0.0.1"
+os.environ["ALSA_CONFIG_PATH"] = "/dev/null"
+os.environ["ALSA_CONFIG_DIR"] = "/dev/null"
 os.environ["SDL_AUDIODRIVER"] = "dummy"
-os.environ["ALSA_CARD"] = "null"
-os.environ["AUDIODEV"] = "null"
-os.environ["JACK_NO_START_SERVER"] = "1"
 os.environ["VOSK_LOG_LEVEL"] = "-1"
-
-import warnings
-warnings.filterwarnings("ignore")
 
 import ctypes
 try:
@@ -14,11 +11,11 @@ try:
 except:
     pass
 
-
 import time
 import json
 import pyaudio
 from vosk import Model, KaldiRecognizer
+
 
 
 # ---------------------------------------------------
