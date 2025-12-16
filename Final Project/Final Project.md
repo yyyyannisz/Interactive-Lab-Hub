@@ -97,46 +97,43 @@ Given the complexity of real-time speech and gesture interaction, several fallba
 
 These fallback options ensure that even if advanced components fail, the core user experience—mode switching and supportive interaction—remains functional and testable.
 
-## Objective
+## Functioning Project
 
-The goal of this final project is for you to have a functioning and well-designed interactive device of your own design.
- 
-## Description
-Your project is to design and build an interactive device to suit a specific application of your choosing, and *test the interaction with people*. 
+![final product]
 
-## Deliverables
+## Documentation of Design Process
 
-1. Project plan: Big idea, timeline, parts needed, fall-back plan.
+### Storyboards
 
-2. Functioning project: The finished project should be a device, system, interface, etc. that people can interact with.
+#### Scenario 1: 
 
-3. Documentation of design process
-4. Archive of all code, design patterns, etc. used in the final design. (As with labs, the standard should be that the documentation would allow you to recreate your project if you woke up with amnesia.)
-5. Video of someone using your project
-6. Reflections on process (What have you learned or wish you knew at the start?)
+![storyboard 1]
 
-7. Group work distribution questionnaire
+#### Scenario 1: 
 
-## Change of Design
+![storyboard 2]
 
-It is fine to change your project goals, but please resubmit the project plan for the new design when you do that.
+### Wizard 
 
-## Grading rubric
 
-20% Project planning: Allocation of needed resources (time, people, materials, facilities) anticipated well.
+#### Notes
 
-20% Design of project: Interaction, hardware and software aspects of projects planned well.
+#### Reflection
 
-20% Testing of project: Functional or wizarded system tested with people
+### Building Functionality
 
-20% Prototype functionality: System capable of interaction, either through autonomous or wizarded mechanisms
+### User Testing
 
-20% Project documentation: Text, video, and photo of project illustratign capability and documenting plans and process
+### Additional Feature
 
-## Teams
+## Archive of All Code and Design Patterns
 
-You can and are not required to work in teams. Be clear in documentation who contributed what. The total project contributions should reflect the number of people on the project.
+#### Please view my source code
 
-## Examples
+## Video Demo
 
-[Here is a list of good final projects from previous classes.](https://github.com/FAR-Lab/Developing-and-Designing-Interactive-Devices/wiki/Previous-Final-Projects)
+## Reflections on Process
+
+## Group Work Distribution
+
+
