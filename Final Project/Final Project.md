@@ -99,7 +99,7 @@ These fallback options ensure that even if advanced components fail, the core us
 
 ## Functioning Project
 
-![final product]
+![final product] 
 
 ## Documentation of Design Process
 
