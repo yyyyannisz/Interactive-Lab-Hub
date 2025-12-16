@@ -221,14 +221,24 @@ Technically, gesture detection runs continuously in the background and updates t
 From an interaction design perspective, this feature addressed a recurring concern identified during Wizard-of-Oz testing: users did not always want to verbally engage with the system, especially during focused work. Gesture-based switching allowed users to control CyberDuck without breaking cognitive flow, and it provided a clear boundary between focused and problem-solving states. This functionality ultimately became a core part of CyberDuck’s interaction model, tying together the physical form of the duck with its software behavior.
 
 #### User Testing
+
+We used the Final Project Presentation as an opportunity to conduct informal user testing with our prototype. During the presentation session, at least eight users interacted with CyberDuck and explored its core features. However, because multiple groups were presenting in the same room simultaneously, the environment was noisy and highly dynamic, which made both user voice input and hearing CyberDuck’s audio output challenging. As a result, users were only able to test gesture-based mode switching and Timer Mode, while extended verbal interaction in TA Mode was limited.
+
+Despite these constraints, users responded positively to several aspects of the system. Many participants found the breathing exercise at the start of Timer Mode to be engaging and calming, noting that it helped signal a clear transition into focused work. Users also expressed strong interest in the overall concept and physical appearance of CyberDuck, describing it as approachable, playful, and well-suited for a desk companion. Even without fully testing voice-based interaction, participants were able to understand the intended behaviors of the system and how the two modes support different working needs.
+
+Overall, this testing session helped validate key design choices around embodiment, gesture-based interaction, and structured focus rituals, while also highlighting the importance of quieter environments for future evaluations of speech-based interaction.
+
+Below is a photo of a user talking to CyberDuck:
 ![User Testing](Uer_testing.jpg)
+
+Below is a photo of a user testing the mode switching feature of CyberDuck:
 ![Testing Switching Mode](Switching_mode.jpg)
 
 #### Additional Feature
 
 ## Archive of All Code and Design Patterns
 
-#### Please view my source code
+#### Please view my source code [here]()
 
 ## Video Demo
 
@@ -242,3 +252,6 @@ I took primary ownership of Timer Mode, including designing the interaction flow
 Amy took primary ownership of TA Mode, focusing on the learning- and reasoning-oriented interaction design. She implemented the mode-switching mechanism, ensuring smooth transitions between Timer Mode and TA Mode, and shaped how the system responds during problem-solving interactions.
 
 Despite this division of responsibility, all core design decisions were made collaboratively. We regularly shared ideas, discussed trade-offs, and supported each other’s work to ensure a cohesive overall design. While I prepared the initial draft of the final report, we ultimately each wrote and submitted our own final report, reflecting both individual contributions and the shared design process.
+
+## Notes on AI Assistant
+For this lab, I used ChatGPT to help me summarize my design decisions and rewrite some sections into clearer paragraphs. All reflection points and design choices are my own. Also, some of my script was coded using the assistance of ChatGPT.
