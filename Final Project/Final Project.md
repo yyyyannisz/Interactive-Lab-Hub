@@ -164,6 +164,54 @@ Overall, the Wizard-of-Oz study helped shift CyberDuck from a conversational AI 
 
 ### Building Functionality
 
+#### Physical Construction
+
+For the physical embodiment of CyberDuck, we were fortunate to find a plush duck toy whose size, proportions, and visual character closely matched our envisioned product. The softness and familiarity of the plush material helped reinforce CyberDuck’s role as a friendly desk companion rather than a piece of technical equipment.
+
+Initially, we considered opening the plush duck and embedding a mini speaker inside the body. However, after further consideration, we realized that the battery life and maintenance of an internally embedded speaker could become problematic, especially during longer work sessions. To avoid frequent disassembly or charging difficulties, we instead designed a small external pouch that CyberDuck “wears” like a backpack. The mini speaker is placed inside this pouch, allowing easy access for charging or replacement while preserving the integrity of the duck body. This solution balanced practicality with the playful character of the object, and it visually reinforced CyberDuck as an active, mobile companion.
+
+#### Early Software Prototypes
+
+On the software side, development began with two largely independent prototypes corresponding to the two interaction modes.
+
+The initial TA Mode, built by Amy, relied on a slower, native large language model with relatively poor text-to-speech quality. While the core idea of conversational assistance was present, the latency and robotic audio output made interactions feel sluggish and unnatural, especially during problem-solving scenarios.
+
+In parallel, I built the first version of Timer Mode, which relied entirely on pre-recorded audio. These audio clips used a Gemini-generated voice, and based on feedback from Wizard-of-Oz testing, I selected the “Sulafat” voice, which is warm and mid-pitched. To further enhance the playful tone, I added a soft quack sound as an auditory signature to make interactions feel lighter and more engaging.
+
+However, the flow of this early Timer Mode was intentionally simple. It consisted of:
+
+- A greeting announcing the start of the session
+
+- A silent focus period
+
+- A announcement when five minutes remained, paired with encouragement
+
+- A announcement marking the end of the session and encouraging future focus
+
+While this version established the basic rhythm of Timer Mode, it lacked interactivity and personalization.
+
+#### Feedback from Functional Check-off
+
+After presenting this version during the functionality check, we received several important pieces of feedback from the teaching team:
+
+- TA Mode should move to a faster language model with improved text-to-speech, potentially using an API-based approach to reduce latency and improve conversational quality.
+
+- Timer Mode could benefit from richer interaction, such as incorporating contextual sensing (e.g., phone detection or mug detection) to make the experience more responsive and playful. For example, detecting phone usage could trigger a gentle reminder to refocus, while detecting a coffee mug could prompt a lighthearted comment encouraging productivity.
+
+This feedback motivated a significant refinement of both modes.
+
+#### Refined TA Mode
+
+In the later version, the TA Mode was redesigned to prioritize responsiveness and guided reasoning. It now uses the Gemini API to answer user questions, with the key design constraint that the assistant should walk the user through a problem rather than simply provide solutions. To support this, the system sends the full conversational context with each request, allowing the model to remember what the user has previously said and maintain continuity across turns. Conceptually, this makes TA Mode feel closer to a thoughtful tutor than a search engine.
+
+#### Expanded Timer Mode
+
+The new Timer Mode evolved substantially from the initial prototype. In addition to pre-recorded audio cues, we introduced user voice input, allowing the system to ask what the user is focusing on and how long they would like to work. The interaction now includes a calming breathing ritual at the start of each session, mid-session encouragement, optional check-ins, and a structured countdown at the end.
+
+Technically, Timer Mode integrates speech recognition to capture short user responses and treats these inputs as lightweight signals rather than open-ended conversation. This design choice was informed by Wizard-of-Oz findings indicating that excessive or poorly timed interaction can disrupt focus. All audio feedback remains intentionally brief, supportive, and predictable.
+
+Together, these refinements transformed Timer Mode from a static timer into a guided focus experience that balances structure, encouragement, and user agency.
+
 #### User Testing
 
 #### Additional Feature
