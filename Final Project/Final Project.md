@@ -110,7 +110,7 @@ These fallback options ensure that even if advanced components fail, the core us
 
 ![storyboard 1](Storyboard1.jpg)
 
-#### Scenario 1: 
+#### Scenario 2: 
 
 ![storyboard 2](Storyboard2.jpg)
 
