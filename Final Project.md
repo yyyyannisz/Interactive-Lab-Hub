@@ -24,14 +24,15 @@ CyberDuck is an AI-powered desk companion designed to support people during focu
 
 Timer Mode is most effective when users already know what they want to work on but struggle with focus, motivation, or time awareness. In this mode, CyberDuck structures work into focused sessions, provides gentle audio cues, and offers light emotional encouragement. The goal is to support sustained attention without interrupting the user’s thinking. In these situations, giving advice or solutions would be distracting rather than helpful.
 
-TA Mode, by contrast, is designed for moments of cognitive blockage—such as debugging code or reasoning through a difficult problem. Instead of behaving like a traditional chatbot that quickly provides answers, TA Mode is intentionally pedagogical. CyberDuck guides users through their own reasoning process by asking leading questions, breaking problems into smaller steps, and encouraging reflection. This design emphasizes learning and understanding over efficiency, making it especially suitable for educational or skill-building contexts.
+TA Mode, by contrast, is designed for moments of cognitive blockage, such as debugging code or reasoning through a difficult problem. Instead of behaving like a traditional chatbot that quickly provides answers, TA Mode is intentionally pedagogical. CyberDuck guides users through their own reasoning process by asking leading questions, breaking problems into smaller steps, and encouraging reflection. This design emphasizes learning and understanding over efficiency, making it especially suitable for educational or skill-building contexts.
 
-These two modes serve different purposes and are most valuable at different moments in a user’s workflow. A timer alone cannot help a user reason through a logic bug, just as an intelligent tutor may interrupt deep focus when the user simply needs uninterrupted work time. By combining both modes into a single, embodied device—and allowing users to switch between them using simple physical gestures—CyberDuck adapts to changing cognitive needs throughout the day while keeping the interaction lightweight, playful, and intuitive.
+These two modes serve different purposes and are most valuable at different moments in a user’s workflow. A timer alone cannot help a user reason through a logic bug, just as an intelligent tutor may interrupt deep focus when the user simply needs uninterrupted work time. By combining both modes into a single, embodied device, and allowing users to switch between them using simple physical gestures, CyberDuck adapts to changing cognitive needs throughout the day while keeping the interaction lightweight, playful, and intuitive.
 
 ###  Timeline
 11/15: Finish & submit project plan
 
 11/16 – 11/20: Design iterations
+- Wizard with multiple potential users
 – Refine interaction flow, dialogue style, and personality
 – Finalize Timer Mode and TA Mode behaviors
 – Storyboard gesture-based mode switching
@@ -74,24 +75,19 @@ Mini speaker – audio output for feedback and responses
 
 APDS-9960 gesture sensor – physical gesture detection for mode switching
 
-Plush duck housing – physical embodiment of CyberDuck
-
-Optional LED or button – visual or tactile feedback and backup interaction
-
-Faster LLM model and improved TTS – to reduce latency and improve conversational quality
+Fast LLM model and improved TTS – to reduce latency and improve conversational quality
 
 ### Fallback Plan
 
 Given the complexity of real-time speech and gesture interaction, several fallback strategies are planned to ensure robustness:
 
-If LLM response latency becomes too high, CyberDuck will switch to pre-scripted prompts for common encouragements or guiding questions.
+- If LLM response latency becomes too high, CyberDuck will switch to pre-scripted prompts for common encouragements or guiding questions.
 
-If real-time generation is unreliable, speech-to-text results can be used to trigger predefined responses rather than full conversational output.
+- If real-time generation is unreliable, speech-to-text results can be used to trigger predefined responses rather than full conversational output.
 
-If the gesture sensor proves unreliable, it can be replaced with a simple physical button for mode switching while preserving the core interaction logic.
+- If the gesture sensor proves unreliable, it can be replaced with a simple physical button for mode switching while preserving the core interaction logic.
 
 These fallback options ensure that even if advanced components fail, the core user experience—mode switching and supportive interaction—remains functional and testable.
-
 
 
 ## Objective
