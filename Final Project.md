@@ -28,42 +28,50 @@ TA Mode, by contrast, is designed for moments of cognitive blockage, such as deb
 
 These two modes serve different purposes and are most valuable at different moments in a user’s workflow. A timer alone cannot help a user reason through a logic bug, just as an intelligent tutor may interrupt deep focus when the user simply needs uninterrupted work time. By combining both modes into a single, embodied device, and allowing users to switch between them using simple physical gestures, CyberDuck adapts to changing cognitive needs throughout the day while keeping the interaction lightweight, playful, and intuitive.
 
+![big idea] 
+
 ###  Timeline
-11/15: Finish & submit project plan
+11/10: Finish & submit project plan
 
-11/16 – 11/20: Design iterations
-- Wizard with multiple potential users
-– Refine interaction flow, dialogue style, and personality
-– Finalize Timer Mode and TA Mode behaviors
-– Storyboard gesture-based mode switching
+11/11 – 11/14: Design iterations
+- Storyboarding
+- Dialogue design
+- Wizard device to get user opinions (what’s a good voice + additional features)
 
-11/21 – 11/28: Implement the design (device only)
-– Raspberry Pi setup and configuration
-– Implement STT → LLM → TTS pipeline
-– Gesture sensor integration and mode switching logic
-– Initial audio output and timing calibration
+11/15 – 11/20: Implement the design (device only)
+- Raspberry Pi setup and configuration
+- Implement STT → LLM → TTS pipeline
+- Gesture sensor integration and mode switching logic
+- Initial audio output and timing calibration
 
-11/29: Functional check-off
-– Present working prototype to teaching team
-– Demonstrate Timer Mode and TA Mode switching
+11/21 – 11/23: Module Testing
+- Test each module separately
+- Refine voice + timing
 
-11/30 – 12/2: Implement the design (physical build)
-– Assemble CyberDuck housing
-– Integrate Raspberry Pi, microphone, speaker, and sensors
-– Finalize physical form and wiring
+11/24 – 11/25: System Integration
+- Combine gesture switching with conversation engine
 
-12/3 – 12/5: User testing & documentation
-– Test with sample users
-– Collect feedback on intuitiveness, latency, and clarity
-– Record demo video and prepare presentation materials
+11/26 – 11/31: Implement the design (physical build)
+- Create the Cyberduck body
+- Integrate Raspberry Pi, microphone, speaker, and sensors
+- Finalize physical form and wiring
 
-12/6: Final project presentation
-– Present CyberDuck to the class
+12/1: Functional check-off
+- Present working prototype to teaching team
+- Demonstrate Timer Mode and TA Mode switching
 
-12/7 – 12/15: Reflection & final write-up
-– Summarize design process and user feedback
-– Reflect on trade-offs, limitations, and future improvements
-– Submit final documentationion
+12/2 – 12/7: User testing & documentation
+- Test with sample users
+- Collect feedback on intuitiveness, latency, and clarity
+- Record demo video and prepare presentation materials
+
+12/8: Final project presentation
+- Present CyberDuck to the class
+
+12/9 – 12/15: Reflection & final write-up
+- Summarize design process and user feedback
+- Reflect on trade-offs, limitations, and future improvements
+- Submit final documentationion
 
 ### Parts Needed
 
@@ -88,7 +96,6 @@ Given the complexity of real-time speech and gesture interaction, several fallba
 - If the gesture sensor proves unreliable, it can be replaced with a simple physical button for mode switching while preserving the core interaction logic.
 
 These fallback options ensure that even if advanced components fail, the core user experience—mode switching and supportive interaction—remains functional and testable.
-
 
 ## Objective
 
