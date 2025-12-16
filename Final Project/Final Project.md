@@ -108,11 +108,11 @@ These fallback options ensure that even if advanced components fail, the core us
 
 #### Scenario 1: 
 
-![storyboard 1]
+![storyboard 1](Storyboard1.jpg)
 
 #### Scenario 1: 
 
-![storyboard 2]
+![storyboard 2](Storyboard2.jpg)
 
 ### Wizard 
 
