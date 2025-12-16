@@ -164,9 +164,9 @@ Overall, the Wizard-of-Oz study helped shift CyberDuck from a conversational AI 
 
 ### Building Functionality
 
-### User Testing
+#### User Testing
 
-### Additional Feature
+#### Additional Feature
 
 ## Archive of All Code and Design Patterns
 
@@ -177,5 +177,14 @@ Overall, the Wizard-of-Oz study helped shift CyberDuck from a conversational AI 
 ## Reflections on Process
 
 ## Group Work Distribution
+This project was divided by interaction mode, with each team member taking primary responsibility for one mode while maintaining close collaboration throughout the design and implementation process.
+
+I took primary ownership of Timer Mode, including designing the interaction flow, implementing the timing logic, voice prompts, and overall behavior during focus sessions. I also led much of the documentation work, including project planning materials, storyboards, and the Wizard-of-Oz evaluations, which informed several key design decisions.
+
+Amy took primary ownership of TA Mode, focusing on the learning- and reasoning-oriented interaction design. She was responsible for implementing the mode-switching mechanism, ensuring smooth transitions between Timer Mode and TA Mode, and shaping how the system responds during problem-solving interactions.
+
+Despite this division of responsibility, all core design decisions were made collaboratively. We regularly shared ideas, discussed trade-offs, and provided feedback on each other’s work to ensure consistency across both modes. While implementation tasks were divided, the conceptual design and interaction philosophy were developed jointly.
+
+Each of us wrote and submitted our own final report, reflecting our individual contributions while documenting the shared design process.
 
 
