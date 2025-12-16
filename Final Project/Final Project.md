@@ -228,10 +228,10 @@ Despite these constraints, users responded positively to several aspects of the 
 
 Overall, this testing session helped validate key design choices around embodiment, gesture-based interaction, and structured focus rituals, while also highlighting the importance of quieter environments for future evaluations of speech-based interaction.
 
-Below is a photo of a user talking to CyberDuck:
+Below is a photo of a participant talking to CyberDuck, demonstrating voice-based interaction:
 ![User Testing](Uer_testing.jpg)
 
-Below is a photo of a user testing the mode switching feature of CyberDuck:
+Below is a photo of a participant testing CyberDuck’s gesture-based mode switching feature.:
 ![Testing Switching Mode](Switching_mode.jpg)
 
 #### Additional Feature
