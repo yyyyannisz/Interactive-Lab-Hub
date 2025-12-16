@@ -99,7 +99,8 @@ These fallback options ensure that even if advanced components fail, the core us
 
 ## Functioning Project
 
-![final product] 
+![final product1](Cyberduck1.jpg)
+![final product2](Cyberduck2.jpg)
 
 ## Documentation of Design Process
 
