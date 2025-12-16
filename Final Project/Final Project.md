@@ -95,7 +95,7 @@ Given the complexity of real-time speech and gesture interaction, several fallba
 
 - If the gesture sensor proves unreliable, it can be replaced with a simple physical button for mode switching while preserving the core interaction logic.
 
-These fallback options ensure that even if advanced components fail, the core user experience—mode switching and supportive interaction—remains functional and testable.
+These fallback options ensure that even if advanced components fail, the core user experience of mode switching and supportive interaction remains functional and testable.
 
 ## Functioning Project
 
