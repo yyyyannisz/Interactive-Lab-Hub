@@ -106,13 +106,13 @@ These fallback options ensure that even if advanced components fail, the core us
 
 ### Storyboards
 
-#### Scenario 1: 
+#### TA Mode: 
 
-![storyboard 1](Storyboard1.jpg)
+![storyboard 1](Storyboard2.jpg)
 
-#### Scenario 2: 
+#### Timer Mode: 
 
-![storyboard 2](Storyboard2.jpg)
+![storyboard 2](Storyboard1.jpg)
 
 ### Wizard 
 
