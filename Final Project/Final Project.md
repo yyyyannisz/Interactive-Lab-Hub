@@ -28,7 +28,7 @@ TA Mode, by contrast, is designed for moments of cognitive blockage, such as deb
 
 These two modes serve different purposes and are most valuable at different moments in a user’s workflow. A timer alone cannot help a user reason through a logic bug, just as an intelligent tutor may interrupt deep focus when the user simply needs uninterrupted work time. By combining both modes into a single, embodied device, and allowing users to switch between them using simple physical gestures, CyberDuck adapts to changing cognitive needs throughout the day while keeping the interaction lightweight, playful, and intuitive.
 
-![big idea] 
+![big idea](Cyberduck_Poster.png)
 
 ###  Timeline
 11/10: Finish & submit project plan
