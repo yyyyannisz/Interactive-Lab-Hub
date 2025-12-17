@@ -130,7 +130,7 @@ Insight: Structured, time-based interventions may feel more appropriate than spo
 
 2. Wizarding with Jade Change(Interactive Device Classmate)
 
-Jade found the interaction meaningful and potentially useful, noting that the cuteness of the duck made the experience more engaging and approachable. However, she felt that the chosen voice (Zephyr) was too high-pitched and hyper, which could become distracting during extended use.
+Jade found the interaction meaningful and potentially useful, noting that the cuteness of the duck made the experience more engaging and approachable. However, she felt that the chosen voice (Zephyr; one of the gemini ai voice) was too high-pitched and hyper, which could become distracting during extended use.
 
 Jade also suggested the need for a clear wake-up line to signal when CyberDuck is actively listening, rather than always passively monitoring the environment. In the context of TA Mode, she wondered whether CyberDuck could have more contextual awareness, such as knowing what is on the user’s screen, to better support debugging or problem-solving.
 
