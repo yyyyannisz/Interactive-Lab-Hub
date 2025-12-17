@@ -202,11 +202,11 @@ In the later version, the TA Mode was redesigned to prioritize responsiveness an
 
 #### Expanded Timer Mode
 
-The new Timer Mode evolved substantially from the initial prototype. In addition to more carefully designed pre-recorded audio cues, we introduced user voice input, allowing the system to ask what the user is focusing on and how long they would like to work. The interaction now includes a calming breathing ritual at the start of each session, mid-session encouragement, optional check-ins, and a structured countdown at the end.
+The expanded Timer Mode introduces a set of newly added features designed to create a more engaging and supportive focus experience. At the start of each session, the system asks users what they plan to focus on and prompts them to select a short, medium, or long work period. Before the timer begins, users are guided through a brief breathing exercise to help them transition into a focused state. During the session, the system provides mid-session encouragement and retains the five-minute reminder from the initial prototype. If speech is detected while the user is meant to be focusing, the system gently checks in by asking, “Are you still with me? Say yes.” The session concludes with a clear end-of-session announcement that acknowledges the user’s effort and encourages future focus. All of these interactions are supported by more carefully designed pre-recorded audio cues that are intentionally brief, calm, and predictable.
 
-Technically, Timer Mode integrates speech recognition to capture short user responses and treats these inputs as lightweight signals rather than open-ended conversation. This design choice was informed by Wizard-of-Oz findings indicating that excessive or poorly timed interaction can disrupt focus. All audio feedback remains intentionally brief, supportive, and predictable.
+A key enhancement in this iteration is the introduction of user voice input, which makes the timer more interactive without turning it into an open-ended conversation. Speech recognition is used to capture short user responses, such as stating a task or confirming presence, and these inputs are treated as lightweight signals rather than conversational turns. This design decision was informed by Wizard-of-Oz findings indicating that excessive or poorly timed interaction can disrupt concentration.
 
-Together, these refinements transformed Timer Mode from a static timer into a guided focus experience that balances structure, encouragement, and user agency.
+Together, these additions reflect a deliberate effort to improve the overall user experience of Timer Mode. By combining structure, gentle interaction, and user agency, the timer evolves from a static countdown tool into a guided focus experience that supports motivation while respecting the user’s attention.
 
 #### Gesture-Based Mode Switching
 
