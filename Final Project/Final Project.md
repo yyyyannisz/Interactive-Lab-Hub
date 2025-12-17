@@ -210,11 +210,9 @@ Together, these additions reflect a deliberate effort to improve the overall use
 
 #### Gesture-Based Mode Switching
 
-A key milestone in the development of CyberDuck was getting gesture-based mode switching fully functional. Using a gesture sensor, we enabled users to switch between Timer Mode and TA Mode through simple hand gestures, without needing to speak commands or touch the device. This decision reinforced CyberDuck’s role as an embodied, ambient companion, allowing mode changes to feel lightweight and intentional rather than conversational or menu-driven.
+We developed a gesture-based mode switching feature that allows users to switch between Timer Mode and TA Mode using simple hand gestures. By using a gesture sensor, users can change modes without speaking commands or touching the device. This design reinforces CyberDuck’s role as an embodied, ambient companion and allows mode changes to feel lightweight and intentional rather than conversational or menu-driven. An upward gesture activates Timer Mode, while a downward gesture switches to TA Mode, with brief audio feedback confirming the change.
 
-Technically, gesture detection runs continuously in the background and updates the system’s current mode state in real time. An upward gesture activates Timer Mode, while a downward gesture switches to TA Mode. Once a gesture is detected, CyberDuck provides brief audio confirmation to make the transition clear to the user.
-
-From an interaction design perspective, this feature addressed a recurring concern identified during Wizard-of-Oz testing: users did not always want to verbally engage with the system, especially during focused work. Gesture-based switching allowed users to control CyberDuck without breaking cognitive flow, and it provided a clear boundary between focused and problem-solving states. This functionality ultimately became a core part of CyberDuck’s interaction model, tying together the physical form of the duck with its software behavior.
+This feature was motivated by Wizard-of-Oz findings showing that users did not always want to verbally interact with the system, especially during focused work. Gesture-based switching enables users to control CyberDuck without interrupting cognitive flow and provides a clear boundary between focused and problem-solving states. As a result, gesture control became a core part of CyberDuck’s interaction model, closely linking its physical form with its software behavior.
 
 #### User Testing
 
