@@ -138,7 +138,7 @@ Jiayi raised several deeper concerns around conversational AI and cognitive flow
 
 Jiayi also stressed the need for explicit instructions about when CyberDuck is listening. She expressed discomfort with the idea of the duck listening at all times and strongly supported the idea of a wake-up line or deliberate activation mechanism. More broadly, she pointed out that conversation with AI can feel unnatural, especially because human conversation naturally involves interruptions, pauses, and overlapping speech.
 
-Importantly, Jiayi noted that talking through ideas aloud is often part of her personal thinking process, and an AI responding at the wrong moment could actually pull her out of that flow. In some cases, she may want to verbalize thoughts without receiving any response at all—similar to the original idea of “rubber duck debugging.”
+Importantly, Jiayi noted that talking through ideas aloud is often part of her personal thinking process, and an AI responding at the wrong moment could actually pull her out of that flow. In some cases, she may want to verbalize thoughts without receiving any response at all, which is similar to the original idea of “rubber duck debugging.”
 
 #### Key Takeaways & Design Implications
 
