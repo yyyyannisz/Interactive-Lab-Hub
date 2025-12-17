@@ -10,6 +10,21 @@ from tflite_runtime.interpreter import Interpreter
 from vosk import Model, KaldiRecognizer
 
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+VOSK_MODEL_PATH = os.path.join(
+    BASE_DIR,
+    "models",
+    "vosk-model-small-en-us-0.15"
+)
+
+if not os.path.exists(os.path.join(VOSK_MODEL_PATH, "model.conf")):
+    raise RuntimeError(f"Vosk model not found at {VOSK_MODEL_PATH}")
+
+# Load model ONCE
+VOSK_MODEL = Model(VOSK_MODEL_PATH)
+
+
 # ---------------------------------------------------
 # Audio helper
 # ---------------------------------------------------
@@ -26,8 +41,7 @@ def listen_for_speech(prompt_wav=None, timeout=6):
     if prompt_wav:
         play_audio(prompt_wav)
 
-    model = Model("vosk-model-small-en-us-0.15")
-    recognizer = KaldiRecognizer(model, 16000)
+    recognizer = KaldiRecognizer(VOSK_MODEL, 16000)
 
     p = pyaudio.PyAudio()
     stream = p.open(format=pyaudio.paInt16,
