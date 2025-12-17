@@ -77,6 +77,8 @@ These two modes serve different purposes and are most valuable at different mome
 
 Raspberry Pi 4 – main computing unit
 
+Plush duck enclosure – physical embodiment of CyberDuck and housing for the system
+
 USB microphone – speech input for user interaction
 
 Mini speaker – audio output for feedback and responses
