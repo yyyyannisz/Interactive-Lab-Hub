@@ -7,3 +7,18 @@ __*
 .venv/
 # ignore local models
 *.onnx
+# Vosk models
+vosk-model*/
+*.zip
+
+# Whisper / virtual environments
+whisper_env/
+venv/
+
+# Audio artifacts
+*.wav
+*.mp3
+
+# Images / frames
+*.jpg
+*.png
