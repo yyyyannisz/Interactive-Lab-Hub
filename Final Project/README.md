@@ -226,6 +226,16 @@ Below is a photo of a participant testing CyberDuck’s gesture-based mode switc
 
 #### Additional Feature
 
+Building on insights from user testing, I introduced several additional features and refinements to Timer Mode to better support sustained focus, reduce ambiguity in voice-only interactions, and encourage post-session reflection. 
+
+I added a phone detection feature built on a lightweight computer vision model trained with Teachable Machine and deployed using TensorFlow Lite. The system continuously monitors the camera feed during the focus session and estimates the probability that a phone is present in the frame. To avoid false positives and unnecessary interruptions, the system only triggers a reminder if the phone is detected continuously above a confidence threshold (0.85) for five seconds. When this condition is met, CyberDuck gently reminds the user to refocus. This design treats phone presence as a sustained distraction signal rather than a momentary glance, aligning with the goal of minimizing disruption while still promoting mindful focus.
+
+Moreover, at the end of the focus session, the system prompts the user to verbally recap what they worked on and what they accomplished during the session. Rather than evaluating or parsing the content of the response, CyberDuck simply listens and provides an acknowledgment. This feature is designed to encourage reflection and closure, helping users consolidate their effort and reinforcing a sense of progress, even for short focus sessions.
+
+I also refined the audio feedback for session selection to explicitly communicate the duration of each session. Instead of simply confirming “short,” “medium,” or “long,” CyberDuck now clearly states how long the selected session will last (e.g., “We’ll focus for 45 minutes”). This change improves transparency and reduces ambiguity in a voice-only interface, helping users better understand and commit to the selected focus duration before the session begins.
+
+Finally, to reduce the disruptive impact of spoken interruptions during the focus session, I intentionally introduced a soft, non-verbal notice sound that plays immediately before any message audio. This brief auditory cue acts as a gentle transition, signaling that CyberDuck is about to speak without startling the user or abruptly breaking concentration. By separating attention-shifting moments from the spoken content itself, this design helps users reorient smoothly while preserving the calm and predictable rhythm of the focus session. This approach was informed by user testing and aligns with the broader goal of making system interventions supportive rather than intrusive.
+
 ## Archive of All Code and Design Patterns
 
 #### Please view my source code [here]()
