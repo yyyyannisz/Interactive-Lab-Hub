@@ -126,15 +126,11 @@ During the session with Wendy, one of the most prominent observations was that m
 
 Wendy suggested that CyberDuck could adopt a Pomodoro-like structure, where the duck announces when a focus session ends, asks what the user has accomplished, and offers brief positive reinforcement. This approach would allow CyberDuck to support users without requiring continuous conversational engagement. Wendy also commented on the voice, suggesting that it could be more “duck-like”, reinforcing the playful, companion-based nature of the device.
 
-Insight: Structured, time-based interventions may feel more appropriate than spontaneous conversational interruptions during focus-heavy workflows.
-
 2. Wizarding with Jade Change(Interactive Device Classmate)
 
 Jade found the interaction meaningful and potentially useful, noting that the cuteness of the duck made the experience more engaging and approachable. However, she felt that the chosen voice (Zephyr; one of the Gemini AI voices) was too high-pitched and hyper, which could become distracting during extended use.
 
 Jade also suggested the need for a clear wake-up line to signal when CyberDuck is actively listening, rather than always passively monitoring the environment. In the context of TA Mode, she wondered whether CyberDuck could have more contextual awareness, such as knowing what is on the user’s screen, to better support debugging or problem-solving.
-
-Insight: Even when the overall concept is appealing, voice characteristics and clear listening boundaries strongly affect comfort and trust.
 
 3. Wizarding with Jiayi Wu (UX Designer)
 
@@ -143,8 +139,6 @@ Jiayi raised several deeper concerns around conversational AI and cognitive flow
 Jiayi also stressed the need for explicit instructions about when CyberDuck is listening. She expressed discomfort with the idea of the duck listening at all times and strongly supported the idea of a wake-up line or deliberate activation mechanism. More broadly, she pointed out that conversation with AI can feel unnatural, especially because human conversation naturally involves interruptions, pauses, and overlapping speech.
 
 Importantly, Jiayi noted that talking through ideas aloud is often part of her personal thinking process, and an AI responding at the wrong moment could actually pull her out of that flow. In some cases, she may want to verbalize thoughts without receiving any response at all—similar to the original idea of “rubber duck debugging.”
-
-Insight: The hardest design challenge is not generating responses, but deciding when not to speak. Timing and restraint are critical for preserving users’ cognitive flow.
 
 #### Key Takeaways & Design Implications
 
