@@ -244,6 +244,14 @@ Finally, to reduce the disruptive impact of spoken interruptions during the focu
 
 ## Reflections on Process
 
+First and foremost, I am very glad that we had the initial idea pitch presentation. The most important advice I learned from Wendy was to conduct Wizard-of-Oz testing early rather than leaving user testing until the end. Originally, we planned to build core features first and test them later. Wendy pointed out that this mindset is risky, because without early testing, we might spend significant time building something that does not work well in practice. By using Wizard-of-Oz methods before full implementation, we were able to understand what users actually needed and how they responded to the interaction. This helped us avoid wasted effort and guided our design decisions more effectively. This lesson fundamentally changed how I think about the relationship between prototyping and user testing.
+
+I also learned that while ambition can be motivating, it can easily lead to projects that are too large or complex, especially for small teams. When a project becomes overwhelming, it is easy to get stuck or lose direction. Starting with a small, simple core and gradually building on top of it is often more effective. I think we handled this balance well by scoping CyberDuck into two main modes and beginning with a very basic initial version using a native LLM and slower text-to-speech. From there, we iteratively improved performance and interaction quality. This approach allowed us to make steady progress while keeping the project manageable.
+
+Another important takeaway was the value of iterative development. Rather than trying to design a “perfect” system upfront, we continuously refined CyberDuck based on testing, technical constraints, and usability considerations. Each iteration helped us clarify what features truly mattered to the user and which ones could be simplified or removed. This process made the final system more focused and coherent, and it helped us make informed trade-offs between functionality and reliability.
+
+Finally, working in a small team teaches me the importance of clear communication and task division. Because we only had two people, we needed to be intentional about how we split responsibilities while still making major design decisions together. Regular check-ins and shared discussions helped ensure that technical implementation and interaction design stayed aligned. This collaboration style made it easier to move quickly while maintaining a consistent vision for the project.
+
 ## Group Work Distribution
 
 I took primary ownership of Timer Mode, including designing the interaction flow, implementing the timing logic, voice prompts, and overall behavior during focus sessions. I also created the storyboards and produced the draft version of the final report, as well as leading much of the documentation and Wizard-of-Oz evaluations that informed key design decisions.
