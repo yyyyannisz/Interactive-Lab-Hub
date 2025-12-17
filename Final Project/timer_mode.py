@@ -12,11 +12,7 @@ from vosk import Model, KaldiRecognizer
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-VOSK_MODEL_PATH = os.path.join(
-    BASE_DIR,
-    "models",
-    "vosk-model-small-en-us-0.15"
-)
+VOSK_MODEL_PATH = "/home/pi/vosk-models/vosk-model-small-en-us-0.15"
 
 if not os.path.exists(os.path.join(VOSK_MODEL_PATH, "model.conf")):
     raise RuntimeError(f"Vosk model not found at {VOSK_MODEL_PATH}")
