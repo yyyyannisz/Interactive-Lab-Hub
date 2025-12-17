@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 VOSK_MODEL_PATH = "/home/pi/vosk-models/vosk-model-small-en-us-0.15"
 
-if not os.path.exists(os.path.join(VOSK_MODEL_PATH, "model.conf")):
+if not os.path.exists(os.path.join(VOSK_MODEL_PATH, "conf", "model.conf")):
     raise RuntimeError(f"Vosk model not found at {VOSK_MODEL_PATH}")
 
 # Load model ONCE
