@@ -210,9 +210,7 @@ Together, these additions reflect a deliberate effort to improve the overall use
 
 #### Gesture-Based Mode Switching
 
-We developed a gesture-based mode switching feature that allows users to switch between Timer Mode and TA Mode using simple hand gestures. By using a gesture sensor, users can change modes without speaking commands or touching the device. This design reinforces CyberDuck’s role as an embodied, ambient companion and allows mode changes to feel lightweight and intentional rather than conversational or menu-driven. An upward gesture activates Timer Mode, while a downward gesture switches to TA Mode, with brief audio feedback confirming the change.
-
-This feature was motivated by Wizard-of-Oz findings showing that users did not always want to verbally interact with the system, especially during focused work. Gesture-based switching enables users to control CyberDuck without interrupting cognitive flow and provides a clear boundary between focused and problem-solving states. As a result, gesture control became a core part of CyberDuck’s interaction model, closely linking its physical form with its software behavior.
+We developed a gesture-based mode switching feature that allows users to switch between Timer Mode and TA Mode using simple hand gestures. By using a gesture sensor, users can change modes without speaking commands or touching the device. This design reinforces CyberDuck’s role as an embodied, ambient companion. An upward gesture activates Timer Mode, while a downward gesture switches to TA Mode, with brief audio feedback confirming the change.
 
 #### User Testing
 
