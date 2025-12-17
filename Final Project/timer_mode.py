@@ -186,6 +186,7 @@ def run_focus_timer():
 
         # Phone reminder (once, after 5s continuous detection)
         if shared_state["phone_should_remind"] and not shared_state["reminder_given"]:
+            play_audio("notice.wav")
             play_audio("stay_focus.wav")
             shared_state["reminder_given"] = True
             shared_state["phone_should_remind"] = False
@@ -193,6 +194,7 @@ def run_focus_timer():
         # Mid-session encouragement
         if total_seconds == 30 and not encouragement_given:
             encouragement_given = True
+            play_audio("notice.wav")
             play_audio("encouragement.wav")
 
         # Final countdown
