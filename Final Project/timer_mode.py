@@ -14,9 +14,9 @@ from vosk import Model, KaldiRecognizer
 # Audio helper
 # ---------------------------------------------------
 def play_audio(filename):
-    print(f"[Playing audio: {filename}]")
-    os.system(f"aplay {filename}")
-
+    audio_path = os.path.join("audios", filename)
+    print(f"[Playing audio: {audio_path}]")
+    os.system(f"aplay {audio_path}")
 
 # ---------------------------------------------------
 # Speech recognition (single listening)
