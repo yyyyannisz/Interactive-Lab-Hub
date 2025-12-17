@@ -196,11 +196,13 @@ def run_focus_timer():
     stop_event.set()
     detector_thread.join(timeout=1)
 
+    play_audio("session_complete.wav")
+
     if shared_state["phone_detected"]:
-        play_audio("session_complete_phone.wav")
-        # e.g. "I noticed some phone use today. Let's try to stay more focused next time."
-    else:
-        play_audio("session_complete.wav")
+        recap = listen_for_speech("recap_prompt.wav", timeout=6)
+    
+        # We don’t parse the content — just acknowledge
+        play_audio("recap_feedback.wav")
 
     play_audio("soft_quack.wav")
 
