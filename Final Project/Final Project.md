@@ -16,7 +16,7 @@
 
 ## Project Plan
 
-This project will be done by Yannis Zhu & Amy Chen.
+This project is done by Yannis Zhu & Amy Chen.
 
 ### Big Idea
 
