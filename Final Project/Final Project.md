@@ -202,7 +202,7 @@ In the later version, the TA Mode was redesigned to prioritize responsiveness an
 
 #### Expanded Timer Mode
 
-The new Timer Mode evolved substantially from the initial prototype. In addition to pre-recorded audio cues, we introduced user voice input, allowing the system to ask what the user is focusing on and how long they would like to work. The interaction now includes a calming breathing ritual at the start of each session, mid-session encouragement, optional check-ins, and a structured countdown at the end.
+The new Timer Mode evolved substantially from the initial prototype. In addition to more carefully designed pre-recorded audio cues, we introduced user voice input, allowing the system to ask what the user is focusing on and how long they would like to work. The interaction now includes a calming breathing ritual at the start of each session, mid-session encouragement, optional check-ins, and a structured countdown at the end.
 
 Technically, Timer Mode integrates speech recognition to capture short user responses and treats these inputs as lightweight signals rather than open-ended conversation. This design choice was informed by Wizard-of-Oz findings indicating that excessive or poorly timed interaction can disrupt focus. All audio feedback remains intentionally brief, supportive, and predictable.
 
