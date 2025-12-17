@@ -186,7 +186,7 @@ def run_focus_timer():
 
         # Phone reminder (once, after 5s continuous detection)
         if shared_state["phone_should_remind"] and not shared_state["reminder_given"]:
-            play_audio("stay_focused.wav")
+            play_audio("stay_focus.wav")
             shared_state["reminder_given"] = True
             shared_state["phone_should_remind"] = False
 
