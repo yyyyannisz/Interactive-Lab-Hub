@@ -242,7 +242,7 @@ Finally, to reduce the disruptive impact of spoken interruptions during the focu
 
 ## Video Demo
 
-[<img src="https://github.com/yyyannisz/Interactive-Lab-Hub/blob/Fall2022/Final%20Project/demo.png" width="50%">](https://www.youtube.com/watch?v=iJYPonsWY54 "Video Demo")
+[<img src="https://github.com/yyyyannisz/Interactive-Lab-Hub/blob/Fall2025/Final%20Project/demo.png" width="50%">](https://www.youtube.com/watch?v=iJYPonsWY54 "Video Demo")
 
 
 ## Reflections on Process
