@@ -242,6 +242,9 @@ Finally, to reduce the disruptive impact of spoken interruptions during the focu
 
 ## Video Demo
 
+[<img src="https://github.com/yyyannisz/Interactive-Lab-Hub/blob/Fall2022/Final%20Project/demo.png" width="50%">](https://www.youtube.com/watch?v=iJYPonsWY54 "Video Demo")
+
+
 ## Reflections on Process
 
 First and foremost, I am very glad that we had the initial idea pitch presentation. The most important advice I learned from Wendy was to conduct Wizard-of-Oz testing early rather than leaving user testing until the end. Originally, we planned to build core features first and test them later. Wendy pointed out that this mindset is risky, because without early testing, we might spend significant time building something that does not work well in practice. By using Wizard-of-Oz methods before full implementation, we were able to understand what users actually needed and how they responded to the interaction. This helped us avoid wasted effort and guided our design decisions more effectively. This lesson fundamentally changed how I think about the relationship between prototyping and user testing.
