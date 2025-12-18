@@ -1,0 +1,11 @@
+vosk==0.3.43
+pyaudio==0.2.13
+sounddevice==0.4.6
+
+mediapipe==0.10.18
+opencv-python==4.11.0.86
+pip-chill==1.0.3
+teachable-machine-lite==1.2.0.2
+torchvision==0.24.0
+numpy==1.26.4
+adafruit-circuitpython-apds9960==3.1.3
