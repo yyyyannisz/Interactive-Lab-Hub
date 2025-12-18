@@ -238,7 +238,7 @@ Finally, to reduce the disruptive impact of spoken interruptions during the focu
 
 ## Archive of All Code and Design Patterns
 
-#### Please view my source code [here]()
+#### Please view my source code [here](https://github.com/yyyyannisz/Interactive-Lab-Hub/blob/Fall2025/Final%20Project/duck.py)
 
 ## Video Demo
 
