@@ -79,13 +79,13 @@ Raspberry Pi 4 – main computing unit
 
 Plush duck enclosure – physical embodiment of CyberDuck and housing for the system
 
-USB microphone – speech input for user interaction
+USB microphone and camera – speech and camera input for user interaction
 
 Mini speaker – audio output for feedback and responses
 
 APDS-9960 gesture sensor – physical gesture detection for mode switching
 
-Fast LLM model and improved TTS – to reduce latency and improve conversational quality
+Fast LLM model and good TTS – to reduce latency and improve conversational quality
 
 ### Fallback Plan
 
